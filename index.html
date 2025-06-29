@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💕 Para Glendys - Mi Amor Eterno</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="animated-background"></div>
+    
+    <!-- Navegación -->
+    <nav class="nav-container">
+        <button class="nav-btn active" onclick="switchSection('inicio')">💖 INICIO</button>
+        <button class="nav-btn" onclick="switchSection('canciones')">🎵 CANCIONES</button>
+        <button class="nav-btn" onclick="switchSection('recuerdos')">📸 RECUERDOS</button>
+        <button class="nav-btn" onclick="switchSection('notas')">📝 NOTAS</button>
+        <button class="nav-btn" onclick="switchSection('confesiones')">💌 CONFESIONES</button>
+    </nav>
+
+    <!-- Sección Inicio (Chat IA) -->
+    <section id="inicio" class="section active">
+        <div class="container">
+            <div class="header">
+                <h1 class="title">💕 Para Glendys, Mi Amor Eterno</h1>
+                <p class="subtitle">Pregúntame lo que quieras saber sobre nosotros, nuestro amor, o sobre mí ❤️</p>
+            </div>
+
+            <div class="chat-container">
+                <div id="chat-messages" class="chat-messages"></div>
+                
+                <div class="input-container">
+                    <input 
+                        type="text" 
+                        id="user-input" 
+                        placeholder="Escribe tu pregunta aquí, mi amor..." 
+                        class="user-input"
+                    >
+                    <button onclick="sendMessage()" class="submit-btn">
+                        <span>Preguntar con Amor 💕</span>
+                    </button>
+                </div>
+                
+                <button onclick="newQuestion()" class="new-question-btn">
+                    Nueva Pregunta ✨
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Canciones -->
+    <section id="canciones" class="section">
+        <div class="container">
+            <h2 class="section-title">🎵 Canciones de Nuestro Amor</h2>
+            <p class="section-subtitle">Cada canción tiene una historia especial para nosotros</p>
+            
+            <div class="songs-grid">
+                <div class="song-card">
+                    <div class="song-info">
+                        <h3>Perfect</h3>
+                        <p>Ed Sheeran</p>
+                        <span class="duration">4:23</span>
+                    </div>
+                    <div class="song-actions">
+                        <button onclick="playSong('perfect')" class="play-btn">▶️ Reproducir</button>
+                        <button onclick="showSongDedication(SONGS_DATABASE.perfect)" class="story-btn">💕 Ver Historia</button>
+                    </div>
+                </div>
+
+                <div class="song-card">
+                    <div class="song-info">
+                        <h3>Thinking Out Loud</h3>
+                        <p>Ed Sheeran</p>
+                        <span class="duration">4:41</span>
+                    </div>
+                    <div class="song-actions">
+                        <button onclick="playSong('thinking_out_loud')" class="play-btn">▶️ Reproducir</button>
+                        <button onclick="showSongDedication(SONGS_DATABASE.thinking_out_loud)" class="story-btn">💕 Ver Historia</button>
+                    </div>
+                </div>
+
+                <div class="song-card">
+                    <div class="song-info">
+                        <h3>All of Me</h3>
+                        <p>John Legend</p>
+                        <span class="duration">4:29</span>
+                    </div>
+                    <div class="song-actions">
+                        <button onclick="playSong('all_of_me')" class="play-btn">▶️ Reproducir</button>
+                        <button onclick="showSongDedication(SONGS_DATABASE.all_of_me)" class="story-btn">💕 Ver Historia</button>
+                    </div>
+                </div>
+
+                <div class="song-card">
+                    <div class="song-info">
+                        <h3>A Thousand Years</h3>
+                        <p>Christina Perri</p>
+                        <span class="duration">4:45</span>
+                    </div>
+                    <div class="song-actions">
+                        <button onclick="playSong('a_thousand_years')" class="play-btn">▶️ Reproducir</button>
+                        <button onclick="showSongDedication(SONGS_DATABASE.a_thousand_years)" class="story-btn">💕 Ver Historia</button>
+                    </div>
+                </div>
+
+                <div class="song-card">
+                    <div class="song-info">
+                        <h3>Love Me Like You Do</h3>
+                        <p>Ellie Goulding</p>
+                        <span class="duration">4:10</span>
+                    </div>
+                    <div class="song-actions">
+                        <button onclick="playSong('love_me_like_you_do')" class="play-btn">▶️ Reproducir</button>
+                        <button onclick="showSongDedication(SONGS_DATABASE.love_me_like_you_do)" class="story-btn">💕 Ver Historia</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Otras secciones -->
+    <section id="recuerdos" class="section">
+        <div class="container">
+            <h2 class="section-title">📸 Nuestros Recuerdos</h2>
+            <p class="section-subtitle">Próximamente: Galería de nuestros momentos especiales</p>
+        </div>
+    </section>
+
+    <section id="notas" class="section">
+        <div class="container">
+            <h2 class="section-title">📝 Notas de Amor</h2>
+            <p class="section-subtitle">Próximamente: Notas y mensajes especiales</p>
+        </div>
+    </section>
+
+    <section id="confesiones" class="section">
+        <div class="container">
+            <h2 class="section-title">💌 Confesiones del Corazón</h2>
+            <p class="section-subtitle">Próximamente: Mis confesiones más profundas</p>
+        </div>
+    </section>
+
+    <!-- Corazones flotantes -->
+    <div class="floating-hearts"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
