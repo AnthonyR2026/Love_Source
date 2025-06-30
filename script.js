@@ -1,11 +1,11 @@
 // Configuración de APIs
 const API_CONFIG = {
   YOUTUBE_API_KEY: "AIzaSyAJM2Tpbf4rYTJcKfoUqSiS4oqKvUdrsbI",
-  GROQ_API_KEY: "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", // Obtener en groq.com
-  USE_REAL_AI: true, // Cambiar a true cuando tengas la API key
+  GROQ_API_KEY: "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",
+  USE_REAL_AI: true, // Activado con tu API key
 }
 
-// Base de datos de canciones mejorada
+// Base de datos de canciones simplificada
 const SONGS_DATABASE = {
   perfect: {
     title: "Perfect",
@@ -15,7 +15,6 @@ const SONGS_DATABASE = {
     youtubeId: "2Vv-BfVoq4g",
     duration: "4:23",
     year: "2017",
-    coverUrl: "https://i.ytimg.com/vi/2Vv-BfVoq4g/maxresdefault.jpg",
   },
   thinking_out_loud: {
     title: "Thinking Out Loud",
@@ -25,7 +24,6 @@ const SONGS_DATABASE = {
     youtubeId: "lp-EO5I60KA",
     duration: "4:41",
     year: "2014",
-    coverUrl: "https://i.ytimg.com/vi/lp-EO5I60KA/maxresdefault.jpg",
   },
   all_of_me: {
     title: "All of Me",
@@ -34,7 +32,6 @@ const SONGS_DATABASE = {
     youtubeId: "450p7goxZqg",
     duration: "4:29",
     year: "2013",
-    coverUrl: "https://i.ytimg.com/vi/450p7goxZqg/maxresdefault.jpg",
   },
   a_thousand_years: {
     title: "A Thousand Years",
@@ -43,7 +40,6 @@ const SONGS_DATABASE = {
     youtubeId: "rtOvBOTyX00",
     duration: "4:45",
     year: "2011",
-    coverUrl: "https://i.ytimg.com/vi/rtOvBOTyX00/maxresdefault.jpg",
   },
   love_me_like_you_do: {
     title: "Love Me Like You Do",
@@ -52,11 +48,10 @@ const SONGS_DATABASE = {
     youtubeId: "AJtDXIazrMo",
     duration: "4:10",
     year: "2015",
-    coverUrl: "https://i.ytimg.com/vi/AJtDXIazrMo/maxresdefault.jpg",
   },
 }
 
-// Base de conocimiento personal mejorada
+// Base de conocimiento personal
 const KNOWLEDGE_BASE = {
   personal: {
     nombre_completo: "Anthony",
@@ -117,7 +112,8 @@ class AISystem {
               Responde como Anthony, siendo romántico, detallista y personal. 
               Usa esta información para crear respuestas únicas y emotivas.
               Siempre habla en primera persona como si fueras Anthony.
-              Sé específico y usa los detalles proporcionados.`,
+              Sé específico y usa los detalles proporcionados.
+              Mantén las respuestas entre 50-150 palabras.`,
             },
             {
               role: "user",
@@ -140,156 +136,53 @@ class AISystem {
   generateLocalResponse(userMessage) {
     const message = userMessage.toLowerCase()
 
-    // Respuestas contextuales basadas en la base de conocimiento
     if (message.includes("amor") || message.includes("amo") || message.includes("quiero")) {
       const responses = [
-        `Te amo más de lo que las palabras pueden expresar, Glendys. Eres mi ${KNOWLEDGE_BASE.sobre_glendys.apodos_cariñosos.split(", ")[Math.floor(Math.random() * 4)]}, mi razón de ser. 💕`,
-        `Mi amor por ti crece cada día. Eres ${KNOWLEDGE_BASE.sobre_glendys.cualidades.split(", ")[Math.floor(Math.random() * 6)]} y perfecta en todos los sentidos. 💖`,
-        `${KNOWLEDGE_BASE.sobre_glendys.lo_que_amo}. Te amo infinitamente, Glendys. 💕`,
+        `Te amo más de lo que las palabras pueden expresar, Glendys. Eres mi ${KNOWLEDGE_BASE.sobre_glendys.apodos_cariñosos.split(", ")[Math.floor(Math.random() * 4)]}, mi razón de ser.`,
+        `Mi amor por ti crece cada día. Eres ${KNOWLEDGE_BASE.sobre_glendys.cualidades.split(", ")[Math.floor(Math.random() * 6)]} y perfecta en todos los sentidos.`,
+        `${KNOWLEDGE_BASE.sobre_glendys.lo_que_amo}. Te amo infinitamente, Glendys.`,
       ]
       return responses[Math.floor(Math.random() * responses.length)]
     }
 
     if (message.includes("conocimos") || message.includes("conocer")) {
-      return `${KNOWLEDGE_BASE.relacion.como_conocieron}. Desde el primer momento supe que eras especial, y cada día confirmo que eres la persona perfecta para mí. ✨`
+      return `${KNOWLEDGE_BASE.relacion.como_conocieron}. Desde el primer momento supe que eras especial, y cada día confirmo que eres la persona perfecta para mí.`
     }
 
     if (message.includes("futuro") || message.includes("planes")) {
-      return `${KNOWLEDGE_BASE.relacion.planes_futuros}. ${KNOWLEDGE_BASE.personal.sueños}. Contigo todo es posible, mi amor. 🌟`
+      return `${KNOWLEDGE_BASE.relacion.planes_futuros}. ${KNOWLEDGE_BASE.personal.sueños}. Contigo todo es posible, mi amor.`
     }
 
     if (message.includes("hermosa") || message.includes("bella") || message.includes("bonita")) {
-      return `Eres la mujer más hermosa del mundo, por dentro y por fuera. ${KNOWLEDGE_BASE.sobre_glendys.lo_que_amo}. Tu belleza ilumina mi vida. 😍`
+      return `Eres la mujer más hermosa del mundo, por dentro y por fuera. ${KNOWLEDGE_BASE.sobre_glendys.lo_que_amo}. Tu belleza ilumina mi vida.`
     }
 
     if (message.includes("música") || message.includes("canción")) {
-      return `La música es el lenguaje de nuestro amor, Glendys. Cada canción que escuchamos juntos se vuelve especial y me recuerda a ti. 🎵 Como dice nuestra canción favorita, eres perfecta para mí.`
+      return `La música es el lenguaje de nuestro amor, Glendys. Cada canción que escuchamos juntos se vuelve especial y me recuerda a ti. Como dice nuestra canción favorita, eres perfecta para mí.`
     }
 
-    if (message.includes("primer beso") || message.includes("beso")) {
-      return `${KNOWLEDGE_BASE.relacion.primer_beso}. Ese momento cambió mi vida para siempre, mi amor. 💋`
-    }
-
-    if (message.includes("primera cita") || message.includes("cita")) {
-      return `${KNOWLEDGE_BASE.relacion.primera_cita}. Sabía que eras especial desde ese momento. 💕`
-    }
-
-    // Respuestas románticas generales
     const romanticResponses = [
-      `Eres mi sueño hecho realidad, Glendys. ${KNOWLEDGE_BASE.personal.personalidad.includes("romántico") ? "Mi corazón romántico" : "Mi corazón"} late solo por ti. 💖`,
-      `${KNOWLEDGE_BASE.sobre_glendys.lo_que_admiro}. No hay palabras suficientes para describir lo mucho que significas para mí. 💕`,
-      `Contigo he encontrado mi hogar, mi paz, mi felicidad completa. Eres mi ${KNOWLEDGE_BASE.sobre_glendys.apodos_cariñosos.split(", ")[0]}. 🏠💕`,
-      `Cada día me enamoro más de ti. ${KNOWLEDGE_BASE.sobre_glendys.cualidades.split(", ")[0]} y perfecta en todos los sentidos. 😍`,
-      `Tu amor es mi fuerza, tu sonrisa mi motivación. ${KNOWLEDGE_BASE.relacion.momentos_especiales}. 💪💕`,
-      `Eres mi estrella más brillante, mi guía, mi inspiración. ${KNOWLEDGE_BASE.personal.cualidades.includes("soñador") ? "Mis sueños" : "Todo"} incluye a ti. ⭐`,
+      `Eres mi sueño hecho realidad, Glendys. Mi corazón romántico late solo por ti.`,
+      `${KNOWLEDGE_BASE.sobre_glendys.lo_que_admiro}. No hay palabras suficientes para describir lo mucho que significas para mí.`,
+      `Contigo he encontrado mi hogar, mi paz, mi felicidad completa. Eres mi ${KNOWLEDGE_BASE.sobre_glendys.apodos_cariñosos.split(", ")[0]}.`,
+      `Cada día me enamoro más de ti. ${KNOWLEDGE_BASE.sobre_glendys.cualidades.split(", ")[0]} y perfecta en todos los sentidos.`,
+      `Tu amor es mi fuerza, tu sonrisa mi motivación. ${KNOWLEDGE_BASE.relacion.momentos_especiales}.`,
+      `Eres mi estrella más brillante, mi guía, mi inspiración. Mis sueños incluyen a ti.`,
     ]
 
     return romanticResponses[Math.floor(Math.random() * romanticResponses.length)]
   }
 }
 
-// Inicializar sistema de IA
-const aiSystem = new AISystem()
-
-// Sistema de reproducción mejorado con visualizador
-class EnhancedMusicPlayer {
+// Sistema de reproducción simplificado y funcional
+class MusicPlayer {
   constructor() {
     this.currentSong = null
     this.isPlaying = false
     this.player = null
     this.playerReady = false
-    this.audioContext = null
-    this.analyser = null
-    this.visualizer = null
-    this.settings = {
-      audioQuality: "medium",
-      visualizerEnabled: true,
-      lowResources: false,
-    }
-
     this.initializePlayer()
     this.loadYouTubeAPI()
-    this.initializeVisualizer()
-    this.loadSongCovers()
-  }
-
-  async loadSongCovers() {
-    // Cargar portadas de canciones
-    Object.keys(SONGS_DATABASE).forEach((songId) => {
-      const song = SONGS_DATABASE[songId]
-      const imgElement = document.querySelector(`[data-song="${songId}"] .cover-image`)
-      if (imgElement && song.coverUrl) {
-        imgElement.src = song.coverUrl
-        imgElement.onerror = () => {
-          // Fallback a gradiente si no carga la imagen
-          imgElement.style.display = "none"
-        }
-      }
-    })
-  }
-
-  initializeVisualizer() {
-    if (!this.settings.visualizerEnabled) return
-
-    const canvas = document.getElementById("audio-visualizer")
-    if (!canvas) return
-
-    const ctx = canvas.getContext("2d")
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
-
-    this.visualizer = {
-      canvas,
-      ctx,
-      width: canvas.width,
-      height: canvas.height,
-    }
-
-    // Redimensionar canvas cuando cambie la ventana
-    window.addEventListener("resize", () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-      this.visualizer.width = canvas.width
-      this.visualizer.height = canvas.height
-    })
-  }
-
-  startVisualizer() {
-    if (!this.visualizer || !this.analyser) return
-
-    const { ctx, width, height } = this.visualizer
-    const bufferLength = this.analyser.frequencyBinCount
-    const dataArray = new Uint8Array(bufferLength)
-
-    const draw = () => {
-      if (!this.isPlaying) return
-
-      requestAnimationFrame(draw)
-      this.analyser.getByteFrequencyData(dataArray)
-
-      ctx.clearRect(0, 0, width, height)
-
-      // Crear efecto de ondas
-      const centerX = width / 2
-      const centerY = height / 2
-      const maxRadius = Math.min(width, height) / 4
-
-      for (let i = 0; i < bufferLength; i += 4) {
-        const amplitude = dataArray[i] / 255
-        const angle = (i / bufferLength) * Math.PI * 2
-        const radius = maxRadius * amplitude
-
-        const x = centerX + Math.cos(angle) * radius
-        const y = centerY + Math.sin(angle) * radius
-
-        ctx.beginPath()
-        ctx.arc(x, y, amplitude * 3, 0, Math.PI * 2)
-        ctx.fillStyle = `hsla(${(i / bufferLength) * 360}, 70%, 60%, ${amplitude})`
-        ctx.fill()
-      }
-    }
-
-    draw()
   }
 
   loadYouTubeAPI() {
@@ -309,28 +202,55 @@ class EnhancedMusicPlayer {
   initializePlayer() {
     const playerHTML = `
       <div id="floating-player" class="floating-player hidden">
-        <div class="player-content">
+        <div class="player-header">
           <div class="song-info">
             <div class="song-title">Selecciona una canción</div>
             <div class="song-artist">para comenzar a escuchar</div>
           </div>
-          <div class="player-controls">
-            <button id="prev-btn" class="control-btn" title="Anterior">⏮️</button>
-            <button id="play-pause-btn" class="control-btn" title="Reproducir/Pausar">▶️</button>
-            <button id="next-btn" class="control-btn" title="Siguiente">⏭️</button>
-            <button id="volume-btn" class="control-btn" title="Volumen">🔊</button>
-            <button id="close-player-btn" class="control-btn" title="Cerrar">❌</button>
+          <button id="close-player-btn" class="close-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="player-controls">
+          <button id="prev-btn" class="control-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="19,20 9,12 19,4"></polygon>
+              <line x1="5" y1="19" x2="5" y2="5"></line>
+            </svg>
+          </button>
+          <button id="play-pause-btn" class="control-btn play-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5,3 19,12 5,21"></polygon>
+            </svg>
+          </button>
+          <button id="next-btn" class="control-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5,4 15,12 5,20"></polygon>
+              <line x1="19" y1="5" x2="19" y2="19"></line>
+            </svg>
+          </button>
+          <button id="volume-btn" class="control-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11,5 6,9 2,9 2,15 6,15 11,19"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="progress-container">
+          <div class="progress-bar" id="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
           </div>
-          <div class="progress-container">
-            <div class="progress-bar" id="progress-bar">
-              <div class="progress-fill" id="progress-fill"></div>
-            </div>
-            <div class="time-display">
-              <span class="current-time" id="current-time">0:00</span>
-              <span class="total-time" id="total-time">0:00</span>
-            </div>
+          <div class="time-display">
+            <span class="current-time" id="current-time">0:00</span>
+            <span class="total-time" id="total-time">0:00</span>
           </div>
         </div>
+        
         <div id="youtube-player" style="display: none;"></div>
       </div>
     `
@@ -358,10 +278,7 @@ class EnhancedMusicPlayer {
 
     try {
       await this.playYouTubeVideo(song.youtubeId)
-      this.showSuccess(`🎵 Reproduciendo: ${song.title}`)
-      if (this.settings.visualizerEnabled) {
-        this.startVisualizer()
-      }
+      this.showSuccess(`Reproduciendo: ${song.title}`)
     } catch (error) {
       console.error("Error reproduciendo:", error)
       this.showError("Error al reproducir la canción")
@@ -413,17 +330,7 @@ class EnhancedMusicPlayer {
   }
 
   handlePlayerStateChange(event) {
-    const states = {
-      [-1]: "sin iniciar",
-      [0]: "terminado",
-      [1]: "reproduciendo",
-      [2]: "pausado",
-      [3]: "buffering",
-      [5]: "video cued",
-    }
-
     const state = event.data
-    console.log("Estado del player:", states[state])
 
     switch (state) {
       case window.YT.PlayerState.PLAYING:
@@ -437,7 +344,7 @@ class EnhancedMusicPlayer {
       case window.YT.PlayerState.ENDED:
         this.isPlaying = false
         this.updatePlayButton()
-        this.showSuccess("🎵 Canción terminada")
+        this.showSuccess("Canción terminada")
         break
     }
   }
@@ -481,7 +388,15 @@ class EnhancedMusicPlayer {
   updatePlayButton() {
     const btn = document.getElementById("play-pause-btn")
     if (btn) {
-      btn.textContent = this.isPlaying ? "⏸️" : "▶️"
+      const svg = this.isPlaying
+        ? `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+             <rect x="6" y="4" width="4" height="16"></rect>
+             <rect x="14" y="4" width="4" height="16"></rect>
+           </svg>`
+        : `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+             <polygon points="5,3 19,12 5,21"></polygon>
+           </svg>`
+      btn.innerHTML = svg
     }
   }
 
@@ -522,9 +437,9 @@ class EnhancedMusicPlayer {
     notification.textContent = message
 
     const styles = {
-      error: "background: #ff4757; color: white;",
-      success: "background: #2ed573; color: white;",
-      info: "background: #3742fa; color: white;",
+      error: "background: #ef4444; color: white;",
+      success: "background: #10b981; color: white;",
+      info: "background: #3b82f6; color: white;",
     }
 
     notification.style.cssText = `
@@ -532,10 +447,11 @@ class EnhancedMusicPlayer {
       top: 20px;
       right: 20px;
       padding: 15px 20px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
       z-index: 3000;
       animation: slideInRight 0.3s ease;
+      font-weight: 500;
       ${styles[type]}
     `
 
@@ -560,7 +476,20 @@ class EnhancedMusicPlayer {
         const currentVolume = this.player.getVolume()
         const newVolume = currentVolume > 0 ? 0 : 50
         this.player.setVolume(newVolume)
-        document.getElementById("volume-btn").textContent = newVolume > 0 ? "🔊" : "🔇"
+
+        const volumeBtn = document.getElementById("volume-btn")
+        const svg =
+          newVolume > 0
+            ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+               <polygon points="11,5 6,9 2,9 2,15 6,15 11,19"></polygon>
+               <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+             </svg>`
+            : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+               <polygon points="11,5 6,9 2,9 2,15 6,15 11,19"></polygon>
+               <line x1="23" y1="9" x2="17" y2="15"></line>
+               <line x1="17" y1="9" x2="23" y2="15"></line>
+             </svg>`
+        volumeBtn.innerHTML = svg
       }
     })
 
@@ -578,65 +507,9 @@ class EnhancedMusicPlayer {
   }
 }
 
-// Sistema de configuración
-class SettingsManager {
-  constructor() {
-    this.settings = {
-      theme: "romantic",
-      reduceMotion: false,
-      highContrast: false,
-      largeText: false,
-      lowResources: false,
-      audioQuality: "medium",
-      visualizerEnabled: true,
-    }
-    this.loadSettings()
-    this.applySettings()
-  }
-
-  loadSettings() {
-    const saved = localStorage.getItem("lovePageSettings")
-    if (saved) {
-      this.settings = { ...this.settings, ...JSON.parse(saved) }
-    }
-  }
-
-  saveSettings() {
-    localStorage.setItem("lovePageSettings", JSON.stringify(this.settings))
-  }
-
-  applySettings() {
-    // Aplicar tema
-    document.documentElement.setAttribute("data-theme", this.settings.theme)
-
-    // Aplicar configuraciones de accesibilidad
-    if (this.settings.reduceMotion) {
-      document.documentElement.style.setProperty("--transition", "none")
-    }
-
-    if (this.settings.highContrast) {
-      document.body.classList.add("high-contrast")
-    }
-
-    if (this.settings.largeText) {
-      document.body.classList.add("large-text")
-    }
-
-    if (this.settings.lowResources) {
-      document.body.classList.add("low-resources")
-    }
-  }
-
-  updateSetting(key, value) {
-    this.settings[key] = value
-    this.saveSettings()
-    this.applySettings()
-  }
-}
-
 // Inicializar sistemas
-const musicPlayer = new EnhancedMusicPlayer()
-const settingsManager = new SettingsManager()
+const aiSystem = new AISystem()
+const musicPlayer = new MusicPlayer()
 
 // Funciones principales
 async function sendMessage() {
@@ -645,10 +518,18 @@ async function sendMessage() {
 
   if (!message || aiSystem.isProcessing) return
 
+  // Mostrar mensaje del usuario
+  addMessage(message, "user")
+
   // Mostrar estado de carga
   const submitBtn = document.getElementById("submit-btn")
   const originalContent = submitBtn.innerHTML
-  submitBtn.innerHTML = '<i data-lucide="loader-2"></i><span>Pensando...</span>'
+  submitBtn.innerHTML = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="animate-spin">
+      <path d="M21 12a9 9 0 11-6.219-8.56"/>
+    </svg>
+    <span>Pensando...</span>
+  `
   submitBtn.disabled = true
 
   // Limpiar input
@@ -659,36 +540,41 @@ async function sendMessage() {
   try {
     // Generar respuesta de IA
     const response = await aiSystem.generateResponse(message)
-    showAIResponse(response)
+
+    // Simular delay para mejor UX
+    setTimeout(() => {
+      addMessage(response, "ai")
+    }, 1000)
   } catch (error) {
     console.error("Error generando respuesta:", error)
-    showAIResponse("Lo siento mi amor, hubo un error. Pero mi amor por ti nunca falla. 💕")
+    addMessage("Lo siento mi amor, hubo un error. Pero mi amor por ti nunca falla.", "ai")
   } finally {
     // Restaurar botón
-    submitBtn.innerHTML = originalContent
-    submitBtn.disabled = false
-    aiSystem.isProcessing = false
-
-    // Reinicializar iconos
-    createIcons()
+    setTimeout(() => {
+      submitBtn.innerHTML = originalContent
+      submitBtn.disabled = false
+      aiSystem.isProcessing = false
+    }, 1000)
   }
 }
 
-function showAIResponse(response) {
-  const bubble = document.getElementById("ai-response-bubble")
-  const responseText = bubble.querySelector(".response-text")
+function addMessage(message, sender) {
+  const chatMessages = document.getElementById("chat-messages")
+  const messageDiv = document.createElement("div")
+  messageDiv.className = `message ${sender}-message`
 
-  responseText.textContent = response
-  bubble.classList.remove("hidden")
+  const messageContent = document.createElement("div")
+  messageContent.className = "message-content"
+  messageContent.textContent = message
 
-  // Auto-cerrar después de 10 segundos
-  setTimeout(() => {
-    bubble.classList.add("hidden")
-  }, 10000)
-}
+  messageDiv.appendChild(messageContent)
+  chatMessages.appendChild(messageDiv)
 
-function closeAIResponse() {
-  document.getElementById("ai-response-bubble").classList.add("hidden")
+  // Scroll al final con animación suave
+  chatMessages.scrollTo({
+    top: chatMessages.scrollHeight,
+    behavior: "smooth",
+  })
 }
 
 function fillInput(text) {
@@ -712,13 +598,19 @@ function showSongDedication(song) {
   modal.className = "dedication-modal"
   modal.innerHTML = `
     <div class="dedication-content">
-      <h3>💕 ${song.title}</h3>
-      <p class="artist">por ${song.artist} (${song.year})</p>
+      <div class="dedication-header">
+        <h3>${song.title}</h3>
+        <p class="artist">por ${song.artist} (${song.year})</p>
+      </div>
       <div class="dedication-text">
         <p>${song.dedication}</p>
       </div>
       <button onclick="this.parentElement.parentElement.remove()" class="close-dedication">
-        Cerrar ❤️
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+        Cerrar
       </button>
     </div>
   `
@@ -732,7 +624,12 @@ function showSongDedication(song) {
   }, 15000)
 }
 
-// Funciones de navegación y configuración
+function newQuestion() {
+  document.getElementById("chat-messages").innerHTML = ""
+  document.getElementById("user-input").focus()
+}
+
+// Funciones de navegación
 function switchSection(sectionName) {
   document.querySelectorAll(".section").forEach((section) => {
     section.classList.remove("active")
@@ -755,6 +652,23 @@ function closeSettings() {
   document.getElementById("settings-modal").classList.add("hidden")
 }
 
+// Corazones flotantes
+function createFloatingHeart() {
+  const hearts = ["💖", "💕", "💗", "💝", "💘"]
+  const heart = document.createElement("div")
+  heart.className = "heart"
+  heart.textContent = hearts[Math.floor(Math.random() * hearts.length)]
+  heart.style.left = Math.random() * 100 + "%"
+  heart.style.animationDuration = Math.random() * 3 + 3 + "s"
+  heart.style.fontSize = Math.random() * 10 + 15 + "px"
+
+  document.querySelector(".floating-hearts").appendChild(heart)
+
+  setTimeout(() => {
+    heart.remove()
+  }, 6000)
+}
+
 // Inicialización
 document.addEventListener("DOMContentLoaded", () => {
   // Pantalla de carga
@@ -772,59 +686,6 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
-  // Configurar event listeners de configuración
-  setupSettingsListeners()
-
-  // Inicializar iconos
-  createIcons()
-
   // Corazones flotantes
-  setInterval(createFloatingHeart, 3000)
+  setInterval(createFloatingHeart, 2000)
 })
-
-function setupSettingsListeners() {
-  // Theme buttons
-  document.querySelectorAll(".theme-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".theme-btn").forEach((b) => b.classList.remove("active"))
-      btn.classList.add("active")
-      settingsManager.updateSetting("theme", btn.dataset.theme)
-    })
-  })
-
-  // Toggle switches
-  document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
-    checkbox.addEventListener("change", () => {
-      const setting = checkbox.id.replace("-", "_")
-      settingsManager.updateSetting(setting, checkbox.checked)
-    })
-  })
-
-  // Audio quality
-  document.getElementById("audio-quality").addEventListener("change", (e) => {
-    settingsManager.updateSetting("audioQuality", e.target.value)
-  })
-}
-
-function createFloatingHeart() {
-  const heart = document.createElement("div")
-  heart.className = "heart"
-  heart.textContent = "💖"
-  heart.style.left = Math.random() * 100 + "%"
-  heart.style.animationDuration = Math.random() * 3 + 3 + "s"
-
-  document.querySelector(".floating-hearts").appendChild(heart)
-
-  setTimeout(() => {
-    heart.remove()
-  }, 6000)
-}
-
-// Function to create icons, assuming lucide is a global object
-function createIcons() {
-  if (window.lucide) {
-    window.lucide.createIcons()
-  } else {
-    console.error("Lucide variable is undeclared.")
-  }
-}
