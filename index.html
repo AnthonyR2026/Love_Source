@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>💕 Para Glendys - Mi Amor Eterno</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
-    <!-- Iconos de Lucide (mejores que emojis) -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    <!-- Canvas para efectos visuales -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Pantalla de carga mejorada -->
@@ -25,36 +21,50 @@
             <p class="loading-text">Preparando algo especial para ti ✨</p>
         </div>
     </div>
-
-    <!-- Canvas para efectos de audio -->
-    <canvas id="audio-visualizer" class="audio-visualizer"></canvas>
-    
-    <div class="animated-background"></div>
     
     <!-- Navegación mejorada -->
     <nav class="nav-container">
         <button class="nav-btn active" onclick="switchSection('inicio')">
-            <i data-lucide="heart"></i>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
             <span>INICIO</span>
         </button>
         <button class="nav-btn" onclick="switchSection('canciones')">
-            <i data-lucide="music"></i>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18V5l12-2v13"></path>
+                <circle cx="6" cy="18" r="3"></circle>
+                <circle cx="18" cy="16" r="3"></circle>
+            </svg>
             <span>CANCIONES</span>
         </button>
         <button class="nav-btn" onclick="switchSection('recuerdos')">
-            <i data-lucide="camera"></i>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+            </svg>
             <span>RECUERDOS</span>
         </button>
         <button class="nav-btn" onclick="switchSection('poemas')">
-            <i data-lucide="feather"></i>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
             <span>POEMAS</span>
         </button>
         <button class="nav-btn" onclick="switchSection('notas')">
-            <i data-lucide="sticky-note"></i>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="16,3 16,8 21,8"></polyline>
+            </svg>
             <span>NOTAS</span>
         </button>
         <button class="nav-btn settings-btn" onclick="openSettings()">
-            <i data-lucide="settings"></i>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+            </svg>
         </button>
     </nav>
 
@@ -66,17 +76,9 @@
                 <p class="subtitle">Pregúntame lo que quieras saber sobre nosotros, nuestro amor, o sobre mí ❤️</p>
             </div>
 
-            <!-- Respuesta de IA flotante -->
-            <div id="ai-response-bubble" class="ai-response-bubble hidden">
-                <div class="response-content">
-                    <div class="response-text"></div>
-                    <button class="close-response" onclick="closeAIResponse()">
-                        <i data-lucide="x"></i>
-                    </button>
-                </div>
-            </div>
-
             <div class="chat-container">
+                <div id="chat-messages" class="chat-messages"></div>
+                
                 <div class="input-container">
                     <input 
                         type="text" 
@@ -85,14 +87,27 @@
                         class="user-input"
                     >
                     <button onclick="sendMessage()" class="submit-btn" id="submit-btn">
-                        <i data-lucide="send"></i>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22,2 15,22 11,13 2,9"></polygon>
+                        </svg>
                         <span>Preguntar</span>
                     </button>
                 </div>
                 
+                <button onclick="newQuestion()" class="new-question-btn">
+                    Nueva Pregunta ✨
+                </button>
+
                 <!-- Sugerencias interactivas -->
                 <div class="suggestions-container">
-                    <h3>💭 Sugerencias:</h3>
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <circle cx="12" cy="17" r="1"></circle>
+                        </svg>
+                        Sugerencias:
+                    </h3>
                     <div class="suggestions-grid">
                         <button class="suggestion-btn" onclick="fillInput('¿Qué es lo que más amas de mí?')">
                             ¿Qué es lo que más amas de mí?
@@ -120,14 +135,6 @@
             
             <div class="songs-grid">
                 <div class="song-card" data-song="perfect">
-                    <div class="song-cover">
-                        <img src="/placeholder.svg" alt="Perfect - Ed Sheeran" class="cover-image">
-                        <div class="play-overlay">
-                            <button class="play-btn-large" onclick="playSong('perfect')">
-                                <i data-lucide="play"></i>
-                            </button>
-                        </div>
-                    </div>
                     <div class="song-info">
                         <h3>Perfect</h3>
                         <p>Ed Sheeran</p>
@@ -135,26 +142,21 @@
                     </div>
                     <div class="song-actions">
                         <button onclick="playSong('perfect')" class="action-btn play-btn">
-                            <i data-lucide="play"></i>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5,3 19,12 5,21"></polygon>
+                            </svg>
                             <span>Reproducir</span>
                         </button>
                         <button onclick="showSongDedication(SONGS_DATABASE.perfect)" class="action-btn story-btn">
-                            <i data-lucide="heart"></i>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
                             <span>Historia</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Más canciones... -->
                 <div class="song-card" data-song="thinking_out_loud">
-                    <div class="song-cover">
-                        <img src="/placeholder.svg" alt="Thinking Out Loud - Ed Sheeran" class="cover-image">
-                        <div class="play-overlay">
-                            <button class="play-btn-large" onclick="playSong('thinking_out_loud')">
-                                <i data-lucide="play"></i>
-                            </button>
-                        </div>
-                    </div>
                     <div class="song-info">
                         <h3>Thinking Out Loud</h3>
                         <p>Ed Sheeran</p>
@@ -162,17 +164,85 @@
                     </div>
                     <div class="song-actions">
                         <button onclick="playSong('thinking_out_loud')" class="action-btn play-btn">
-                            <i data-lucide="play"></i>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5,3 19,12 5,21"></polygon>
+                            </svg>
                             <span>Reproducir</span>
                         </button>
                         <button onclick="showSongDedication(SONGS_DATABASE.thinking_out_loud)" class="action-btn story-btn">
-                            <i data-lucide="heart"></i>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
                             <span>Historia</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Continúa con las demás canciones... -->
+                <div class="song-card" data-song="all_of_me">
+                    <div class="song-info">
+                        <h3>All of Me</h3>
+                        <p>John Legend</p>
+                        <span class="duration">4:29</span>
+                    </div>
+                    <div class="song-actions">
+                        <button onclick="playSong('all_of_me')" class="action-btn play-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5,3 19,12 5,21"></polygon>
+                            </svg>
+                            <span>Reproducir</span>
+                        </button>
+                        <button onclick="showSongDedication(SONGS_DATABASE.all_of_me)" class="action-btn story-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                            <span>Historia</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="song-card" data-song="a_thousand_years">
+                    <div class="song-info">
+                        <h3>A Thousand Years</h3>
+                        <p>Christina Perri</p>
+                        <span class="duration">4:45</span>
+                    </div>
+                    <div class="song-actions">
+                        <button onclick="playSong('a_thousand_years')" class="action-btn play-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5,3 19,12 5,21"></polygon>
+                            </svg>
+                            <span>Reproducir</span>
+                        </button>
+                        <button onclick="showSongDedication(SONGS_DATABASE.a_thousand_years)" class="action-btn story-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                            <span>Historia</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="song-card" data-song="love_me_like_you_do">
+                    <div class="song-info">
+                        <h3>Love Me Like You Do</h3>
+                        <p>Ellie Goulding</p>
+                        <span class="duration">4:10</span>
+                    </div>
+                    <div class="song-actions">
+                        <button onclick="playSong('love_me_like_you_do')" class="action-btn play-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5,3 19,12 5,21"></polygon>
+                            </svg>
+                            <span>Reproducir</span>
+                        </button>
+                        <button onclick="showSongDedication(SONGS_DATABASE.love_me_like_you_do)" class="action-btn story-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                            <span>Historia</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -188,7 +258,10 @@
             </div>
             
             <button class="add-poem-btn" onclick="openPoemEditor()">
-                <i data-lucide="plus"></i>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
                 <span>Añadir Poema</span>
             </button>
         </div>
@@ -214,17 +287,32 @@
         <div class="settings-content">
             <div class="settings-header">
                 <h2>
-                    <i data-lucide="settings"></i>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                    </svg>
                     Configuración
                 </h2>
                 <button class="close-settings" onclick="closeSettings()">
-                    <i data-lucide="x"></i>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
                 </button>
             </div>
             
             <div class="settings-body">
                 <div class="setting-group">
-                    <h3><i data-lucide="palette"></i> Tema</h3>
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="13.5" cy="6.5" r=".5"></circle>
+                            <circle cx="17.5" cy="10.5" r=".5"></circle>
+                            <circle cx="8.5" cy="7.5" r=".5"></circle>
+                            <circle cx="6.5" cy="12.5" r=".5"></circle>
+                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+                        </svg>
+                        Tema
+                    </h3>
                     <div class="theme-options">
                         <button class="theme-btn active" data-theme="romantic">Romántico</button>
                         <button class="theme-btn" data-theme="dark">Oscuro</button>
@@ -234,37 +322,54 @@
                 </div>
 
                 <div class="setting-group">
-                    <h3><i data-lucide="accessibility"></i> Accesibilidad</h3>
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg>
+                        Accesibilidad
+                    </h3>
                     <div class="accessibility-options">
                         <label class="setting-toggle">
+                            <span>Reducir animaciones</span>
                             <input type="checkbox" id="reduce-motion">
                             <span class="toggle-slider"></span>
-                            Reducir animaciones
                         </label>
                         <label class="setting-toggle">
+                            <span>Alto contraste</span>
                             <input type="checkbox" id="high-contrast">
                             <span class="toggle-slider"></span>
-                            Alto contraste
                         </label>
                         <label class="setting-toggle">
+                            <span>Texto grande</span>
                             <input type="checkbox" id="large-text">
                             <span class="toggle-slider"></span>
-                            Texto grande
                         </label>
                     </div>
                 </div>
 
                 <div class="setting-group">
-                    <h3><i data-lucide="zap"></i> Rendimiento</h3>
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="13,2 3,14 12,14 11,22 21,10 12,10"></polygon>
+                        </svg>
+                        Rendimiento
+                    </h3>
                     <label class="setting-toggle">
+                        <span>Modo bajo recursos</span>
                         <input type="checkbox" id="low-resources">
                         <span class="toggle-slider"></span>
-                        Modo bajo recursos
                     </label>
                 </div>
 
                 <div class="setting-group">
-                    <h3><i data-lucide="volume-2"></i> Audio</h3>
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="11,5 6,9 2,9 2,15 6,15 11,19"></polygon>
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                        </svg>
+                        Audio
+                    </h3>
                     <div class="audio-settings">
                         <label>Calidad de sonido:</label>
                         <select id="audio-quality">
@@ -273,9 +378,9 @@
                             <option value="low">Baja</option>
                         </select>
                         <label class="setting-toggle">
+                            <span>Visualizador de audio</span>
                             <input type="checkbox" id="audio-visualizer-toggle" checked>
                             <span class="toggle-slider"></span>
-                            Visualizador de audio
                         </label>
                     </div>
                 </div>
