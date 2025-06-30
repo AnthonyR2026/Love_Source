@@ -5,18 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>💕 Para Glendys - Mi Amor Eterno</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <!-- Iconos de Lucide (mejores que emojis) -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Canvas para efectos visuales -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
+    <!-- Pantalla de carga mejorada -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-heart">
+                <div class="heart-beat"></div>
+            </div>
+            <h2 class="loading-title">Cargando nuestro amor...</h2>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+            <p class="loading-text">Preparando algo especial para ti ✨</p>
+        </div>
+    </div>
+
+    <!-- Canvas para efectos de audio -->
+    <canvas id="audio-visualizer" class="audio-visualizer"></canvas>
+    
     <div class="animated-background"></div>
     
-    <!-- Navegación -->
+    <!-- Navegación mejorada -->
     <nav class="nav-container">
-        <button class="nav-btn active" onclick="switchSection('inicio')">💖 INICIO</button>
-        <button class="nav-btn" onclick="switchSection('canciones')">🎵 CANCIONES</button>
-        <button class="nav-btn" onclick="switchSection('recuerdos')">📸 RECUERDOS</button>
-        <button class="nav-btn" onclick="switchSection('notas')">📝 NOTAS</button>
-        <button class="nav-btn" onclick="switchSection('confesiones')">💌 CONFESIONES</button>
+        <button class="nav-btn active" onclick="switchSection('inicio')">
+            <i data-lucide="heart"></i>
+            <span>INICIO</span>
+        </button>
+        <button class="nav-btn" onclick="switchSection('canciones')">
+            <i data-lucide="music"></i>
+            <span>CANCIONES</span>
+        </button>
+        <button class="nav-btn" onclick="switchSection('recuerdos')">
+            <i data-lucide="camera"></i>
+            <span>RECUERDOS</span>
+        </button>
+        <button class="nav-btn" onclick="switchSection('poemas')">
+            <i data-lucide="feather"></i>
+            <span>POEMAS</span>
+        </button>
+        <button class="nav-btn" onclick="switchSection('notas')">
+            <i data-lucide="sticky-note"></i>
+            <span>NOTAS</span>
+        </button>
+        <button class="nav-btn settings-btn" onclick="openSettings()">
+            <i data-lucide="settings"></i>
+        </button>
     </nav>
 
     <!-- Sección Inicio (Chat IA) -->
@@ -27,9 +66,17 @@
                 <p class="subtitle">Pregúntame lo que quieras saber sobre nosotros, nuestro amor, o sobre mí ❤️</p>
             </div>
 
+            <!-- Respuesta de IA flotante -->
+            <div id="ai-response-bubble" class="ai-response-bubble hidden">
+                <div class="response-content">
+                    <div class="response-text"></div>
+                    <button class="close-response" onclick="closeAIResponse()">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+            </div>
+
             <div class="chat-container">
-                <div id="chat-messages" class="chat-messages"></div>
-                
                 <div class="input-container">
                     <input 
                         type="text" 
@@ -37,89 +84,117 @@
                         placeholder="Escribe tu pregunta aquí, mi amor..." 
                         class="user-input"
                     >
-                    <button onclick="sendMessage()" class="submit-btn">
-                        <span>Preguntar con Amor 💕</span>
+                    <button onclick="sendMessage()" class="submit-btn" id="submit-btn">
+                        <i data-lucide="send"></i>
+                        <span>Preguntar</span>
                     </button>
                 </div>
                 
-                <button onclick="newQuestion()" class="new-question-btn">
-                    Nueva Pregunta ✨
-                </button>
+                <!-- Sugerencias interactivas -->
+                <div class="suggestions-container">
+                    <h3>💭 Sugerencias:</h3>
+                    <div class="suggestions-grid">
+                        <button class="suggestion-btn" onclick="fillInput('¿Qué es lo que más amas de mí?')">
+                            ¿Qué es lo que más amas de mí?
+                        </button>
+                        <button class="suggestion-btn" onclick="fillInput('Cuéntame sobre nuestro primer beso')">
+                            Cuéntame sobre nuestro primer beso
+                        </button>
+                        <button class="suggestion-btn" onclick="fillInput('¿Cuáles son nuestros planes futuros?')">
+                            ¿Cuáles son nuestros planes futuros?
+                        </button>
+                        <button class="suggestion-btn" onclick="fillInput('Dime algo romántico')">
+                            Dime algo romántico
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Sección Canciones -->
+    <!-- Sección Canciones Mejorada -->
     <section id="canciones" class="section">
         <div class="container">
             <h2 class="section-title">🎵 Canciones de Nuestro Amor</h2>
             <p class="section-subtitle">Cada canción tiene una historia especial para nosotros</p>
             
             <div class="songs-grid">
-                <div class="song-card">
+                <div class="song-card" data-song="perfect">
+                    <div class="song-cover">
+                        <img src="/placeholder.svg" alt="Perfect - Ed Sheeran" class="cover-image">
+                        <div class="play-overlay">
+                            <button class="play-btn-large" onclick="playSong('perfect')">
+                                <i data-lucide="play"></i>
+                            </button>
+                        </div>
+                    </div>
                     <div class="song-info">
                         <h3>Perfect</h3>
                         <p>Ed Sheeran</p>
                         <span class="duration">4:23</span>
                     </div>
                     <div class="song-actions">
-                        <button onclick="playSong('perfect')" class="play-btn">▶️ Reproducir</button>
-                        <button onclick="showSongDedication(SONGS_DATABASE.perfect)" class="story-btn">💕 Ver Historia</button>
+                        <button onclick="playSong('perfect')" class="action-btn play-btn">
+                            <i data-lucide="play"></i>
+                            <span>Reproducir</span>
+                        </button>
+                        <button onclick="showSongDedication(SONGS_DATABASE.perfect)" class="action-btn story-btn">
+                            <i data-lucide="heart"></i>
+                            <span>Historia</span>
+                        </button>
                     </div>
                 </div>
 
-                <div class="song-card">
+                <!-- Más canciones... -->
+                <div class="song-card" data-song="thinking_out_loud">
+                    <div class="song-cover">
+                        <img src="/placeholder.svg" alt="Thinking Out Loud - Ed Sheeran" class="cover-image">
+                        <div class="play-overlay">
+                            <button class="play-btn-large" onclick="playSong('thinking_out_loud')">
+                                <i data-lucide="play"></i>
+                            </button>
+                        </div>
+                    </div>
                     <div class="song-info">
                         <h3>Thinking Out Loud</h3>
                         <p>Ed Sheeran</p>
                         <span class="duration">4:41</span>
                     </div>
                     <div class="song-actions">
-                        <button onclick="playSong('thinking_out_loud')" class="play-btn">▶️ Reproducir</button>
-                        <button onclick="showSongDedication(SONGS_DATABASE.thinking_out_loud)" class="story-btn">💕 Ver Historia</button>
+                        <button onclick="playSong('thinking_out_loud')" class="action-btn play-btn">
+                            <i data-lucide="play"></i>
+                            <span>Reproducir</span>
+                        </button>
+                        <button onclick="showSongDedication(SONGS_DATABASE.thinking_out_loud)" class="action-btn story-btn">
+                            <i data-lucide="heart"></i>
+                            <span>Historia</span>
+                        </button>
                     </div>
                 </div>
 
-                <div class="song-card">
-                    <div class="song-info">
-                        <h3>All of Me</h3>
-                        <p>John Legend</p>
-                        <span class="duration">4:29</span>
-                    </div>
-                    <div class="song-actions">
-                        <button onclick="playSong('all_of_me')" class="play-btn">▶️ Reproducir</button>
-                        <button onclick="showSongDedication(SONGS_DATABASE.all_of_me)" class="story-btn">💕 Ver Historia</button>
-                    </div>
-                </div>
-
-                <div class="song-card">
-                    <div class="song-info">
-                        <h3>A Thousand Years</h3>
-                        <p>Christina Perri</p>
-                        <span class="duration">4:45</span>
-                    </div>
-                    <div class="song-actions">
-                        <button onclick="playSong('a_thousand_years')" class="play-btn">▶️ Reproducir</button>
-                        <button onclick="showSongDedication(SONGS_DATABASE.a_thousand_years)" class="story-btn">💕 Ver Historia</button>
-                    </div>
-                </div>
-
-                <div class="song-card">
-                    <div class="song-info">
-                        <h3>Love Me Like You Do</h3>
-                        <p>Ellie Goulding</p>
-                        <span class="duration">4:10</span>
-                    </div>
-                    <div class="song-actions">
-                        <button onclick="playSong('love_me_like_you_do')" class="play-btn">▶️ Reproducir</button>
-                        <button onclick="showSongDedication(SONGS_DATABASE.love_me_like_you_do)" class="story-btn">💕 Ver Historia</button>
-                    </div>
-                </div>
+                <!-- Continúa con las demás canciones... -->
             </div>
         </div>
     </section>
 
-    <!-- Otras secciones -->
+    <!-- Sección Poemas -->
+    <section id="poemas" class="section">
+        <div class="container">
+            <h2 class="section-title">✨ Poemas de Amor</h2>
+            <p class="section-subtitle">Versos escritos desde el corazón</p>
+            
+            <div class="poems-container">
+                <!-- Los poemas se cargarán dinámicamente -->
+            </div>
+            
+            <button class="add-poem-btn" onclick="openPoemEditor()">
+                <i data-lucide="plus"></i>
+                <span>Añadir Poema</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Otras secciones... -->
     <section id="recuerdos" class="section">
         <div class="container">
             <h2 class="section-title">📸 Nuestros Recuerdos</h2>
@@ -134,12 +209,79 @@
         </div>
     </section>
 
-    <section id="confesiones" class="section">
-        <div class="container">
-            <h2 class="section-title">💌 Confesiones del Corazón</h2>
-            <p class="section-subtitle">Próximamente: Mis confesiones más profundas</p>
+    <!-- Modal de Configuración -->
+    <div id="settings-modal" class="settings-modal hidden">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h2>
+                    <i data-lucide="settings"></i>
+                    Configuración
+                </h2>
+                <button class="close-settings" onclick="closeSettings()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <div class="settings-body">
+                <div class="setting-group">
+                    <h3><i data-lucide="palette"></i> Tema</h3>
+                    <div class="theme-options">
+                        <button class="theme-btn active" data-theme="romantic">Romántico</button>
+                        <button class="theme-btn" data-theme="dark">Oscuro</button>
+                        <button class="theme-btn" data-theme="light">Claro</button>
+                        <button class="theme-btn" data-theme="sunset">Atardecer</button>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <h3><i data-lucide="accessibility"></i> Accesibilidad</h3>
+                    <div class="accessibility-options">
+                        <label class="setting-toggle">
+                            <input type="checkbox" id="reduce-motion">
+                            <span class="toggle-slider"></span>
+                            Reducir animaciones
+                        </label>
+                        <label class="setting-toggle">
+                            <input type="checkbox" id="high-contrast">
+                            <span class="toggle-slider"></span>
+                            Alto contraste
+                        </label>
+                        <label class="setting-toggle">
+                            <input type="checkbox" id="large-text">
+                            <span class="toggle-slider"></span>
+                            Texto grande
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <h3><i data-lucide="zap"></i> Rendimiento</h3>
+                    <label class="setting-toggle">
+                        <input type="checkbox" id="low-resources">
+                        <span class="toggle-slider"></span>
+                        Modo bajo recursos
+                    </label>
+                </div>
+
+                <div class="setting-group">
+                    <h3><i data-lucide="volume-2"></i> Audio</h3>
+                    <div class="audio-settings">
+                        <label>Calidad de sonido:</label>
+                        <select id="audio-quality">
+                            <option value="high">Alta</option>
+                            <option value="medium" selected>Media</option>
+                            <option value="low">Baja</option>
+                        </select>
+                        <label class="setting-toggle">
+                            <input type="checkbox" id="audio-visualizer-toggle" checked>
+                            <span class="toggle-slider"></span>
+                            Visualizador de audio
+                        </label>
+                    </div>
+                </div>
+            </div>
         </div>
-    </section>
+    </div>
 
     <!-- Corazones flotantes -->
     <div class="floating-hearts"></div>
