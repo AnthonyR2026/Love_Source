@@ -2,10 +2,10 @@
 const API_CONFIG = {
   YOUTUBE_API_KEY: "AIzaSyAJM2Tpbf4rYTJcKfoUqSiS4oqKvUdrsbI",
   GROQ_API_KEY: "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",
-  USE_REAL_AI: true, // Activado con tu API key
+  USE_REAL_AI: true,
 }
 
-// Base de datos de canciones simplificada
+// Base de datos de canciones
 const SONGS_DATABASE = {
   perfect: {
     title: "Perfect",
@@ -51,38 +51,119 @@ const SONGS_DATABASE = {
   },
 }
 
-// Base de conocimiento personal
+// Base de conocimiento personal COMPLETA
 const KNOWLEDGE_BASE = {
   personal: {
     nombre_completo: "Anthony",
     edad: "22 años",
-    lugar_estudia: "Universidad",
-    personalidad: "romántico, detallista, gracioso, inteligente, apasionado",
-    gustos: "música, tecnología, películas románticas, cocinar para ti, programar",
-    sueños: "construir un futuro contigo, viajar por el mundo juntos, formar una familia hermosa",
-    cualidades: "leal, honesto, trabajador, soñador, protector",
+    lugar_estudia: "Universidad de Tecnología",
+    carrera: "Ingeniería en Sistemas",
+    ciudad: "Ciudad donde vivo",
+    personalidad: "romántico, detallista, gracioso, inteligente, apasionado, protector, leal",
+    gustos: "programar, música romántica, películas de amor, cocinar para ti, videojuegos, leer, tecnología",
+    hobbies: "tocar guitarra, escribir poemas, fotografía, caminar contigo",
+    sueños:
+      "graduarme, conseguir un buen trabajo, casarme contigo, viajar por el mundo juntos, formar una familia hermosa",
+    cualidades: "leal, honesto, trabajador, soñador, protector, cariñoso, detallista",
+    miedos: "perderte, no ser suficiente para ti, que algo nos separe",
+    fortalezas: "determinación, amor incondicional, capacidad de hacerte reír",
   },
   relacion: {
-    aniversario: "hace varios meses maravillosos",
-    como_conocieron: "nos conocimos de una manera muy especial que cambió nuestras vidas",
-    primer_beso: "fue mágico, bajo las estrellas, un momento que nunca olvidaré",
-    momentos_especiales: "cada día contigo es especial, cada sonrisa tuya es un regalo",
-    planes_futuros: "quiero pasar toda mi vida a tu lado, crear recuerdos increíbles juntos",
-    primera_cita: "fue perfecta, nerviosa pero llena de magia y conexión",
+    aniversario: "15 de febrero de 2024", // CAMBIAR POR FECHA REAL
+    tiempo_juntos: "10 meses maravillosos",
+    como_conocieron:
+      "Nos conocimos en la universidad, en la cafetería. Tú estabas estudiando sola y yo me armé de valor para acercarme. Fue el mejor día de mi vida.",
+    primer_encuentro: "Fue mágico, nervioso pero lleno de química. Hablamos por horas sobre todo y nada.",
+    primer_beso:
+      "Fue bajo las estrellas, después de nuestra tercera cita, en el parque cerca de tu casa. Temblé de nervios pero fue perfecto.",
+    primera_cita:
+      "Te llevé al cine a ver una película romántica, después fuimos por helado y caminamos hablando hasta muy tarde.",
+    primera_pelea: "Fue por una tontería, pero aprendimos que comunicarnos es lo más importante.",
+    momentos_especiales:
+      "Nuestro primer 'te amo', cuando me presentaste a tu familia, nuestras noches viendo películas, cada abrazo tuyo",
+    planes_futuros:
+      "Graduarnos juntos, vivir juntos, casarnos en una ceremonia hermosa, luna de miel en París, tener 2 hijos",
+    tradiciones: "Vemos películas los viernes, cocinamos juntos los domingos, nos escribimos cartas de amor",
+    lugares_especiales:
+      "El parque donde fue nuestro primer beso, la cafetería donde nos conocimos, tu lugar favorito para caminar",
   },
   sobre_glendys: {
-    nombre_completo: "Glendys",
-    cualidades: "hermosa, inteligente, dulce, perfecta, fuerte, inspiradora",
-    lo_que_amo: "tu sonrisa que ilumina mi día, tu forma de ser auténtica, tu corazón puro",
-    apodos_cariñosos: "mi amor, mi vida, mi princesa, mi todo, mi estrella",
-    lo_que_admiro: "tu fortaleza, tu inteligencia, tu forma de ver la vida",
+    nombre_completo: "Glendys María", // CAMBIAR POR NOMBRE REAL
+    edad: "21 años", // CAMBIAR POR EDAD REAL
+    estudios: "Estudiante universitaria", // CAMBIAR POR ESTUDIOS REALES
+    personalidad: "dulce, inteligente, fuerte, independiente, graciosa, cariñosa",
+    cualidades_fisicas: "hermosa sonrisa, ojos que brillan, cabello precioso, la mujer más bella del mundo",
+    cualidades_emocionales: "corazón puro, alma noble, espíritu libre, fortaleza increíble",
+    lo_que_amo: "tu risa que ilumina mi día, tu forma de verme con amor, tu inteligencia, tu forma de ser auténtica",
+    apodos_cariñosos: "mi amor, mi vida, mi princesa, mi reina, mi estrella, mi todo, mi cielo",
+    lo_que_admiro: "tu determinación, tu inteligencia, tu forma de enfrentar los problemas, tu corazón generoso",
+    gustos_de_ella: "música, películas románticas, leer, bailar, pasar tiempo conmigo",
+    comida_favorita: "pizza, helado de chocolate, pasta", // CAMBIAR POR GUSTOS REALES
+    color_favorito: "rosa y morado", // CAMBIAR POR COLOR REAL
+    sueños_de_ella: "graduarse, ser exitosa, viajar, formar una familia conmigo",
+  },
+  recuerdos_especiales: {
+    primer_te_amo: "Lo dijimos al mismo tiempo después de 3 meses juntos, fue mágico",
+    mejor_cita: "Cuando fuimos al mirador a ver el atardecer y hablamos de nuestros sueños",
+    momento_mas_romantico: "Cuando te sorprendí con pétalos de rosa en tu cuarto",
+    momento_mas_gracioso: "Cuando intenté cocinar para ti y casi quemo la cocina",
+    regalo_especial: "El collar con nuestras iniciales que te di en nuestro aniversario",
+    viaje_juntos: "Nuestro fin de semana en la playa, fue perfecto",
+    navidad_juntos: "Nuestra primera navidad juntos, intercambiamos regalos hechos a mano",
+    cumpleanos: "Tu cumpleaños cuando te organicé una sorpresa con todos tus amigos",
   },
 }
 
-// Sistema de IA mejorado
+// Sistema de memoria para el chat
+class ChatMemory {
+  constructor() {
+    this.conversations = this.loadConversations()
+    this.currentSession = []
+  }
+
+  loadConversations() {
+    const saved = localStorage.getItem("chatMemory")
+    return saved ? JSON.parse(saved) : []
+  }
+
+  saveConversations() {
+    localStorage.setItem("chatMemory", JSON.stringify(this.conversations))
+  }
+
+  addMessage(userMessage, aiResponse) {
+    const message = {
+      timestamp: new Date().toISOString(),
+      user: userMessage,
+      ai: aiResponse,
+    }
+
+    this.currentSession.push(message)
+    this.conversations.push(message)
+
+    // Mantener solo los últimos 50 mensajes para no sobrecargar
+    if (this.conversations.length > 50) {
+      this.conversations = this.conversations.slice(-50)
+    }
+
+    this.saveConversations()
+  }
+
+  getRecentContext(limit = 5) {
+    return this.conversations.slice(-limit)
+  }
+
+  clearMemory() {
+    this.conversations = []
+    this.currentSession = []
+    localStorage.removeItem("chatMemory")
+  }
+}
+
+// Sistema de IA mejorado con memoria
 class AISystem {
   constructor() {
     this.isProcessing = false
+    this.memory = new ChatMemory()
   }
 
   async generateResponse(userMessage) {
@@ -95,6 +176,9 @@ class AISystem {
 
   async callGroqAPI(userMessage) {
     try {
+      const recentContext = this.memory.getRecentContext(3)
+      const contextString = recentContext.map((msg) => `Usuario: ${msg.user}\nAnthony: ${msg.ai}`).join("\n\n")
+
       const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: {
@@ -107,74 +191,97 @@ class AISystem {
             {
               role: "system",
               content: `Eres Anthony, un joven de 22 años profundamente enamorado de Glendys. 
-              Información personal: ${JSON.stringify(KNOWLEDGE_BASE)}
-              
-              Responde como Anthony, siendo romántico, detallista y personal. 
-              Usa esta información para crear respuestas únicas y emotivas.
-              Siempre habla en primera persona como si fueras Anthony.
-              Sé específico y usa los detalles proporcionados.
-              Mantén las respuestas entre 50-150 palabras.`,
+
+INFORMACIÓN PERSONAL COMPLETA:
+${JSON.stringify(KNOWLEDGE_BASE, null, 2)}
+
+INSTRUCCIONES IMPORTANTES:
+- SOLO usa la información proporcionada arriba
+- NO inventes detalles que no están en la base de conocimiento
+- Si no tienes información específica, di "No tengo esa información específica, pero..."
+- Siempre responde como Anthony en primera persona
+- Sé romántico, detallista y personal
+- Usa los nombres, fechas y detalles exactos proporcionados
+- Mantén las respuestas entre 50-150 palabras
+- Recuerda conversaciones anteriores cuando sea relevante
+
+CONTEXTO DE CONVERSACIONES RECIENTES:
+${contextString}
+
+Responde como Anthony con la información exacta proporcionada.`,
             },
             {
               role: "user",
               content: userMessage,
             },
           ],
-          temperature: 0.7,
+          temperature: 0.3, // Reducido para más consistencia
           max_tokens: 200,
         }),
       })
 
       const data = await response.json()
-      return data.choices[0].message.content
+      const aiResponse = data.choices[0].message.content
+
+      // Guardar en memoria
+      this.memory.addMessage(userMessage, aiResponse)
+
+      return aiResponse
     } catch (error) {
       console.error("Error con Groq API:", error)
-      return this.generateLocalResponse(userMessage)
+      const fallbackResponse = this.generateLocalResponse(userMessage)
+      this.memory.addMessage(userMessage, fallbackResponse)
+      return fallbackResponse
     }
   }
 
   generateLocalResponse(userMessage) {
     const message = userMessage.toLowerCase()
 
-    if (message.includes("amor") || message.includes("amo") || message.includes("quiero")) {
-      const responses = [
-        `Te amo más de lo que las palabras pueden expresar, Glendys. Eres mi ${KNOWLEDGE_BASE.sobre_glendys.apodos_cariñosos.split(", ")[Math.floor(Math.random() * 4)]}, mi razón de ser.`,
-        `Mi amor por ti crece cada día. Eres ${KNOWLEDGE_BASE.sobre_glendys.cualidades.split(", ")[Math.floor(Math.random() * 6)]} y perfecta en todos los sentidos.`,
-        `${KNOWLEDGE_BASE.sobre_glendys.lo_que_amo}. Te amo infinitamente, Glendys.`,
-      ]
-      return responses[Math.floor(Math.random() * responses.length)]
+    // Respuestas específicas basadas en la base de conocimiento
+    if (message.includes("conocimos") || message.includes("conocer")) {
+      return `${KNOWLEDGE_BASE.relacion.como_conocieron} Desde ese momento supe que eras especial, Glendys. Fue en ${KNOWLEDGE_BASE.relacion.primer_encuentro}.`
     }
 
-    if (message.includes("conocimos") || message.includes("conocer")) {
-      return `${KNOWLEDGE_BASE.relacion.como_conocieron}. Desde el primer momento supe que eras especial, y cada día confirmo que eres la persona perfecta para mí.`
+    if (message.includes("primer beso") || message.includes("beso")) {
+      return `${KNOWLEDGE_BASE.relacion.primer_beso} Ese momento cambió mi vida para siempre, mi amor. Fue después de ${KNOWLEDGE_BASE.relacion.primera_cita}.`
+    }
+
+    if (message.includes("primera cita") || message.includes("cita")) {
+      return `${KNOWLEDGE_BASE.relacion.primera_cita} Estaba tan nervioso pero fue perfecto. ${KNOWLEDGE_BASE.relacion.primer_encuentro}.`
+    }
+
+    if (message.includes("aniversario") || message.includes("tiempo juntos")) {
+      return `Llevamos ${KNOWLEDGE_BASE.relacion.tiempo_juntos} desde ${KNOWLEDGE_BASE.relacion.aniversario}. Cada día contigo es un regalo, ${KNOWLEDGE_BASE.sobre_glendys.apodos_cariñosos.split(", ")[0]}.`
     }
 
     if (message.includes("futuro") || message.includes("planes")) {
-      return `${KNOWLEDGE_BASE.relacion.planes_futuros}. ${KNOWLEDGE_BASE.personal.sueños}. Contigo todo es posible, mi amor.`
+      return `${KNOWLEDGE_BASE.relacion.planes_futuros}. También ${KNOWLEDGE_BASE.personal.sueños}. Todo mi futuro incluye a ti, Glendys.`
     }
 
-    if (message.includes("hermosa") || message.includes("bella") || message.includes("bonita")) {
-      return `Eres la mujer más hermosa del mundo, por dentro y por fuera. ${KNOWLEDGE_BASE.sobre_glendys.lo_que_amo}. Tu belleza ilumina mi vida.`
+    if (message.includes("amo") || message.includes("amor")) {
+      return `${KNOWLEDGE_BASE.sobre_glendys.lo_que_amo}. Te amo más que a nada en este mundo, ${KNOWLEDGE_BASE.sobre_glendys.apodos_cariñosos.split(", ")[Math.floor(Math.random() * 6)]}.`
     }
 
-    if (message.includes("música") || message.includes("canción")) {
-      return `La música es el lenguaje de nuestro amor, Glendys. Cada canción que escuchamos juntos se vuelve especial y me recuerda a ti. Como dice nuestra canción favorita, eres perfecta para mí.`
+    if (message.includes("hermosa") || message.includes("bella")) {
+      return `Eres la mujer más hermosa del mundo. ${KNOWLEDGE_BASE.sobre_glendys.cualidades_fisicas}. ${KNOWLEDGE_BASE.sobre_glendys.lo_que_amo}.`
     }
 
+    // Respuestas románticas generales usando la base de conocimiento
     const romanticResponses = [
-      `Eres mi sueño hecho realidad, Glendys. Mi corazón romántico late solo por ti.`,
-      `${KNOWLEDGE_BASE.sobre_glendys.lo_que_admiro}. No hay palabras suficientes para describir lo mucho que significas para mí.`,
-      `Contigo he encontrado mi hogar, mi paz, mi felicidad completa. Eres mi ${KNOWLEDGE_BASE.sobre_glendys.apodos_cariñosos.split(", ")[0]}.`,
-      `Cada día me enamoro más de ti. ${KNOWLEDGE_BASE.sobre_glendys.cualidades.split(", ")[0]} y perfecta en todos los sentidos.`,
-      `Tu amor es mi fuerza, tu sonrisa mi motivación. ${KNOWLEDGE_BASE.relacion.momentos_especiales}.`,
-      `Eres mi estrella más brillante, mi guía, mi inspiración. Mis sueños incluyen a ti.`,
+      `Eres mi ${KNOWLEDGE_BASE.sobre_glendys.apodos_cariñosos.split(", ")[0]}, Glendys. ${KNOWLEDGE_BASE.sobre_glendys.cualidades_emocionales.split(", ")[0]} y perfecta en todos los sentidos.`,
+      `${KNOWLEDGE_BASE.relacion.momentos_especiales}. Cada momento contigo es especial, mi amor.`,
+      `Mi ${KNOWLEDGE_BASE.personal.personalidad.split(", ")[0]} corazón late solo por ti. ${KNOWLEDGE_BASE.sobre_glendys.lo_que_admiro}.`,
+      `${KNOWLEDGE_BASE.recuerdos_especiales.primer_te_amo}. Y cada día te amo más, ${KNOWLEDGE_BASE.sobre_glendys.apodos_cariñosos.split(", ")[2]}.`,
     ]
 
-    return romanticResponses[Math.floor(Math.random() * romanticResponses.length)]
+    const response = romanticResponses[Math.floor(Math.random() * romanticResponses.length)]
+    this.memory.addMessage(userMessage, response)
+    return response
   }
 }
 
-// Sistema de reproducción simplificado y funcional
+// Sistema de reproducción
 class MusicPlayer {
   constructor() {
     this.currentSong = null
@@ -452,6 +559,7 @@ class MusicPlayer {
       z-index: 3000;
       animation: slideInRight 0.3s ease;
       font-weight: 500;
+      backdrop-filter: blur(10px);
       ${styles[type]}
     `
 
@@ -507,9 +615,74 @@ class MusicPlayer {
   }
 }
 
+// Sistema de configuración mejorado
+class SettingsManager {
+  constructor() {
+    this.settings = {
+      theme: "romantic",
+      reduceMotion: false,
+      highContrast: false,
+      largeText: false,
+      lowResources: false,
+      audioQuality: "medium",
+      visualizerEnabled: true,
+    }
+    this.loadSettings()
+    this.applySettings()
+  }
+
+  loadSettings() {
+    const saved = localStorage.getItem("lovePageSettings")
+    if (saved) {
+      this.settings = { ...this.settings, ...JSON.parse(saved) }
+    }
+  }
+
+  saveSettings() {
+    localStorage.setItem("lovePageSettings", JSON.stringify(this.settings))
+  }
+
+  applySettings() {
+    // Aplicar tema
+    document.documentElement.setAttribute("data-theme", this.settings.theme)
+
+    // Aplicar configuraciones de accesibilidad
+    if (this.settings.reduceMotion) {
+      document.documentElement.style.setProperty("--transition", "none")
+    } else {
+      document.documentElement.style.setProperty("--transition", "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)")
+    }
+
+    if (this.settings.highContrast) {
+      document.body.classList.add("high-contrast")
+    } else {
+      document.body.classList.remove("high-contrast")
+    }
+
+    if (this.settings.largeText) {
+      document.body.classList.add("large-text")
+    } else {
+      document.body.classList.remove("large-text")
+    }
+
+    if (this.settings.lowResources) {
+      document.body.classList.add("low-resources")
+    } else {
+      document.body.classList.remove("low-resources")
+    }
+  }
+
+  updateSetting(key, value) {
+    this.settings[key] = value
+    this.saveSettings()
+    this.applySettings()
+  }
+}
+
 // Inicializar sistemas
 const aiSystem = new AISystem()
 const musicPlayer = new MusicPlayer()
+const settingsManager = new SettingsManager()
 
 // Funciones principales
 async function sendMessage() {
@@ -629,6 +802,12 @@ function newQuestion() {
   document.getElementById("user-input").focus()
 }
 
+function clearChatMemory() {
+  aiSystem.memory.clearMemory()
+  newQuestion()
+  showNotification("Memoria del chat borrada", "success")
+}
+
 // Funciones de navegación
 function switchSection(sectionName) {
   document.querySelectorAll(".section").forEach((section) => {
@@ -646,10 +825,68 @@ function switchSection(sectionName) {
 
 function openSettings() {
   document.getElementById("settings-modal").classList.remove("hidden")
+  // Actualizar UI con configuraciones actuales
+  updateSettingsUI()
 }
 
 function closeSettings() {
   document.getElementById("settings-modal").classList.add("hidden")
+}
+
+function updateSettingsUI() {
+  // Actualizar botones de tema
+  document.querySelectorAll(".theme-btn").forEach((btn) => {
+    btn.classList.remove("active")
+    if (btn.dataset.theme === settingsManager.settings.theme) {
+      btn.classList.add("active")
+    }
+  })
+
+  // Actualizar toggles
+  Object.keys(settingsManager.settings).forEach((key) => {
+    const checkbox = document.getElementById(key.replace("_", "-"))
+    if (checkbox && typeof settingsManager.settings[key] === "boolean") {
+      checkbox.checked = settingsManager.settings[key]
+    }
+  })
+
+  // Actualizar select de calidad de audio
+  const audioQuality = document.getElementById("audio-quality")
+  if (audioQuality) {
+    audioQuality.value = settingsManager.settings.audioQuality
+  }
+}
+
+function showNotification(message, type = "info") {
+  const notification = document.createElement("div")
+  notification.className = `notification ${type}`
+  notification.textContent = message
+
+  const styles = {
+    error: "background: #ef4444; color: white;",
+    success: "background: #10b981; color: white;",
+    info: "background: #3b82f6; color: white;",
+  }
+
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    z-index: 3000;
+    animation: slideInRight 0.3s ease;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+    ${styles[type]}
+  `
+
+  document.body.appendChild(notification)
+
+  setTimeout(() => {
+    notification.remove()
+  }, 4000)
 }
 
 // Corazones flotantes
@@ -686,6 +923,36 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
+  // Configurar event listeners de configuración
+  setupSettingsListeners()
+
   // Corazones flotantes
   setInterval(createFloatingHeart, 2000)
 })
+
+function setupSettingsListeners() {
+  // Theme buttons
+  document.querySelectorAll(".theme-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".theme-btn").forEach((b) => b.classList.remove("active"))
+      btn.classList.add("active")
+      settingsManager.updateSetting("theme", btn.dataset.theme)
+    })
+  })
+
+  // Toggle switches
+  document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+    checkbox.addEventListener("change", () => {
+      const setting = checkbox.id.replace("-", "_")
+      settingsManager.updateSetting(setting, checkbox.checked)
+    })
+  })
+
+  // Audio quality
+  const audioQualitySelect = document.getElementById("audio-quality")
+  if (audioQualitySelect) {
+    audioQualitySelect.addEventListener("change", (e) => {
+      settingsManager.updateSetting("audioQuality", e.target.value)
+    })
+  }
+}
