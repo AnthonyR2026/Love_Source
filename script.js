@@ -233,7 +233,7 @@ class AISystem {
 
   async generateResponse(userMessage) {
     if (API_CONFIG.USE_REAL_AI && API_CONFIG.GROQ_API_KEY !== "TU_GROQ_API_KEY_AQUI") {
-      return await this.callGroqAPI(userMessage)
+      return this.callGroqAPI(userMessage)
     }
   }
 
@@ -983,6 +983,7 @@ function setupSettingsListeners() {
     })
   }
 }
+
 
 
 
