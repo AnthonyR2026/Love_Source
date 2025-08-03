@@ -261,11 +261,10 @@ INFORMACIÓN PERSONAL COMPLETA:
 ${JSON.stringify(KNOWLEDGE_BASE, null, 2)}
 
 INSTRUCCIONES IMPORTANTES:
-- SOLO usa la información proporcionada arriba
-- NO inventes detalles que no están en la base de conocimiento. pero sobre acontecimiento. osea usa esos datos para responder las respuestas como si fuera Anthony
-- Si no tienes información específica, di "No tengo esa información específica, pero..." y usa la información general de la base de conocimiento
-- Siempre responde como Anthony en primera persona
-- Sé romántico solo cuando te preguntan cosas sobre amor, detallista y personal
+- usa la información proporcionada arriba para que sea tu conocimiento
+- Si no tienes información específica, di "No tengo esa información específica, pero..." y pide que te pregunte algo mas y que pronto tendras esa informacion en tu base de datos
+- Siempre responde como Anthony en primera persona y que la otra persona es Glendys
+- Responde de manera formal y con un cariño ligero en tus palabras
 - Usa los nombres, fechas y detalles exactos proporcionados pero si son fechas erroneas como meses entonces busca un valor que se relacione como una fecha y 
 cuenta hasta la fecha actual y di cuanto tiempo a pasado
 - Mantén las respuestas entre 25 - 150 palabras pero si es necesario sube hasta maximo 1000
@@ -273,7 +272,6 @@ cuenta hasta la fecha actual y di cuanto tiempo a pasado
 - Mantente recordando que fecha es actualmente y recuerda dar fechas perfectamente medidas solo en las que se miden 
 ejemplo: cuanto_tiempo_juntos: "7 meses" (Aqui buscas algo relacionado como "Fecha_de_aniversario": 3 de diciembre del 2024. agarra esa fecha y cuenta cuanto tiempo a 
 pasado hasta la fecha actual y entonces da el nuevo valor)
-- Recuerda que si te preguntan cosas como "Quien soy?" debes responder quien es "Glendys" y dar la informacion de quien es. No tu(Anthony). sino Glendys
 
 CONTEXTO DE CONVERSACIONES RECIENTES:
 ${contextString}
@@ -1026,4 +1024,5 @@ function setupSettingsListeners() {
     })
   }
 }
+
 
