@@ -235,10 +235,9 @@ class AISystem {
     if (API_CONFIG.USE_REAL_AI && API_CONFIG.GROQ_API_KEY !== "TU_GROQ_API_KEY_AQUI") {
       return await this.callGroqAPI(userMessage)
     }
-    }
   }
 
-  async callGroqAPI(userMessage) {
+  callGroqAPI(userMessage) {
     try {
       const recentContext = this.memory.getRecentContext(3)
       const contextString = recentContext.map((msg) => `Usuario: ${msg.user}\nAnthony: ${msg.ai}`).join("\n\n")
@@ -304,45 +303,6 @@ Responde como Anthony con la información exacta proporcionada.`,
 
   generateLocalResponse(userMessage) {
     const message = userMessage.toLowerCase()
-
-    // Respuestas específicas basadas en la base de conocimiento
-    if (message.includes("conocimos") || message.includes("conocer")) {
-      return `${KNOWLEDGE_BASE.relacion.como_conocieron} Desde ese momento supe que eras especial, Glendys. Fue en ${KNOWLEDGE_BASE.relacion.primer_encuentro}.`
-    }
-
-    if (message.includes("primer beso") || message.includes("beso")) {
-      return `${KNOWLEDGE_BASE.relacion.primer_beso} Ese momento cambió mi vida para siempre, mi amor. Fue después de ${KNOWLEDGE_BASE.relacion.primera_cita}.`
-    }
-
-    if (message.includes("primera cita") || message.includes("cita")) {
-      return `${KNOWLEDGE_BASE.relacion.primera_cita} Estaba tan nervioso pero fue perfecto. ${KNOWLEDGE_BASE.relacion.primer_encuentro}.`
-    }
-
-    if (message.includes("aniversario") || message.includes("tiempo juntos")) {
-      return `Llevamos ${KNOWLEDGE_BASE.relacion.tiempo_juntos} desde ${KNOWLEDGE_BASE.relacion.aniversario}. Cada día contigo es un regalo, ${KNOWLEDGE_BASE.sobre_glendys.apodos_cariñosos.split(", ")[0]}.`
-    }
-
-    if (message.includes("futuro") || message.includes("planes")) {
-      return `${KNOWLEDGE_BASE.relacion.planes_futuros}. También ${KNOWLEDGE_BASE.personal.sueños}. Todo mi futuro incluye a ti, Glendys.`
-    }
-
-    if (message.includes("amo") || message.includes("amor")) {
-      return `${KNOWLEDGE_BASE.sobre_glendys.lo_que_amo}. Te amo más que a nada en este mundo, ${KNOWLEDGE_BASE.sobre_glendys.apodos_cariñosos.split(", ")[Math.floor(Math.random() * 6)]}.`
-    }
-
-    if (message.includes("hermosa") || message.includes("bella")) {
-      return `Eres la mujer más hermosa del mundo. ${KNOWLEDGE_BASE.sobre_glendys.cualidades_fisicas}. ${KNOWLEDGE_BASE.sobre_glendys.lo_que_amo}.`
-    }
-
-    // Respuestas románticas generales usando la base de conocimiento
-    const romanticResponses = [
-      `Eres mi ${KNOWLEDGE_BASE.sobre_glendys.apodos_cariñosos.split(", ")[0]}, Glendys. ${KNOWLEDGE_BASE.sobre_glendys.cualidades_emocionales.split(", ")[0]} y perfecta en todos los sentidos.`,
-      `${KNOWLEDGE_BASE.relacion.momentos_especiales}. Cada momento contigo es especial, mi amor.`,
-      `Mi ${KNOWLEDGE_BASE.personal.personalidad.split(", ")[0]} corazón late solo por ti. ${KNOWLEDGE_BASE.sobre_glendys.lo_que_admiro}.`,
-      `${KNOWLEDGE_BASE.recuerdos_especiales.primer_te_amo}. Y cada día te amo más, ${KNOWLEDGE_BASE.sobre_glendys.apodos_cariñosos.split(", ")[2]}.`,
-    ]
-
-    const response = romanticResponses[Math.floor(Math.random() * romanticResponses.length)]
     this.memory.addMessage(userMessage, response)
     return response
   }
@@ -1023,6 +983,7 @@ function setupSettingsListeners() {
     })
   }
 }
+
 
 
 
