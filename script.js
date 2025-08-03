@@ -1,7 +1,7 @@
 // Configuración de APIs
 const API_CONFIG = {
   YOUTUBE_API_KEY: "AIzaSyAJM2Tpbf4rYTJcKfoUqSiS4oqKvUdrsbI",
-  GROQ_API_KEY: "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",
+  GROQ_API_KEY: "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",
   USE_REAL_AI: true,
 }
 
@@ -1023,6 +1023,7 @@ function setupSettingsListeners() {
     })
   }
 }
+
 
 
 
