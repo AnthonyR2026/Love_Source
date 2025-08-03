@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💕 Esto es para ti mi Glendys 💕</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Pantalla de carga mejorada -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-heart">
+                <div class="heart-beat"></div>
+            </div>
+            <h2 class="loading-title">Cargando la pagina...</h2>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+            <p class="loading-text">✨ preparando todo ✨</p>
+        </div>
+    </div>
+    
+    <!-- Navegación mejorada -->
+    <nav class="nav-container">
+        <button class="nav-btn active" onclick="switchSection('inicio')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <span>INICIO</span>
+        </button>
+        <button class="nav-btn" onclick="switchSection('canciones')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18V5l12-2v13"></path>
+                <circle cx="6" cy="18" r="3"></circle>
+                <circle cx="18" cy="16" r="3"></circle>
+            </svg>
+            <span>CANCIONES</span>
+        </button>
+        <button class="nav-btn" onclick="switchSection('recuerdos')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+            <span>RECUERDOS</span>
+        </button>
+        <button class="nav-btn" onclick="switchSection('poemas')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>POEMAS</span>
+        </button>
+        <button class="nav-btn" onclick="switchSection('notas')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="16,3 16,8 21,8"></polyline>
+            </svg>
+            <span>NOTAS</span>
+        </button>
+        <button class="nav-btn settings-btn" onclick="openSettings()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+            </svg>
+        </button>
+    </nav>
+
+    <!-- Sección Inicio (Chat IA) -->
+    <section id="inicio" class="section active">
+        <div class="container">
+            <div class="header">
+                <h1 class="title">💕 Esto es para ti mi Glendys 💕</h1>
+                <p class="subtitle">❤️ Pregúntame lo que quieras saber sobre nosotros, nuestro amor, o sobre mí ❤️</p>
+            </div>
+
+            <div class="chat-container">
+                <div id="chat-messages" class="chat-messages"></div>
+                
+                <div class="input-container">
+                    <input 
+                        type="text" 
+                        id="user-input" 
+                        placeholder="Escribe tu pregunta aquí, mi amor..." 
+                        class="user-input"
+                    >
+                    <button onclick="sendMessage()" class="submit-btn" id="submit-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22,2 15,22 11,13 2,9"></polygon>
+                        </svg>
+                        <span>Preguntar</span>
+                    </button>
+                </div>
+                
+                <button onclick="newQuestion()" class="new-question-btn">
+                    Nueva Pregunta ✨
+                </button>
+
+                <!-- Sugerencias interactivas -->
+                <div class="suggestions-container">
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <circle cx="12" cy="17" r="1"></circle>
+                        </svg>
+                        Sugerencias:
+                    </h3>
+                    <div class="suggestions-grid">
+                        <button class="suggestion-btn" onclick="fillInput('¿Cómo nos conocimos?')">
+                            ¿Cómo nos conocimos?
+                        </button>
+                        <button class="suggestion-btn" onclick="fillInput('Cuéntame sobre nuestro primer beso')">
+                            Cuéntame sobre nuestro primer beso
+                        </button>
+                        <button class="suggestion-btn" onclick="fillInput('¿Cuáles son nuestros planes futuros?')">
+                            ¿Cuáles son nuestros planes futuros?
+                        </button>
+                        <button class="suggestion-btn" onclick="fillInput('¿Qué es lo que más amas de mí?')">
+                            ¿Qué es lo que más amas de mí?
+                        </button>
+                        <button class="suggestion-btn" onclick="fillInput('Háblame de nuestro aniversario')">
+                            Háblame de nuestro aniversario
+                        </button>
+                        <button class="suggestion-btn" onclick="fillInput('¿Cual es mi nombre completo?')">
+                            ¿Cuál mi nombre completo?
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Botón para limpiar memoria -->
+                <div style="margin-top: 20px; text-align: center;">
+                    <button onclick="clearChatMemory()" style="padding: 8px 16px; background: var(--glass-bg); color: var(--text-secondary); border: 1px solid var(--glass-border); border-radius: 8px; cursor: pointer; font-size: 12px;">
+                        Borrar memoria del chat
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Canciones Mejorada -->
+    <section id="canciones" class="section">
+        <div class="container">
+            <h2 class="section-title">🎵 Canciones para ti 🎵</h2>
+            <p class="section-subtitle">Cada canción tiene una historia especial. porque te la dedique a ti</p>
+            
+            <div class="songs-grid">
+<div class="song-card" data-song="heather">
+  <div class="song-info">
+    <h3>Heather</h3>
+    <p>Conan Gray</p>
+    <span class="duration">3:25</span>
+  </div>
+  <div class="song-actions">
+    <button onclick="playSong('heather')" class="action-btn play-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5,3 19,12 5,21"></polygon>
+      </svg>
+      <span>Reproducir</span>
+    </button>
+    <button onclick="showSongDedication(SONGS_DATABASE.heather)" class="action-btn story-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span>Historia</span>
+    </button>
+  </div>
+</div>
+
+<div class="song-card" data-song="line_without_a_hook">
+  <div class="song-info">
+    <h3>Line Without a Hook</h3>
+    <p>Ricky Montgomery</p>
+    <span class="duration">4:09</span>
+  </div>
+  <div class="song-actions">
+    <button onclick="playSong('line_without_a_hook')" class="action-btn play-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5,3 19,12 5,21"></polygon>
+      </svg>
+      <span>Reproducir</span>
+    </button>
+    <button onclick="showSongDedication(SONGS_DATABASE.line_without_a_hook)" class="action-btn story-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span>Historia</span>
+    </button>
+  </div>
+</div>
+
+<div class="song-card" data-song="golden_hour">
+  <div class="song-info">
+    <h3>golden hour</h3>
+    <p>JVKE</p>
+    <span class="duration">3:51</span>
+  </div>
+  <div class="song-actions">
+    <button onclick="playSong('golden_hour')" class="action-btn play-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5,3 19,12 5,21"></polygon>
+      </svg>
+      <span>Reproducir</span>
+    </button>
+    <button onclick="showSongDedication(SONGS_DATABASE.golden_hour)" class="action-btn story-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span>Historia</span>
+    </button>
+  </div>
+</div>
+
+<div class="song-card" data-song="this_is_what_falling_in_love_feels_like">
+  <div class="song-info">
+    <h3>this is what falling in love feels like</h3>
+    <p>JVKE</p>
+    <span class="duration">2:34</span>
+  </div>
+  <div class="song-actions">
+    <button onclick="playSong('this_is_what_falling_in_love_feels_like')" class="action-btn play-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5,3 19,12 5,21"></polygon>
+      </svg>
+      <span>Reproducir</span>
+    </button>
+    <button onclick="showSongDedication(SONGS_DATABASE.this_is_what_falling_in_love_feels_like)" class="action-btn story-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span>Historia</span>
+    </button>
+  </div>
+</div>
+
+<div class="song-card" data-song="catorce">
+  <div class="song-info">
+    <h3>Catorce</h3>
+    <p>Sebastian Romero</p>
+    <span class="duration">3:44</span>
+  </div>
+  <div class="song-actions">
+    <button onclick="playSong('catorce')" class="action-btn play-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5,3 19,12 5,21"></polygon>
+      </svg>
+      <span>Reproducir</span>
+    </button>
+    <button onclick="showSongDedication(SONGS_DATABASE.catorce)" class="action-btn story-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span>Historia</span>
+    </button>
+  </div>
+</div>
+
+<div class="song-card" data-song="me_gustas">
+  <div class="song-info">
+    <h3>Me Gustas</h3>
+    <p>TIMØ</p>
+    <span class="duration">3:03</span>
+  </div>
+  <div class="song-actions">
+    <button onclick="playSong('me_gustas')" class="action-btn play-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5,3 19,12 5,21"></polygon>
+      </svg>
+      <span>Reproducir</span>
+    </button>
+    <button onclick="showSongDedication(SONGS_DATABASE.me_gustas)" class="action-btn story-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span>Historia</span>
+    </button>
+  </div>
+</div>
+
+<div class="song-card" data-song="llegaste_a_mi">
+  <div class="song-info">
+    <h3>Llegaste a Mí</h3>
+    <p>LÚA</p>
+    <span class="duration">2:22</span>
+  </div>
+  <div class="song-actions">
+    <button onclick="playSong('llegaste_a_mi')" class="action-btn play-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5,3 19,12 5,21"></polygon>
+      </svg>
+      <span>Reproducir</span>
+    </button>
+    <button onclick="showSongDedication(SONGS_DATABASE.llegaste_a_mi)" class="action-btn story-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span>Historia</span>
+    </button>
+  </div>
+</div>
+
+<div class="song-card" data-song="sol">
+  <div class="song-info">
+    <h3>Sol</h3>
+    <p>Claudio Matta</p>
+    <span class="duration">3:03</span>
+  </div>
+  <div class="song-actions">
+    <button onclick="playSong('sol')" class="action-btn play-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5,3 19,12 5,21"></polygon>
+      </svg>
+      <span>Reproducir</span>
+    </button>
+    <button onclick="showSongDedication(SONGS_DATABASE.sol)" class="action-btn story-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span>Historia</span>
+    </button>
+  </div>
+</div>
+
+<div class="song-card" data-song="quererte">
+  <div class="song-info">
+    <h3>Quererte</h3>
+    <p>Pastrana, Chava Salazar</p>
+    <span class="duration">3:24</span>
+  </div>
+  <div class="song-actions">
+    <button onclick="playSong('quererte')" class="action-btn play-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5,3 19,12 5,21"></polygon>
+      </svg>
+      <span>Reproducir</span>
+    </button>
+    <button onclick="showSongDedication(SONGS_DATABASE.quererte)" class="action-btn story-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span>Historia</span>
+    </button>
+  </div>
+</div>
+
+<div class="song-card" data-song="a_la_mera_hora">
+  <div class="song-info">
+    <h3>A La Mera Hora</h3>
+    <p>Giorgio Siladi</p>
+    <span class="duration">3:20</span>
+  </div>
+  <div class="song-actions">
+    <button onclick="playSong('a_la_mera_hora')" class="action-btn play-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5,3 19,12 5,21"></polygon>
+      </svg>
+      <span>Reproducir</span>
+    </button>
+    <button onclick="showSongDedication(SONGS_DATABASE.a_la_mera_hora)" class="action-btn story-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span>Historia</span>
+    </button>
+  </div>
+</div>
+
+<div class="song-card" data-song="lo_que_siento">
+  <div class="song-info">
+    <h3>Lo Que Siento</h3>
+    <p>CUCO</p>
+    <span class="duration">5:12</span>
+  </div>
+  <div class="song-actions">
+    <button onclick="playSong('lo_que_siento')" class="action-btn play-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5,3 19,12 5,21"></polygon>
+      </svg>
+      <span>Reproducir</span>
+    </button>
+    <button onclick="showSongDedication(SONGS_DATABASE.lo_que_siento)" class="action-btn story-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span>Historia</span>
+    </button>
+  </div>
+</div>
+
+<div class="song-card" data-song="tus_ojitos">
+  <div class="song-info">
+    <h3>Tus Ojitos</h3>
+    <p>Samanez</p>
+    <span class="duration">4:15</span>
+  </div>
+  <div class="song-actions">
+    <button onclick="playSong('tus_ojitos')" class="action-btn play-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5,3 19,12 5,21"></polygon>
+      </svg>
+      <span>Reproducir</span>
+    </button>
+    <button onclick="showSongDedication(SONGS_DATABASE.tus_ojitos)" class="action-btn story-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span>Historia</span>
+    </button>
+  </div>
+</div>
+
+<div class="song-card" data-song="amor_viral">
+  <div class="song-info">
+    <h3>Amor Viral</h3>
+    <p>Marco Mares</p>
+    <span class="duration">4:26</span>
+  </div>
+  <div class="song-actions">
+    <button onclick="playSong('amor_viral')" class="action-btn play-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5,3 19,12 5,21"></polygon>
+      </svg>
+      <span>Reproducir</span>
+    </button>
+    <button onclick="showSongDedication(SONGS_DATABASE.amor_viral)" class="action-btn story-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span>Historia</span>
+    </button>
+  </div>
+</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Poemas -->
+    <section id="poemas" class="section">
+        <div class="container">
+            <h2 class="section-title">✨ Poemas de Amor ✨</h2>
+            <p class="section-subtitle">Versos escritos desde el corazón</p>
+            
+            <div class="poems-container">
+                <!-- Los poemas se cargarán dinámicamente -->
+            </div>
+            
+            <button class="add-poem-btn" onclick="openPoemEditor()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </button>
+        </div>
+    </section>
+
+    <!-- Otras secciones... -->
+    <section id="recuerdos" class="section">
+        <div class="container">
+            <h2 class="section-title">📸 Nuestros Recuerdos</h2>
+            <p class="section-subtitle">Próximamente: Galería de nuestros momentos especiales</p>
+        </div>
+    </section>
+
+    <section id="notas" class="section">
+        <div class="container">
+            <h2 class="section-title">📝 Notas de Amor</h2>
+            <p class="section-subtitle">Próximamente: Notas y mensajes especiales</p>
+        </div>
+    </section>
+
+    <!-- Modal de Configuración -->
+    <div id="settings-modal" class="settings-modal hidden">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                    </svg>
+                    Configuración
+                </h2>
+                <button class="close-settings" onclick="closeSettings()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="settings-body">
+                <div class="setting-group">
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="13.5" cy="6.5" r=".5"></circle>
+                            <circle cx="17.5" cy="10.5" r=".5"></circle>
+                            <circle cx="8.5" cy="7.5" r=".5"></circle>
+                            <circle cx="6.5" cy="12.5" r=".5"></circle>
+                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+                        </svg>
+                        Tema
+                    </h3>
+                    <div class="theme-options">
+                        <button class="theme-btn active" data-theme="romantic">Romántico</button>
+                        <button class="theme-btn" data-theme="dark">Oscuro</button>
+                        <button class="theme-btn" data-theme="light">Claro</button>
+                        <button class="theme-btn" data-theme="sunset">Atardecer</button>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg>
+                        Accesibilidad
+                    </h3>
+                    <div class="accessibility-options">
+                        <label class="setting-toggle">
+                            <span>Reducir animaciones</span>
+                            <input type="checkbox" id="reduce-motion">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <label class="setting-toggle">
+                            <span>Alto contraste</span>
+                            <input type="checkbox" id="high-contrast">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <label class="setting-toggle">
+                            <span>Texto grande</span>
+                            <input type="checkbox" id="large-text">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="13,2 3,14 12,14 11,22 21,10 12,10"></polygon>
+                        </svg>
+                        Rendimiento
+                    </h3>
+                    <label class="setting-toggle">
+                        <span>Modo bajo recursos</span>
+                        <input type="checkbox" id="low-resources">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-group">
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="11,5 6,9 2,9 2,15 6,15 11,19"></polygon>
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                        </svg>
+                        Audio
+                    </h3>
+                    <div class="audio-settings">
+                        <label>Calidad de sonido:</label>
+                        <select id="audio-quality">
+                            <option value="high">Alta</option>
+                            <option value="medium" selected>Media</option>
+                            <option value="low">Baja</option>
+                        </select>
+                        <label class="setting-toggle">
+                            <span>Visualizador de audio</span>
+                            <input type="checkbox" id="audio-visualizer-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Corazones flotantes -->
+    <div class="floating-hearts"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
