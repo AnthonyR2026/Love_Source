@@ -1,10 +1,3 @@
-// Configuración de APIs
-const API_CONFIG = {
-  YOUTUBE_API_KEY: "AIzaSyAJM2Tpbf4rYTJcKfoUqSiS4oqKvUdrsbI",
-  GROQ_API_KEY: "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",
-  USE_REAL_AI: true,
-}
-
 // Base de datos de canciones
 const SONGS_DATABASE = {
   heather: {
@@ -115,200 +108,209 @@ const SONGS_DATABASE = {
   },
 }
 
-// Base de conocimiento personal COMPLETA
-const KNOWLEDGE_BASE = {
-  personal: {
-    nombre_completo: "Anthony",
-    edad: "16 años",
-    lugar_estudia: "instituto Comercial de Panama",
-    carrera: "Ciecias",
-    ciudad: "Panama/Pacora",
-    personalidad: "romántico, detallista, gracioso, inteligente, apasionado, protector, leal",
-    gustos: "programar, música romántica, películas de amor, cocinar, videojuegos, leer, tecnología",
-    hobbies: "tocar guitarra, escribir poemas, fotografía, caminar contigo",
-    sueños:
-      "graduarme, conseguir un buen trabajo, casarme contigo, viajar por el mundo juntos, formar una familia hermosa",
-    cualidades: "leal, honesto, trabajador, soñador, protector, cariñoso, detallista",
-    miedos: "perderte, no ser suficiente para ti, que algo nos separe",
-    fortalezas: "determinación, amor incondicional, capacidad de hacerte reír",
-  },
-  relacion: {
-    aniversario: "3 de diciembre de 2024", // CAMBIAR POR FECHA REAL
-    tiempo_juntos: "8 meses maravillosos (Cuenta hasta la fecha actual)",
-    como_conocieron:
-      "Un dia en la escuela nos presentaron personas ya no relevante y desde ese momento tu inciaste a tener un sentimiento por mi que pausaste",
-    primer_encuentro: "Fue extraño porque ni tu ni yo sabiamos lo que pasariamos y en ese momento jamas imaginamos nada de esto pero la vida da sorpresas",
-    primer_beso:
-      "El primero fue curioso porque solo fue un pico pero el siguiente fue el mas lindo porque senti que jamas acabaria como estabas en esa parada esperando ese bus y yo solo esperando hasta que te fueras...  que lindo",
-    primera_cita:
-      "No hemos tenido aun pero pronto",
-    primera_pelea: "Fue por una tontería, pero fue por confusiones de palabras de amor",
-    momentos_especiales:
-      "Nuestro primer 'te amo', cuando te presente a mi mama, nuestras horas de viajes, cada abrazo tuyo y beso que me complementa",
-    planes_futuros:
-      "Graduarnos juntos, vivir juntos, casarnos en una ceremonia hermosa, luna de miel en París, tener 2 hijos",
-    tradiciones: "Hablamos todos los dias por mensajes y naturalmente decimos lo que hicimos en el dia",
-    lugares_especiales:
-      "La parada donde fue uno de nuestros primeros besos, Lugares publicos como buses o el metro",
-  },
-  sobre_glendys: {
-    nombre_completo: "Glendys Alesly Martinez Porras", // CAMBIAR POR NOMBRE REAL
-    edad: "17 años", // CAMBIAR POR EDAD REAL
-    fecha_de_cumpleaños: "23 de Septiembre",
-    año_de_nacimiento: "2007",
-    estudios: "Estudiante de bachillerato en Turismo", // CAMBIAR POR ESTUDIOS REALES
-    personalidad: "dulce, amargada, fuerte mentalmente, independiente, graciosa, cariñosa, comprensiva, sensible, sentimental, gruñona, confusa",
-    cualidades_fisicas: "hermosa sonrisa, ojos que brillan, altura adorable, cabello liso precioso, la mujer más bella del mundo",
-    cualidades_emocionales: "corazón puro, alma noble, espíritu libre, fortaleza increíble y sentimiento sensible",
-    lo_que_amo: "tu risa que ilumina mi día, tu forma de verme con amor, tu habilidad para tranquilizarme, tu forma de ser auténtica con tu forma de ser",
-    apodos_cariñosos: "mi amor, mi vida, mi princesa, mi reina, mi vida, mi todo, mi cielo",
-    lo_que_admiro: "tu determinación, tu cariño, tu forma de enfrentar los problemas, tu corazón adorable y sensible, tu valentia para siempre intentarlo",
-    gustos_de_ella: "música de BTS, películas románticas y naturalmente coreanas, leer libros sobre amor o sentimientos, pasar tiempo conmigo y salir a pasear",
-    comida_favorita: "la verdad es que no me acuerdo pero siempre dare lo que quieras", // CAMBIAR POR GUSTOS REALES
-    color_favorito: "negro, blanco y alguno mas no recuerdo", // CAMBIAR POR COLOR REAL
-    sueños_de_ella: "graduarse para poder sentir orgullosa a su mama, lograr sus metas en los estudios, viajar a todas partes, formar una familia conmigo",
-  },
-  recuerdos_especiales: {
-    primer_te_amo: "Fui yo lo dije primero y fue casi de inmediato. no lo olvidare es mas que especial atravez de chat pero igualmente paso",
-    mejor_cita: "nunca hemos tenido una cita oficial pero hemos salido algunas veces y la hemos pasado bien",
-    momento_mas_romantico: "Cuando empezamos a decirnos apodos lindos y nos prometimos amor eterno",
-    momento_mas_gracioso: "Un momento mas gracioso? pues cualquiera todo siempre es gracioso",
-    regalo_especial: "Te regale un peluche de un perrito(tu mascota favorita) y varios collares lindos",
-    viaje_juntos: "Jamas hemos viajado pero si hemos compartido juntos en viajes hasta nuestras casas",
-    navidad_juntos: "Nuestra primera navidad juntos, fue a distancia pero fue la primera navidad que pasamos con alguien que llamemos pareja",
-  },
+// Datos del blog
+const BLOG_DATA = {
+  events: [
+    {
+      id: 1,
+      title: "🎂 Cumpleaños de Glendys",
+      date: "2025-09-23",
+      type: "birthday",
+      description: "El día más especial del año - ¡Tu cumpleaños número 18!",
+      daysUntil: null,
+      icon: "🎂",
+    },
+    {
+      id: 2,
+      title: "💕 Nuestro Aniversario",
+      date: "2025-12-03",
+      type: "anniversary",
+      description: "Celebrando un año más de amor infinito",
+      daysUntil: null,
+      icon: "💕",
+    },
+    {
+      id: 3,
+      title: "🎄 Primera Navidad Juntos (Presencial)",
+      date: "2024-12-25",
+      type: "holiday",
+      description: "Nuestra primera navidad juntos en persona",
+      daysUntil: null,
+      icon: "🎄",
+    },
+    {
+      id: 4,
+      title: "💝 Día de San Valentín",
+      date: "2025-02-14",
+      type: "valentine",
+      description: "El día del amor y la amistad - perfecto para nosotros",
+      daysUntil: null,
+      icon: "💝",
+    },
+  ],
+
+  updates: [
+    {
+      id: 1,
+      title: "🎵 Página de Canciones Completada",
+      date: "2024-08-30",
+      description:
+        "Agregué todas nuestras canciones especiales con reproductor funcional y dedicatorias personalizadas.",
+      type: "feature",
+    },
+    {
+      id: 2,
+      title: "✨ Nuevo Sistema de Temas",
+      date: "2024-08-30",
+      description: "Ahora puedes cambiar entre 4 temas diferentes: Romántico, Oscuro, Claro y Atardecer.",
+      type: "feature",
+    },
+    {
+      id: 3,
+      title: "💕 Blog de Amor Creado",
+      date: "2024-08-30",
+      description: "Convertí la página principal en un blog donde puedes ver eventos especiales y actualizaciones.",
+      type: "major",
+    },
+    {
+      id: 4,
+      title: "🎨 Efectos Visuales Mejorados",
+      date: "2024-08-29",
+      description:
+        "Agregué corazones flotantes, animaciones suaves y efectos de blur para una experiencia más romántica.",
+      type: "enhancement",
+    },
+    {
+      id: 5,
+      title: "⚙️ Configuraciones Avanzadas",
+      date: "2024-08-29",
+      description: "Opciones de accesibilidad, rendimiento y personalización para que tengas la mejor experiencia.",
+      type: "feature",
+    },
+  ],
 }
 
-// Sistema de memoria para el chat
-class ChatMemory {
-  constructor() {
-    this.conversations = this.loadConversations()
-    this.currentSession = []
+// Función para calcular días hasta un evento
+function calculateDaysUntil(dateString) {
+  const eventDate = new Date(dateString)
+  const today = new Date()
+  const diffTime = eventDate - today
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+  if (diffDays < 0) {
+    // Si ya pasó, calcular para el próximo año
+    eventDate.setFullYear(eventDate.getFullYear() + 1)
+    const newDiffTime = eventDate - today
+    return Math.ceil(newDiffTime / (1000 * 60 * 60 * 24))
   }
 
-  loadConversations() {
-    const saved = localStorage.getItem("chatMemory")
-    return saved ? JSON.parse(saved) : []
-  }
-
-  saveConversations() {
-    localStorage.setItem("chatMemory", JSON.stringify(this.conversations))
-  }
-
-  addMessage(userMessage, aiResponse) {
-    const message = {
-      timestamp: new Date().toISOString(),
-      user: userMessage,
-      ai: aiResponse,
-    }
-
-    this.currentSession.push(message)
-    this.conversations.push(message)
-
-    // Mantener solo los últimos 50 mensajes para no sobrecargar
-    if (this.conversations.length > 50) {
-      this.conversations = this.conversations.slice(-50)
-    }
-
-    this.saveConversations()
-  }
-
-  getRecentContext(limit = 5) {
-    return this.conversations.slice(-limit)
-  }
-
-  clearMemory() {
-    this.conversations = []
-    this.currentSession = []
-    localStorage.removeItem("chatMemory")
-  }
+  return diffDays
 }
 
-// Sistema de IA mejorado con memoria
-class AISystem {
-  constructor() {
-    this.isProcessing = false
-    this.memory = new ChatMemory()
-  }
+// Función para calcular tiempo juntos
+function calculateTimeTogetherStats() {
+  const startDate = new Date("2024-12-03")
+  const now = new Date()
+  const diffTime = now - startDate
 
-  async generateResponse(userMessage) {
-    if (API_CONFIG.USE_REAL_AI && API_CONFIG.GROQ_API_KEY !== "TU_GROQ_API_KEY_AQUI") {
-      return this.callGroqAPI(userMessage)
-    }
-  }
+  const days = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+  const months = Math.floor(days / 30.44)
+  const weeks = Math.floor(days / 7)
+  const hours = Math.floor(diffTime / (1000 * 60 * 60))
 
-  callGroqAPI(userMessage) {
-    try {
-      const recentContext = this.memory.getRecentContext(3)
-      const contextString = recentContext.map((msg) => `Usuario: ${msg.user}\nAnthony: ${msg.ai}`).join("\n\n")
-
-      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${API_CONFIG.GROQ_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "llama3-8b-8192",
-          messages: [
-            {
-              role: "system",
-              content: `Eres Anthony, un joven de 16 años. 
-
-INFORMACIÓN PERSONAL COMPLETA:
-${JSON.stringify(KNOWLEDGE_BASE, null, 2)}
-
-INSTRUCCIONES IMPORTANTES:
-- usa la información proporcionada arriba para que sea tu conocimiento
-- Si no tienes información específica, di "No tengo esa información específica, pero..." y pide que te pregunte algo mas y que pronto tendras esa informacion en tu base de datos
-- Siempre responde como Anthony en primera persona y que la otra persona es Glendys
-- Responde de manera formal y con un cariño ligero en tus palabras
-- Usa los nombres, fechas y detalles exactos proporcionados pero si son fechas erroneas como meses entonces busca un valor que se relacione como una fecha y 
-cuenta hasta la fecha actual y di cuanto tiempo a pasado
-- Mantén las respuestas entre 25 - 150 palabras pero si es necesario sube hasta maximo 1000
-- Recuerda conversaciones anteriores cuando sea relevante
-- Mantente recordando que fecha es actualmente y recuerda dar fechas perfectamente medidas solo en las que se miden 
-ejemplo: cuanto_tiempo_juntos: "7 meses" (Aqui buscas algo relacionado como "Fecha_de_aniversario": 3 de diciembre del 2024. agarra esa fecha y cuenta cuanto tiempo a 
-pasado hasta la fecha actual y entonces da el nuevo valor)
-
-CONTEXTO DE CONVERSACIONES RECIENTES:
-${contextString}
-
-Responde como Anthony con la información exacta proporcionada.`,
-            },
-            {
-              role: "user",
-              content: userMessage,
-            },
-          ],
-          temperature: 0.3, // Reducido para más consistencia
-          max_tokens: 1000,
-        }),
-      })
-
-      const data = await response.json()
-      const aiResponse = data.choices[0].message.content
-
-      // Guardar en memoria
-      this.memory.addMessage(userMessage, aiResponse)
-
-      return aiResponse
-    } catch (error) {
-      console.error("Error con Groq API:", error)
-      const fallbackResponse = this.generateLocalResponse(userMessage)
-      this.memory.addMessage(userMessage, fallbackResponse)
-      return fallbackResponse
-    }
-  }
-
-  generateLocalResponse(userMessage) {
-    const message = userMessage.toLowerCase()
-    this.memory.addMessage(userMessage, response)
-    return response
-  }
+  return { days, months, weeks, hours }
 }
 
-// Sistema de reproducción
+// Cargar eventos
+function loadEvents() {
+  const container = document.getElementById("events-container")
+  if (!container) return
+
+  // Calcular días hasta cada evento
+  BLOG_DATA.events.forEach((event) => {
+    event.daysUntil = calculateDaysUntil(event.date)
+  })
+
+  // Ordenar por proximidad
+  const sortedEvents = BLOG_DATA.events.sort((a, b) => a.daysUntil - b.daysUntil)
+
+  container.innerHTML = sortedEvents
+    .map(
+      (event) => `
+    <div class="event-card ${event.type}">
+      <div class="event-icon">${event.icon}</div>
+      <div class="event-content">
+        <h3>${event.title}</h3>
+        <p>${event.description}</p>
+        <div class="event-countdown">
+          <span class="days-count">${event.daysUntil}</span>
+          <span class="days-label">${event.daysUntil === 1 ? "día" : "días"}</span>
+        </div>
+      </div>
+    </div>
+  `,
+    )
+    .join("")
+}
+
+// Cargar actualizaciones
+function loadUpdates() {
+  const container = document.getElementById("updates-container")
+  if (!container) return
+
+  container.innerHTML = BLOG_DATA.updates
+    .map(
+      (update) => `
+    <div class="update-item ${update.type}">
+      <div class="update-date">${formatDate(update.date)}</div>
+      <div class="update-content">
+        <h3>${update.title}</h3>
+        <p>${update.description}</p>
+      </div>
+    </div>
+  `,
+    )
+    .join("")
+}
+
+// Cargar estadísticas
+function loadStats() {
+  const container = document.getElementById("stats-container")
+  if (!container) return
+
+  const stats = calculateTimeTogetherStats()
+
+  container.innerHTML = `
+    <div class="stat-card">
+      <div class="stat-number">${Math.abs(stats.days)}</div>
+      <div class="stat-label">Días ${stats.days >= 0 ? "juntos" : "hasta estar juntos"}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">${Object.keys(SONGS_DATABASE).length}</div>
+      <div class="stat-label">Canciones Especiales</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">∞</div>
+      <div class="stat-label">Amor Infinito</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">1</div>
+      <div class="stat-label">Amor Verdadero</div>
+    </div>
+  `
+}
+
+// Formatear fecha
+function formatDate(dateString) {
+  const date = new Date(dateString)
+  return date.toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  })
+}
+
+// Sistema de reproducción de música (mantengo el código original)
 class MusicPlayer {
   constructor() {
     this.currentSong = null
@@ -642,7 +644,7 @@ class MusicPlayer {
   }
 }
 
-// Sistema de configuración mejorado
+// Sistema de configuración
 class SettingsManager {
   constructor() {
     this.settings = {
@@ -670,10 +672,8 @@ class SettingsManager {
   }
 
   applySettings() {
-    // Aplicar tema
     document.documentElement.setAttribute("data-theme", this.settings.theme)
 
-    // Aplicar configuraciones de accesibilidad
     if (this.settings.reduceMotion) {
       document.documentElement.style.setProperty("--transition", "none")
     } else {
@@ -707,81 +707,10 @@ class SettingsManager {
 }
 
 // Inicializar sistemas
-const aiSystem = new AISystem()
 const musicPlayer = new MusicPlayer()
 const settingsManager = new SettingsManager()
 
 // Funciones principales
-async function sendMessage() {
-  const input = document.getElementById("user-input")
-  const message = input.value.trim()
-
-  if (!message || aiSystem.isProcessing) return
-
-  // Mostrar mensaje del usuario
-  addMessage(message, "user")
-
-  // Mostrar estado de carga
-  const submitBtn = document.getElementById("submit-btn")
-  const originalContent = submitBtn.innerHTML
-  submitBtn.innerHTML = `
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="animate-spin">
-      <path d="M21 12a9 9 0 11-6.219-8.56"/>
-    </svg>
-    <span>Pensando...</span>
-  `
-  submitBtn.disabled = true
-
-  // Limpiar input
-  input.value = ""
-
-  aiSystem.isProcessing = true
-
-  try {
-    // Generar respuesta de IA
-    const response = await aiSystem.generateResponse(message)
-
-    // Simular delay para mejor UX
-    setTimeout(() => {
-      addMessage(response, "ai")
-    }, 1000)
-  } catch (error) {
-    console.error("Error generando respuesta:", error)
-    addMessage("Lo siento mi amor, hubo un error...", "ai")
-  } finally {
-    // Restaurar botón
-    setTimeout(() => {
-      submitBtn.innerHTML = originalContent
-      submitBtn.disabled = false
-      aiSystem.isProcessing = false
-    }, 1000)
-  }
-}
-
-function addMessage(message, sender) {
-  const chatMessages = document.getElementById("chat-messages")
-  const messageDiv = document.createElement("div")
-  messageDiv.className = `message ${sender}-message`
-
-  const messageContent = document.createElement("div")
-  messageContent.className = "message-content"
-  messageContent.textContent = message
-
-  messageDiv.appendChild(messageContent)
-  chatMessages.appendChild(messageDiv)
-
-  // Scroll al final con animación suave
-  chatMessages.scrollTo({
-    top: chatMessages.scrollHeight,
-    behavior: "smooth",
-  })
-}
-
-function fillInput(text) {
-  document.getElementById("user-input").value = text
-  document.getElementById("user-input").focus()
-}
-
 function playSong(songId) {
   musicPlayer.playSong(songId)
 
@@ -824,17 +753,6 @@ function showSongDedication(song) {
   }, 15000)
 }
 
-function newQuestion() {
-  document.getElementById("chat-messages").innerHTML = ""
-  document.getElementById("user-input").focus()
-}
-
-function clearChatMemory() {
-  aiSystem.memory.clearMemory()
-  newQuestion()
-  showNotification("Memoria del chat borrada", "success")
-}
-
 // Funciones de navegación
 function switchSection(sectionName) {
   document.querySelectorAll(".section").forEach((section) => {
@@ -852,7 +770,6 @@ function switchSection(sectionName) {
 
 function openSettings() {
   document.getElementById("settings-modal").classList.remove("hidden")
-  // Actualizar UI con configuraciones actuales
   updateSettingsUI()
 }
 
@@ -861,7 +778,6 @@ function closeSettings() {
 }
 
 function updateSettingsUI() {
-  // Actualizar botones de tema
   document.querySelectorAll(".theme-btn").forEach((btn) => {
     btn.classList.remove("active")
     if (btn.dataset.theme === settingsManager.settings.theme) {
@@ -869,7 +785,6 @@ function updateSettingsUI() {
     }
   })
 
-  // Actualizar toggles
   Object.keys(settingsManager.settings).forEach((key) => {
     const checkbox = document.getElementById(key.replace("_", "-"))
     if (checkbox && typeof settingsManager.settings[key] === "boolean") {
@@ -877,7 +792,6 @@ function updateSettingsUI() {
     }
   })
 
-  // Actualizar select de calidad de audio
   const audioQuality = document.getElementById("audio-quality")
   if (audioQuality) {
     audioQuality.value = settingsManager.settings.audioQuality
@@ -940,21 +854,21 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("loading-screen").classList.add("hidden")
   }, 3000)
 
-  // Event listeners
-  const userInput = document.getElementById("user-input")
-  if (userInput) {
-    userInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") {
-        sendMessage()
-      }
-    })
-  }
+  // Cargar contenido del blog
+  loadEvents()
+  loadUpdates()
+  loadStats()
 
   // Configurar event listeners de configuración
   setupSettingsListeners()
 
   // Corazones flotantes
   setInterval(createFloatingHeart, 2000)
+
+  // Mostrar notificación de bienvenida
+  setTimeout(() => {
+    showNotification("¡Bienvenida a nuestro blog de amor! 💕", "success")
+  }, 4000)
 })
 
 function setupSettingsListeners() {
@@ -983,10 +897,3 @@ function setupSettingsListeners() {
     })
   }
 }
-
-
-
-
-
-
-
