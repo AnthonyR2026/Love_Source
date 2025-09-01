@@ -1604,4 +1604,175 @@ function updateSettingsUI() {
   })
 
   const audioQuality = document.getElementById("audio-quality")
-  if (audioQ\
+  if (audioQuality) {
+    audioQuality.value = settingsManager.settings.audioQuality
+  }
+}
+
+// Función para alternar burbuja de eventos
+function toggleEventsBubble() {
+  const bubbleContent = document.getElementById("bubble-content")
+  const bubbleToggle = document.querySelector(".bubble-toggle")
+
+  if (bubbleContent.classList.contains("hidden")) {
+    bubbleContent.classList.remove("hidden")
+    bubbleToggle.classList.add("expanded")
+  } else {
+    bubbleContent.classList.add("hidden")
+    bubbleToggle.classList.remove("expanded")
+  }
+}
+
+// Función para marcar carta como leída
+function markLetterAsRead() {
+  adminSystem.markLetterAsRead()
+}
+
+// Función para abrir cubo de amor
+function openLoveCube() {
+  adminSystem.openLoveCube()
+}
+
+// Función para cerrar mensaje de amor
+function closeLoveMessage() {
+  adminSystem.closeLoveMessage()
+}
+
+function showNotification(message, type = "info") {
+  const notification = document.createElement("div")
+  notification.className = `notification ${type}`
+  notification.textContent = message
+
+  const styles = {
+    error: "background: #ef4444; color: white;",
+    success: "background: #10b981; color: white;",
+    info: "background: #3b82f6; color: white;",
+  }
+
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    z-index: 3000;
+    animation: slideInRight 0.3s ease;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+    ${styles[type]}
+  `
+
+  document.body.appendChild(notification)
+
+  setTimeout(() => {
+    notification.remove()
+  }, 4000)
+}
+
+// Corazones flotantes
+function createFloatingHeart() {
+  const hearts = ["💖", "💕", "💗", "💝", "💘"]
+  const heart = document.createElement("div")
+  heart.className = "heart"
+  heart.textContent = hearts[Math.floor(Math.random() * hearts.length)]
+  heart.style.left = Math.random() * 100 + "%"
+  heart.style.animationDuration = Math.random() * 3 + 3 + "s"
+  heart.style.fontSize = Math.random() * 10 + 15 + "px"
+
+  document.querySelector(".floating-hearts").appendChild(heart)
+
+  setTimeout(() => {
+    heart.remove()
+  }, 6000)
+}
+
+// Funciones globales para el panel de administrador
+function closeAdminPanel() {
+  adminSystem.closeAdminPanel()
+}
+
+function activateEvent(eventType) {
+  adminSystem.activateEvent(eventType)
+}
+
+function deactivateAllEvents() {
+  adminSystem.deactivateAllEvents()
+}
+
+function closeEventNotification() {
+  adminSystem.closeEventNotification()
+}
+
+function triggerHeartRain() {
+  adminSystem.triggerHeartRain(15)
+}
+
+function showLoveMessage() {
+  adminSystem.showLoveMessage()
+}
+
+function playRandomSong() {
+  adminSystem.playRandomSong()
+}
+
+// Inicialización
+document.addEventListener("DOMContentLoaded", () => {
+  // Pantalla de carga
+  setTimeout(() => {
+    document.getElementById("loading-screen").classList.add("hidden")
+  }, 3000)
+
+  // Cargar contenido del blog
+  loadEvents()
+  loadUpdates()
+  loadStats()
+
+  // Configurar event listeners de configuración
+  setupSettingsListeners()
+
+  // Mostrar notificación sobre el panel secreto
+  setTimeout(() => {
+    showNotification("💡 Tip: Presiona P + L para acceder al panel secreto", "info")
+  }, 8000)
+
+  // Corazones flotantes
+  setInterval(createFloatingHeart, 2000)
+
+  // Mostrar notificación de bienvenida
+  setTimeout(() => {
+    showNotification("¡Bienvenida a nuestro blog de amor! 💕", "success")
+  }, 4000)
+})
+
+function setupSettingsListeners() {
+  // Theme buttons
+  document.querySelectorAll(".theme-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".theme-btn").forEach((b) => b.classList.remove("active"))
+      btn.classList.add("active")
+      settingsManager.updateSetting("theme", btn.dataset.theme)
+    })
+  })
+
+  // Toggle switches
+  document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+    checkbox.addEventListener("change", () => {
+      const setting = checkbox.id.replace("-", "_")
+      settingsManager.updateSetting(setting, checkbox.checked)
+    })
+  })
+
+  // Audio quality
+  const audioQualitySelect = document.getElementById("audio-quality")
+  if (audioQualitySelect) {
+    audioQualitySelect.addEventListener("change", (e) => {
+      settingsManager.updateSetting("audioQuality", e.target.value)
+    })
+  }
+}
+
+// Inicializar sistemas
+const musicPlayer = new MusicPlayer()
+const settingsManager = new SettingsManager()
+const adminSystem = new AdminSystem()
