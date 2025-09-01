@@ -231,6 +231,63 @@ body {
   }
 }
 
+/* Título flotante del evento */
+.floating-event-title {
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  transition: var(--transition);
+  animation: floatingTitle 3s ease-in-out infinite;
+}
+
+.floating-event-title.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(-20px);
+}
+
+.floating-title-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  padding: 16px 24px;
+  border-radius: var(--border-radius-lg);
+  border: 2px solid var(--primary);
+  box-shadow: var(--shadow-xl);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.event-emoji {
+  font-size: 1.5rem;
+  animation: eventEmojiPulse 2s ease-in-out infinite;
+}
+
+@keyframes floatingTitle {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0px);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
+
+@keyframes eventEmojiPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
 /* Navegación mejorada con blur */
 .nav-container {
   position: fixed;
@@ -312,6 +369,38 @@ body {
 
 .settings-btn {
   padding: 12px !important;
+}
+
+/* Pestaña de evento especial */
+.event-tab {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+  color: white !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  animation: eventTabGlow 2s ease-in-out infinite;
+}
+
+.event-tab-emoji {
+  font-size: 16px;
+  animation: eventTabEmojiSpin 3s linear infinite;
+}
+
+@keyframes eventTabGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.8);
+  }
+}
+
+@keyframes eventTabEmojiSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Secciones con animaciones mejoradas */
@@ -437,6 +526,11 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 25px;
   margin-bottom: 50px;
+  transition: var(--transition);
+}
+
+.events-grid.compressed {
+  display: none;
 }
 
 .event-card {
@@ -507,6 +601,610 @@ body {
 .days-label {
   color: var(--text-muted);
   font-size: 0.9rem;
+}
+
+/* Burbuja de eventos comprimidos */
+.events-bubble {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  margin-bottom: 30px;
+}
+
+.events-bubble.hidden {
+  display: none;
+}
+
+.bubble-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 500;
+}
+
+.bubble-toggle:hover {
+  background: var(--glass-hover);
+}
+
+.bubble-count {
+  background: var(--primary);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  min-width: 24px;
+  text-align: center;
+}
+
+.bubble-arrow {
+  transition: var(--transition);
+}
+
+.bubble-toggle.expanded .bubble-arrow {
+  transform: rotate(180deg);
+}
+
+.bubble-content {
+  padding: 0 24px 20px;
+  border-top: 1px solid var(--glass-border);
+  transition: var(--transition);
+}
+
+.bubble-content.hidden {
+  display: none;
+}
+
+.bubble-event {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--glass-border);
+  transition: var(--transition);
+}
+
+.bubble-event:last-child {
+  border-bottom: none;
+}
+
+.bubble-event:hover {
+  background: var(--glass-hover);
+  margin: 0 -12px;
+  padding: 12px;
+  border-radius: var(--border-radius-sm);
+}
+
+.bubble-event-icon {
+  font-size: 1.5rem;
+  min-width: 40px;
+}
+
+.bubble-event-info h4 {
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.bubble-event-info p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.bubble-event-days {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+/* Sección de Evento Especial */
+.event-section {
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  min-height: 100vh;
+  position: relative;
+}
+
+.event-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.event-title {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  font-family: "Great Vibes", cursive;
+  animation: eventTitleGlow 3s ease-in-out infinite alternate;
+}
+
+.event-subtitle {
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  font-family: "Satisfy", cursive;
+  animation: fadeIn 1s ease 0.5s both;
+}
+
+@keyframes eventTitleGlow {
+  0% {
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    text-shadow: 0 4px 30px var(--primary), 0 0 40px var(--primary);
+  }
+}
+
+/* Carta de Amor */
+.love-letter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 60px;
+  min-height: 500px;
+}
+
+.love-letter {
+  position: relative;
+  cursor: pointer;
+}
+
+.letter-envelope {
+  position: relative;
+  width: 400px;
+  height: 250px;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 8px;
+  box-shadow: var(--shadow-xl);
+  transition: var(--transition);
+  animation: letterFloat 3s ease-in-out infinite;
+}
+
+.letter-envelope:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes letterFloat {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  border-radius: 8px 8px 0 0;
+  transition: var(--transition);
+  transform-origin: top center;
+}
+
+.letter-envelope.opening .envelope-flap {
+  transform: rotateX(180deg);
+  animation: envelopeOpen 1s ease-in-out;
+}
+
+@keyframes envelopeOpen {
+  0% {
+    transform: rotateX(0deg);
+  }
+  50% {
+    transform: rotateX(-20deg);
+  }
+  100% {
+    transform: rotateX(180deg);
+  }
+}
+
+.envelope-body {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(135deg, #fff, #f8f9fa);
+  border-radius: 0 0 8px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  border: 2px solid #dc3545;
+  border-top: none;
+}
+
+.envelope-heart {
+  font-size: 3rem;
+  animation: heartPulse 2s ease-in-out infinite;
+}
+
+@keyframes heartPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.envelope-text {
+  font-family: "Dancing Script", cursive;
+  font-size: 1.5rem;
+  color: #dc3545;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.letter-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  max-width: 90vw;
+  transition: var(--transition);
+  animation: letterSlideIn 0.8s ease-out;
+}
+
+@keyframes letterSlideIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.letter-paper {
+  background: linear-gradient(135deg, #fffef7, #faf9f2);
+  border-radius: var(--border-radius-lg);
+  padding: 40px;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid #e9ecef;
+  position: relative;
+  overflow: hidden;
+}
+
+.letter-paper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f8f9fa' fill-opacity='0.3'%3E%3Cpath d='M0 0h40v40H0V0z'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.letter-header {
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #dc3545;
+  padding-bottom: 20px;
+}
+
+.letter-date {
+  font-family: "Dancing Script", cursive;
+  font-size: 1.2rem;
+  color: #6c757d;
+  margin-bottom: 10px;
+}
+
+.letter-to {
+  font-family: "Great Vibes", cursive;
+  font-size: 2rem;
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.letter-text {
+  font-family: "Satisfy", cursive;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #495057;
+  margin-bottom: 30px;
+  text-align: justify;
+  position: relative;
+  z-index: 1;
+}
+
+.letter-signature {
+  text-align: right;
+  margin-top: 30px;
+  border-top: 1px solid #dee2e6;
+  padding-top: 20px;
+}
+
+.signature-text {
+  font-family: "Dancing Script", cursive;
+  font-size: 1.1rem;
+  color: #6c757d;
+  margin-bottom: 5px;
+}
+
+.signature-name {
+  font-family: "Great Vibes", cursive;
+  font-size: 1.8rem;
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.letter-read-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-lg);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  margin: 20px auto 0;
+  font-family: "Inter", sans-serif;
+  box-shadow: var(--shadow-md);
+}
+
+.letter-read-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, #20c997, #28a745);
+}
+
+/* Cubo 3D de Amor */
+.love-cube-container {
+  text-align: center;
+  margin-bottom: 60px;
+  transition: var(--transition);
+  animation: fadeInUp 0.8s ease 0.5s both;
+}
+
+.love-cube-container.hidden {
+  display: none;
+}
+
+.cube-title {
+  font-family: "Great Vibes", cursive;
+  font-size: 2.5rem;
+  color: var(--text-primary);
+  margin-bottom: 40px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.love-cube-scene {
+  perspective: 1000px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}
+
+.love-cube {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  transform-style: preserve-3d;
+  animation: cubeRotate 10s linear infinite;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.love-cube:hover {
+  animation-play-state: paused;
+  transform: rotateX(-15deg) rotateY(45deg) scale(1.1);
+}
+
+@keyframes cubeRotate {
+  0% {
+    transform: rotateX(0deg) rotateY(0deg);
+  }
+  100% {
+    transform: rotateX(360deg) rotateY(360deg);
+  }
+}
+
+.cube-face {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: white;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+  transition: var(--transition);
+}
+
+.cube-face:hover {
+  background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+  box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.2);
+}
+
+.cube-front {
+  transform: rotateY(0deg) translateZ(75px);
+}
+
+.cube-back {
+  transform: rotateY(180deg) translateZ(75px);
+}
+
+.cube-right {
+  transform: rotateY(90deg) translateZ(75px);
+}
+
+.cube-left {
+  transform: rotateY(-90deg) translateZ(75px);
+}
+
+.cube-top {
+  transform: rotateX(90deg) translateZ(75px);
+}
+
+.cube-bottom {
+  transform: rotateX(-90deg) translateZ(75px);
+}
+
+.cube-heart {
+  font-size: 2rem;
+  margin-bottom: 8px;
+  animation: cubeHeartBeat 2s ease-in-out infinite;
+}
+
+@keyframes cubeHeartBeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.cube-text {
+  font-family: "Dancing Script", cursive;
+  font-size: 1rem;
+}
+
+.cube-pattern {
+  font-size: 1.5rem;
+  letter-spacing: 8px;
+  animation: cubePatternGlow 3s ease-in-out infinite;
+}
+
+@keyframes cubePatternGlow {
+  0%,
+  100% {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* Mensaje de Amor Enfocado */
+.love-message-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(20px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 6000;
+  transition: var(--transition);
+  animation: overlayFadeIn 0.5s ease;
+}
+
+.love-message-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes overlayFadeIn {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(20px);
+  }
+}
+
+.love-message-content {
+  background: var(--glass-bg);
+  backdrop-filter: blur(25px);
+  border-radius: var(--border-radius-lg);
+  padding: 60px;
+  max-width: 800px;
+  margin: 20px;
+  border: 2px solid var(--primary);
+  box-shadow: var(--shadow-xl);
+  position: relative;
+  animation: messageSlideIn 0.6s ease-out;
+}
+
+@keyframes messageSlideIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.close-message-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 12px;
+  border-radius: 50%;
+  transition: var(--transition);
+}
+
+.close-message-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+.love-message-text {
+  font-family: "Great Vibes", cursive;
+  font-size: 2.5rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  text-align: center;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  animation: messageTextGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes messageTextGlow {
+  0% {
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    text-shadow: 0 0 30px var(--primary), 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
 }
 
 /* Funcionalidades */
@@ -1921,6 +2619,74 @@ input[type="checkbox"] {
   .update-item::before {
     left: -32px;
   }
+
+  .floating-event-title {
+    top: 80px;
+    font-size: 0.9rem;
+  }
+
+  .floating-title-content {
+    padding: 12px 16px;
+  }
+
+  .love-cube {
+    width: 120px;
+    height: 120px;
+  }
+
+  .cube-face {
+    width: 120px;
+    height: 120px;
+  }
+
+  .cube-front {
+    transform: rotateY(0deg) translateZ(60px);
+  }
+
+  .cube-back {
+    transform: rotateY(180deg) translateZ(60px);
+  }
+
+  .cube-right {
+    transform: rotateY(90deg) translateZ(60px);
+  }
+
+  .cube-left {
+    transform: rotateY(-90deg) translateZ(60px);
+  }
+
+  .cube-top {
+    transform: rotateX(90deg) translateZ(60px);
+  }
+
+  .cube-bottom {
+    transform: rotateX(-90deg) translateZ(60px);
+  }
+
+  .letter-envelope {
+    width: 300px;
+    height: 200px;
+  }
+
+  .letter-content {
+    width: 400px;
+  }
+
+  .letter-paper {
+    padding: 30px;
+  }
+
+  .event-title {
+    font-size: 3rem;
+  }
+
+  .love-message-text {
+    font-size: 2rem;
+  }
+
+  .love-message-content {
+    padding: 40px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1944,5 +2710,73 @@ input[type="checkbox"] {
   .feature-card,
   .stat-card {
     padding: 20px;
+  }
+
+  .letter-envelope {
+    width: 250px;
+    height: 160px;
+  }
+
+  .letter-content {
+    width: 320px;
+  }
+
+  .letter-paper {
+    padding: 20px;
+  }
+
+  .event-title {
+    font-size: 2.5rem;
+  }
+
+  .love-message-text {
+    font-size: 1.8rem;
+  }
+
+  .love-message-content {
+    padding: 30px;
+  }
+
+  .love-cube {
+    width: 100px;
+    height: 100px;
+  }
+
+  .cube-face {
+    width: 100px;
+    height: 100px;
+  }
+
+  .cube-front {
+    transform: rotateY(0deg) translateZ(50px);
+  }
+
+  .cube-back {
+    transform: rotateY(180deg) translateZ(50px);
+  }
+
+  .cube-right {
+    transform: rotateY(90deg) translateZ(50px);
+  }
+
+  .cube-left {
+    transform: rotateY(-90deg) translateZ(50px);
+  }
+
+  .cube-top {
+    transform: rotateX(90deg) translateZ(50px);
+  }
+
+  .cube-bottom {
+    transform: rotateX(-90deg) translateZ(50px);
+  }
+
+  .floating-event-title {
+    top: 70px;
+    font-size: 0.8rem;
+  }
+
+  .floating-title-content {
+    padding: 10px 14px;
   }
 }
