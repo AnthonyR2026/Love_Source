@@ -468,6 +468,152 @@
         </div>
     </div>
 
+    <!-- Panel de Administrador Secreto -->
+    <div id="admin-panel" class="admin-panel hidden">
+        <div class="admin-content">
+            <div class="admin-header">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                    </svg>
+                    Panel de Administrador
+                </h2>
+                <button class="close-admin" onclick="closeAdminPanel()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="admin-body">
+                <div class="admin-section">
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        Eventos Especiales
+                    </h3>
+                    <p class="admin-description">Activa eventos temáticos que cambiarán toda la página</p>
+                    
+                    <div class="events-admin-grid">
+                        <div class="event-admin-card">
+                            <div class="event-admin-info">
+                                <h4>🎂 Cumpleaños de Glendys</h4>
+                                <p>Tema festivo con colores vibrantes y animaciones de celebración</p>
+                            </div>
+                            <button onclick="activateEvent('birthday')" class="activate-btn">
+                                Activar
+                            </button>
+                        </div>
+
+                        <div class="event-admin-card">
+                            <div class="event-admin-info">
+                                <h4>💕 Aniversario Anual</h4>
+                                <p>Tema romántico especial para celebrar nuestro aniversario</p>
+                            </div>
+                            <button onclick="activateEvent('anniversary')" class="activate-btn">
+                                Activar
+                            </button>
+                        </div>
+
+                        <div class="event-admin-card">
+                            <div class="event-admin-info">
+                                <h4>📅 Aniversario Mensual</h4>
+                                <p>Celebración mensual de nuestro amor - cada día 3 del mes</p>
+                            </div>
+                            <button onclick="activateEvent('monthly')" class="activate-btn">
+                                Activar
+                            </button>
+                        </div>
+
+                        <div class="event-admin-card">
+                            <div class="event-admin-info">
+                                <h4>🎄 Navidad Juntos</h4>
+                                <p>Tema navideño con colores festivos y nieve digital</p>
+                            </div>
+                            <button onclick="activateEvent('christmas')" class="activate-btn">
+                                Activar
+                            </button>
+                        </div>
+
+                        <div class="event-admin-card">
+                            <div class="event-admin-info">
+                                <h4>💝 San Valentín</h4>
+                                <p>Tema ultra romántico con corazones y colores rosados</p>
+                            </div>
+                            <button onclick="activateEvent('valentine')" class="activate-btn">
+                                Activar
+                            </button>
+                        </div>
+
+                        <div class="event-admin-card special">
+                            <div class="event-admin-info">
+                                <h4>✨ Modo Normal</h4>
+                                <p>Desactivar todos los eventos y volver al tema normal</p>
+                            </div>
+                            <button onclick="deactivateAllEvents()" class="deactivate-btn">
+                                Desactivar Todo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                        </svg>
+                        Estado Actual
+                    </h3>
+                    <div class="current-status" id="current-event-status">
+                        <div class="status-item">
+                            <span class="status-label">Evento Activo:</span>
+                            <span class="status-value" id="active-event-name">Ninguno</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Desde:</span>
+                            <span class="status-value" id="event-start-time">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                        </svg>
+                        Acciones Rápidas
+                    </h3>
+                    <div class="quick-actions">
+                        <button onclick="triggerHeartRain()" class="quick-action-btn">
+                            💕 Lluvia de Corazones
+                        </button>
+                        <button onclick="showLoveMessage()" class="quick-action-btn">
+                            💌 Mensaje de Amor
+                        </button>
+                        <button onclick="playRandomSong()" class="quick-action-btn">
+                            🎵 Canción Aleatoria
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay para eventos especiales -->
+    <div id="event-overlay" class="event-overlay hidden">
+        <div class="event-notification">
+            <div class="event-icon" id="event-icon">🎉</div>
+            <h2 id="event-title">¡Evento Activado!</h2>
+            <p id="event-message">La página se ha tematizado para este evento especial</p>
+            <button onclick="closeEventNotification()" class="close-event-btn">
+                Continuar
+            </button>
+        </div>
+    </div>
+
     <!-- Corazones flotantes -->
     <div class="floating-hearts"></div>
 
