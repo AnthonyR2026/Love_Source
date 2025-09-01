@@ -618,11 +618,21 @@ class MusicPlayer {
         },
         events: {
           onReady: (event) => {
-            event.target.setVolume(15) // Volumen bajo para música de fondo
+            event.target.setVolume(8) // Volumen más bajo y atenuado
             console.log("Música de fondo iniciada:", song.title)
+          },
+          onStateChange: (event) => {
+            // Asegurar que se repita indefinidamente
+            if (event.data === window.YT.PlayerState.ENDED) {
+              event.target.playVideo()
+            }
           },
           onError: (event) => {
             console.error("Error en música de fondo:", event.data)
+            // Intentar con otra canción si hay error
+            setTimeout(() => {
+              this.playBackgroundMusic()
+            }, 2000)
           },
         },
       })
@@ -1063,14 +1073,22 @@ class AdminSystem {
     const eventTab = document.getElementById("event-tab")
     const eventTabEmoji = document.getElementById("event-tab-emoji")
     const eventTabName = document.getElementById("event-tab-name")
+    const compactNav = document.getElementById("compact-nav")
 
     eventTabEmoji.textContent = eventData.icon
     eventTabName.textContent = "EVENTO"
     eventTab.classList.remove("hidden")
+
+    // Mostrar navegación compacta
+    compactNav.classList.remove("hidden")
   }
 
   hideEventTab() {
-    document.getElementById("event-tab").classList.add("hidden")
+    const eventTab = document.getElementById("event-tab")
+    const compactNav = document.getElementById("compact-nav")
+
+    eventTab.classList.add("hidden")
+    compactNav.classList.add("hidden")
   }
 
   compressEvents() {
@@ -1715,6 +1733,26 @@ function showLoveMessage() {
 function playRandomSong() {
   adminSystem.playRandomSong()
 }
+
+// Función para alternar navegación compacta
+function toggleCompactNav() {
+  const menu = document.getElementById("compact-nav-menu")
+  if (menu.classList.contains("hidden")) {
+    menu.classList.remove("hidden")
+  } else {
+    menu.classList.add("hidden")
+  }
+}
+
+// Cerrar menú compacto al hacer click fuera
+document.addEventListener("click", (e) => {
+  const compactNav = document.getElementById("compact-nav")
+  const menu = document.getElementById("compact-nav-menu")
+
+  if (compactNav && !compactNav.contains(e.target)) {
+    menu.classList.add("hidden")
+  }
+})
 
 // Inicialización
 document.addEventListener("DOMContentLoaded", () => {
