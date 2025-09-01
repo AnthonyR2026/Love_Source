@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>💕 Para Glendys - Mi Amor Eterno</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Pacifico&family=Satisfy&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Pantalla de carga mejorada -->
+     Pantalla de carga mejorada 
     <div id="loading-screen" class="loading-screen">
         <div class="loading-content">
             <div class="loading-heart">
@@ -21,8 +21,16 @@
             <p class="loading-text">Preparando algo especial para ti ✨</p>
         </div>
     </div>
+
+     Título flotante del evento activo 
+    <div id="floating-event-title" class="floating-event-title hidden">
+        <div class="floating-title-content">
+            <span class="event-emoji" id="floating-event-emoji">🎉</span>
+            <span class="event-name" id="floating-event-name">Evento Activo</span>
+        </div>
+    </div>
     
-    <!-- Navegación mejorada -->
+     Navegación mejorada 
     <nav class="nav-container">
         <button class="nav-btn active" onclick="switchSection('blog')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -60,6 +68,11 @@
             </svg>
             <span>NOTAS</span>
         </button>
+         Pestaña de evento especial (solo visible durante eventos) 
+        <button class="nav-btn event-tab hidden" id="event-tab" onclick="switchSection('evento-especial')">
+            <span class="event-tab-emoji" id="event-tab-emoji">🎉</span>
+            <span id="event-tab-name">EVENTO</span>
+        </button>
         <button class="nav-btn settings-btn" onclick="openSettings()">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="3"></circle>
@@ -68,7 +81,7 @@
         </button>
     </nav>
 
-    <!-- Sección Blog Principal -->
+     Sección Blog Principal 
     <section id="blog" class="section active">
         <div class="container">
             <div class="header">
@@ -76,8 +89,8 @@
                 <p class="subtitle">Nuestro diario de amor digital - Eventos, recuerdos y todo sobre nosotros ❤️</p>
             </div>
 
-            <!-- Próximos Eventos -->
-            <div class="events-section">
+             Próximos Eventos (se comprimen durante eventos activos) 
+            <div class="events-section" id="events-section">
                 <h2 class="section-title">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -89,11 +102,25 @@
                 </h2>
                 
                 <div class="events-grid" id="events-container">
-                    <!-- Los eventos se cargarán dinámicamente -->
+                     Los eventos se cargarán dinámicamente 
+                </div>
+
+                 Burbuja comprimida para eventos (solo visible durante eventos activos) 
+                <div class="events-bubble hidden" id="events-bubble">
+                    <button class="bubble-toggle" onclick="toggleEventsBubble()">
+                        <span class="bubble-text">Próximos Eventos</span>
+                        <span class="bubble-count" id="bubble-count">4</span>
+                        <svg class="bubble-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6,9 12,15 18,9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="bubble-content hidden" id="bubble-content">
+                         Eventos comprimidos 
+                    </div>
                 </div>
             </div>
 
-            <!-- Funcionalidades de la Página -->
+             Funcionalidades de la Página 
             <div class="features-section">
                 <h2 class="section-title">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -147,7 +174,7 @@
                 </div>
             </div>
 
-            <!-- Actualizaciones Recientes -->
+             Actualizaciones Recientes 
             <div class="updates-section">
                 <h2 class="section-title">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -157,11 +184,11 @@
                 </h2>
                 
                 <div class="updates-timeline" id="updates-container">
-                    <!-- Las actualizaciones se cargarán dinámicamente -->
+                     Las actualizaciones se cargarán dinámicamente 
                 </div>
             </div>
 
-            <!-- Estadísticas de Amor -->
+             Estadísticas de Amor 
             <div class="stats-section">
                 <h2 class="section-title">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -171,13 +198,101 @@
                 </h2>
                 
                 <div class="stats-grid" id="stats-container">
-                    <!-- Las estadísticas se cargarán dinámicamente -->
+                     Las estadísticas se cargarán dinámicamente 
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Sección Canciones Mejorada -->
+     Sección Evento Especial 
+    <section id="evento-especial" class="section event-section">
+        <div class="container">
+            <div class="event-header">
+                <h1 class="event-title" id="event-section-title">🎉 Evento Especial</h1>
+                <p class="event-subtitle" id="event-section-subtitle">Celebrando un momento único</p>
+            </div>
+
+             Carta de Amor 
+            <div class="love-letter-container" id="love-letter-container">
+                <div class="love-letter" id="love-letter">
+                    <div class="letter-envelope" id="letter-envelope">
+                        <div class="envelope-flap"></div>
+                        <div class="envelope-body">
+                            <div class="envelope-heart">💕</div>
+                            <div class="envelope-text">Para ti, mi amor</div>
+                        </div>
+                    </div>
+                    
+                    <div class="letter-content hidden" id="letter-content">
+                        <div class="letter-paper">
+                            <div class="letter-header">
+                                <div class="letter-date" id="letter-date"></div>
+                                <div class="letter-to">Para mi amada Glendys 💕</div>
+                            </div>
+                            <div class="letter-text" id="letter-text">
+                                 El texto se cargará dinámicamente según el evento 
+                            </div>
+                            <div class="letter-signature">
+                                <div class="signature-text">Con todo mi amor,</div>
+                                <div class="signature-name">Anthony ❤️</div>
+                            </div>
+                            <button class="letter-read-btn" onclick="markLetterAsRead()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20,6 9,17 4,12"></polyline>
+                                </svg>
+                                Leído
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             Cubo 3D de Amor 
+            <div class="love-cube-container hidden" id="love-cube-container">
+                <h2 class="cube-title">Un regalo especial para ti</h2>
+                <div class="love-cube-scene">
+                    <div class="love-cube" id="love-cube" onclick="openLoveCube()">
+                        <div class="cube-face cube-front">
+                            <div class="cube-heart">💕</div>
+                            <div class="cube-text">Click me</div>
+                        </div>
+                        <div class="cube-face cube-back">
+                            <div class="cube-pattern">💖💗💝</div>
+                        </div>
+                        <div class="cube-face cube-right">
+                            <div class="cube-pattern">💘💞💓</div>
+                        </div>
+                        <div class="cube-face cube-left">
+                            <div class="cube-pattern">💌💐🌹</div>
+                        </div>
+                        <div class="cube-face cube-top">
+                            <div class="cube-pattern">✨⭐💫</div>
+                        </div>
+                        <div class="cube-face cube-bottom">
+                            <div class="cube-pattern">🎀🎁💎</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             Mensaje de Amor Enfocado 
+            <div class="love-message-overlay hidden" id="love-message-overlay">
+                <div class="love-message-content">
+                    <button class="close-message-btn" onclick="closeLoveMessage()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div class="love-message-text" id="love-message-text">
+                         El mensaje se cargará dinámicamente 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+     Sección Canciones Mejorada 
     <section id="canciones" class="section">
         <div class="container">
             <h2 class="section-title">🎵 Canciones de Nuestro Amor</h2>
@@ -272,7 +387,7 @@
                     </div>
                 </div>
 
-                <!-- Más canciones... -->
+                 Más canciones... 
                 <div class="song-card" data-song="catorce">
                     <div class="song-info">
                         <h3>Catorce</h3>
@@ -320,7 +435,7 @@
         </div>
     </section>
 
-    <!-- Sección Recuerdos -->
+     Sección Recuerdos 
     <section id="recuerdos" class="section">
         <div class="container">
             <h2 class="section-title">📸 Nuestros Recuerdos</h2>
@@ -334,7 +449,7 @@
         </div>
     </section>
 
-    <!-- Sección Poemas -->
+     Sección Poemas 
     <section id="poemas" class="section">
         <div class="container">
             <h2 class="section-title">✨ Poemas de Amor</h2>
@@ -348,7 +463,7 @@
         </div>
     </section>
 
-    <!-- Sección Notas -->
+     Sección Notas 
     <section id="notas" class="section">
         <div class="container">
             <h2 class="section-title">📝 Notas de Amor</h2>
@@ -362,7 +477,7 @@
         </div>
     </section>
 
-    <!-- Modal de Configuración -->
+     Modal de Configuración 
     <div id="settings-modal" class="settings-modal hidden">
         <div class="settings-content">
             <div class="settings-header">
@@ -458,8 +573,13 @@
                             <option value="low">Baja</option>
                         </select>
                         <label class="setting-toggle">
-                            <span>Visualizador de audio</span>
-                            <input type="checkbox" id="audio-visualizer-toggle" checked>
+                            <span>Música de fondo en eventos</span>
+                            <input type="checkbox" id="background-music" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <label class="setting-toggle">
+                            <span>Efectos de sonido</span>
+                            <input type="checkbox" id="sound-effects" checked>
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -468,7 +588,7 @@
         </div>
     </div>
 
-    <!-- Panel de Administrador Secreto -->
+     Panel de Administrador Secreto 
     <div id="admin-panel" class="admin-panel hidden">
         <div class="admin-content">
             <div class="admin-header">
@@ -602,7 +722,7 @@
         </div>
     </div>
 
-    <!-- Overlay para eventos especiales -->
+     Overlay para eventos especiales 
     <div id="event-overlay" class="event-overlay hidden">
         <div class="event-notification">
             <div class="event-icon" id="event-icon">🎉</div>
@@ -614,7 +734,12 @@
         </div>
     </div>
 
-    <!-- Corazones flotantes -->
+     Audio para música de fondo 
+    <audio id="background-music" loop style="display: none;">
+         Se cargará dinámicamente 
+    </audio>
+
+     Corazones flotantes 
     <div class="floating-hearts"></div>
 
     <script src="script.js"></script>
