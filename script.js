@@ -706,9 +706,342 @@ class SettingsManager {
   }
 }
 
-// Inicializar sistemas
-const musicPlayer = new MusicPlayer()
-const settingsManager = new SettingsManager()
+// Sistema de Administrador
+class AdminSystem {
+  constructor() {
+    this.keySequence = []
+    this.targetSequence = ["KeyP", "KeyL"]
+    this.sequenceTimeout = null
+    this.currentEvent = null
+    this.eventStartTime = null
+    this.setupKeyListener()
+    this.loadEventState()
+  }
+
+  setupKeyListener() {
+    document.addEventListener("keydown", (e) => {
+      // Limpiar secuencia anterior si ha pasado mucho tiempo
+      if (this.sequenceTimeout) {
+        clearTimeout(this.sequenceTimeout)
+      }
+
+      // Agregar tecla a la secuencia
+      this.keySequence.push(e.code)
+
+      // Mantener solo las últimas teclas necesarias
+      if (this.keySequence.length > this.targetSequence.length) {
+        this.keySequence.shift()
+      }
+
+      // Verificar si la secuencia coincide
+      if (this.keySequence.length === this.targetSequence.length) {
+        const matches = this.keySequence.every((key, index) => key === this.targetSequence[index])
+        if (matches) {
+          this.openAdminPanel()
+          this.keySequence = []
+          return
+        }
+      }
+
+      // Limpiar secuencia después de 2 segundos
+      this.sequenceTimeout = setTimeout(() => {
+        this.keySequence = []
+      }, 2000)
+    })
+  }
+
+  openAdminPanel() {
+    document.getElementById("admin-panel").classList.remove("hidden")
+    this.updateAdminStatus()
+    showNotification("Panel de administrador activado", "success")
+  }
+
+  closeAdminPanel() {
+    document.getElementById("admin-panel").classList.add("hidden")
+  }
+
+  activateEvent(eventType) {
+    this.currentEvent = eventType
+    this.eventStartTime = new Date().toISOString()
+
+    // Aplicar tema del evento
+    document.documentElement.setAttribute("data-event", eventType)
+
+    // Guardar estado
+    this.saveEventState()
+
+    // Mostrar notificación del evento
+    this.showEventNotification(eventType)
+
+    // Cerrar panel de admin
+    this.closeAdminPanel()
+
+    // Actualizar estadísticas si es aniversario mensual
+    if (eventType === "monthly") {
+      this.updateMonthlyStats()
+    }
+  }
+
+  deactivateAllEvents() {
+    this.currentEvent = null
+    this.eventStartTime = null
+
+    // Remover tema del evento
+    document.documentElement.removeAttribute("data-event")
+
+    // Guardar estado
+    this.saveEventState()
+
+    showNotification("Todos los eventos desactivados", "info")
+    this.closeAdminPanel()
+  }
+
+  showEventNotification(eventType) {
+    const eventData = this.getEventData(eventType)
+
+    document.getElementById("event-icon").textContent = eventData.icon
+    document.getElementById("event-title").textContent = eventData.title
+    document.getElementById("event-message").textContent = eventData.message
+
+    document.getElementById("event-overlay").classList.remove("hidden")
+
+    // Efectos especiales según el evento
+    this.triggerEventEffects(eventType)
+  }
+
+  getEventData(eventType) {
+    const events = {
+      birthday: {
+        icon: "🎂",
+        title: "¡Feliz Cumpleaños Glendys!",
+        message: "Hoy celebramos tu día especial con un tema festivo lleno de amor",
+      },
+      anniversary: {
+        icon: "💕",
+        title: "¡Feliz Aniversario!",
+        message: "Celebrando nuestro amor eterno con un tema romántico especial",
+      },
+      monthly: {
+        icon: "📅",
+        title: "¡Aniversario Mensual!",
+        message: "Un mes más de amor infinito - celebremos este momento especial",
+      },
+      christmas: {
+        icon: "🎄",
+        title: "¡Feliz Navidad Juntos!",
+        message: "Nuestra primera navidad juntos merece una celebración especial",
+      },
+      valentine: {
+        icon: "💝",
+        title: "¡Feliz San Valentín!",
+        message: "El día del amor perfecto para celebrar lo nuestro",
+      },
+    }
+
+    return events[eventType] || { icon: "🎉", title: "Evento Especial", message: "Celebrando un momento único" }
+  }
+
+  triggerEventEffects(eventType) {
+    // Lluvia de corazones especial
+    setTimeout(() => {
+      this.triggerHeartRain(20)
+    }, 1000)
+
+    // Efectos específicos por evento
+    switch (eventType) {
+      case "birthday":
+        this.triggerBirthdayEffects()
+        break
+      case "anniversary":
+      case "monthly":
+        this.triggerAnniversaryEffects()
+        break
+      case "christmas":
+        this.triggerChristmasEffects()
+        break
+      case "valentine":
+        this.triggerValentineEffects()
+        break
+    }
+  }
+
+  triggerBirthdayEffects() {
+    // Confeti de cumpleaños
+    for (let i = 0; i < 30; i++) {
+      setTimeout(() => {
+        this.createConfetti()
+      }, i * 100)
+    }
+  }
+
+  triggerAnniversaryEffects() {
+    // Corazones dorados
+    for (let i = 0; i < 15; i++) {
+      setTimeout(() => {
+        this.createSpecialHeart("💖")
+      }, i * 200)
+    }
+  }
+
+  triggerChristmasEffects() {
+    // Nieve digital
+    for (let i = 0; i < 25; i++) {
+      setTimeout(() => {
+        this.createSnowflake()
+      }, i * 150)
+    }
+  }
+
+  triggerValentineEffects() {
+    // Corazones rojos intensos
+    for (let i = 0; i < 20; i++) {
+      setTimeout(() => {
+        this.createSpecialHeart("💘")
+      }, i * 100)
+    }
+  }
+
+  createConfetti() {
+    const confetti = document.createElement("div")
+    const emojis = ["🎉", "🎊", "🎈", "🎂", "⭐"]
+    confetti.textContent = emojis[Math.floor(Math.random() * emojis.length)]
+    confetti.className = "heart-rain"
+    confetti.style.left = Math.random() * 100 + "%"
+    confetti.style.fontSize = Math.random() * 20 + 20 + "px"
+    confetti.style.animationDuration = Math.random() * 2 + 2 + "s"
+
+    document.body.appendChild(confetti)
+
+    setTimeout(() => {
+      confetti.remove()
+    }, 4000)
+  }
+
+  createSpecialHeart(emoji) {
+    const heart = document.createElement("div")
+    heart.textContent = emoji
+    heart.className = "heart-rain"
+    heart.style.left = Math.random() * 100 + "%"
+    heart.style.fontSize = Math.random() * 15 + 20 + "px"
+    heart.style.animationDuration = Math.random() * 2 + 2 + "s"
+
+    document.body.appendChild(heart)
+
+    setTimeout(() => {
+      heart.remove()
+    }, 3000)
+  }
+
+  createSnowflake() {
+    const snow = document.createElement("div")
+    const snowEmojis = ["❄️", "⭐", "✨"]
+    snow.textContent = snowEmojis[Math.floor(Math.random() * snowEmojis.length)]
+    snow.className = "heart-rain"
+    snow.style.left = Math.random() * 100 + "%"
+    snow.style.fontSize = Math.random() * 10 + 15 + "px"
+    snow.style.animationDuration = Math.random() * 3 + 3 + "s"
+    snow.style.color = "#ffffff"
+
+    document.body.appendChild(snow)
+
+    setTimeout(() => {
+      snow.remove()
+    }, 6000)
+  }
+
+  triggerHeartRain(count = 10) {
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        const heart = document.createElement("div")
+        const hearts = ["💕", "💖", "💗", "💝", "💘"]
+        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)]
+        heart.className = "heart-rain"
+        heart.style.left = Math.random() * 100 + "%"
+        heart.style.fontSize = Math.random() * 15 + 20 + "px"
+        heart.style.animationDuration = Math.random() * 2 + 2 + "s"
+
+        document.body.appendChild(heart)
+
+        setTimeout(() => {
+          heart.remove()
+        }, 4000)
+      }, i * 100)
+    }
+  }
+
+  showLoveMessage() {
+    const messages = [
+      "Eres la razón de mi sonrisa cada día 💕",
+      "Mi amor por ti crece más cada segundo ❤️",
+      "Eres mi persona favorita en todo el universo 🌟",
+      "Contigo cada día es una aventura hermosa 🌈",
+      "Tu amor es mi mayor tesoro 💎",
+      "Eres mi hogar, mi paz, mi todo 🏠",
+      "Mi corazón late solo por ti 💓",
+    ]
+
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)]
+    showNotification(randomMessage, "success")
+  }
+
+  playRandomSong() {
+    const songIds = Object.keys(SONGS_DATABASE)
+    const randomSong = songIds[Math.floor(Math.random() * songIds.length)]
+    playSong(randomSong)
+  }
+
+  updateMonthlyStats() {
+    // Actualizar estadísticas para aniversario mensual
+    const monthlyCount = this.getMonthlyCount()
+    showNotification(`¡${monthlyCount} meses de amor puro! 💜`, "success")
+  }
+
+  getMonthlyCount() {
+    const startDate = new Date("2024-12-03")
+    const now = new Date()
+    const diffTime = now - startDate
+    const diffMonths = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 30.44))
+    return Math.max(0, diffMonths)
+  }
+
+  updateAdminStatus() {
+    const activeEventName = document.getElementById("active-event-name")
+    const eventStartTime = document.getElementById("event-start-time")
+
+    if (this.currentEvent) {
+      const eventData = this.getEventData(this.currentEvent)
+      activeEventName.textContent = eventData.title
+      eventStartTime.textContent = new Date(this.eventStartTime).toLocaleString("es-ES")
+    } else {
+      activeEventName.textContent = "Ninguno"
+      eventStartTime.textContent = "-"
+    }
+  }
+
+  saveEventState() {
+    const state = {
+      currentEvent: this.currentEvent,
+      eventStartTime: this.eventStartTime,
+    }
+    localStorage.setItem("adminEventState", JSON.stringify(state))
+  }
+
+  loadEventState() {
+    const saved = localStorage.getItem("adminEventState")
+    if (saved) {
+      const state = JSON.parse(saved)
+      if (state.currentEvent) {
+        this.currentEvent = state.currentEvent
+        this.eventStartTime = state.eventStartTime
+        document.documentElement.setAttribute("data-event", state.currentEvent)
+      }
+    }
+  }
+
+  closeEventNotification() {
+    document.getElementById("event-overlay").classList.add("hidden")
+  }
+}
 
 // Funciones principales
 function playSong(songId) {
@@ -847,6 +1180,35 @@ function createFloatingHeart() {
   }, 6000)
 }
 
+// Funciones globales para el panel de administrador
+function closeAdminPanel() {
+  adminSystem.closeAdminPanel()
+}
+
+function activateEvent(eventType) {
+  adminSystem.activateEvent(eventType)
+}
+
+function deactivateAllEvents() {
+  adminSystem.deactivateAllEvents()
+}
+
+function closeEventNotification() {
+  adminSystem.closeEventNotification()
+}
+
+function triggerHeartRain() {
+  adminSystem.triggerHeartRain(15)
+}
+
+function showLoveMessage() {
+  adminSystem.showLoveMessage()
+}
+
+function playRandomSong() {
+  adminSystem.playRandomSong()
+}
+
 // Inicialización
 document.addEventListener("DOMContentLoaded", () => {
   // Pantalla de carga
@@ -861,6 +1223,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Configurar event listeners de configuración
   setupSettingsListeners()
+
+  // Mostrar notificación sobre el panel secreto
+  setTimeout(() => {
+    showNotification("💡 Tip: Presiona P + L para acceder al panel secreto", "info")
+  }, 8000)
 
   // Corazones flotantes
   setInterval(createFloatingHeart, 2000)
@@ -897,3 +1264,8 @@ function setupSettingsListeners() {
     })
   }
 }
+
+// Inicializar sistemas
+const musicPlayer = new MusicPlayer()
+const settingsManager = new SettingsManager()
+const adminSystem = new AdminSystem()
