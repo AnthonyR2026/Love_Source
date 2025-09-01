@@ -148,46 +148,6 @@ const BLOG_DATA = {
       icon: "💝",
     },
   ],
-
-  updates: [
-    {
-      id: 1,
-      title: "🎵 Página de Canciones Completada",
-      date: "2024-08-30",
-      description:
-        "Agregué todas nuestras canciones especiales con reproductor funcional y dedicatorias personalizadas.",
-      type: "feature",
-    },
-    {
-      id: 2,
-      title: "✨ Nuevo Sistema de Temas",
-      date: "2024-08-30",
-      description: "Ahora puedes cambiar entre 4 temas diferentes: Romántico, Oscuro, Claro y Atardecer.",
-      type: "feature",
-    },
-    {
-      id: 3,
-      title: "💕 Blog de Amor Creado",
-      date: "2024-08-30",
-      description: "Convertí la página principal en un blog donde puedes ver eventos especiales y actualizaciones.",
-      type: "major",
-    },
-    {
-      id: 4,
-      title: "🎨 Efectos Visuales Mejorados",
-      date: "2024-08-29",
-      description:
-        "Agregué corazones flotantes, animaciones suaves y efectos de blur para una experiencia más romántica.",
-      type: "enhancement",
-    },
-    {
-      id: 5,
-      title: "⚙️ Configuraciones Avanzadas",
-      date: "2024-08-29",
-      description: "Opciones de accesibilidad, rendimiento y personalización para que tengas la mejor experiencia.",
-      type: "feature",
-    },
-  ],
 }
 
 // Textos de eventos especiales
@@ -331,7 +291,6 @@ function calculateDaysUntil(dateString) {
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
   if (diffDays < 0) {
-    // Si ya pasó, calcular para el próximo año
     eventDate.setFullYear(eventDate.getFullYear() + 1)
     const newDiffTime = eventDate - today
     return Math.ceil(newDiffTime / (1000 * 60 * 60 * 24))
@@ -359,12 +318,10 @@ function loadEvents() {
   const container = document.getElementById("events-container")
   if (!container) return
 
-  // Calcular días hasta cada evento
   BLOG_DATA.events.forEach((event) => {
     event.daysUntil = calculateDaysUntil(event.date)
   })
 
-  // Ordenar por proximidad
   const sortedEvents = BLOG_DATA.events.sort((a, b) => a.daysUntil - b.daysUntil)
 
   container.innerHTML = sortedEvents
@@ -391,12 +348,10 @@ function loadEventsBubble() {
   const bubbleContent = document.getElementById("bubble-content")
   if (!bubbleContent) return
 
-  // Calcular días hasta cada evento
   BLOG_DATA.events.forEach((event) => {
     event.daysUntil = calculateDaysUntil(event.date)
   })
 
-  // Ordenar por proximidad
   const sortedEvents = BLOG_DATA.events.sort((a, b) => a.daysUntil - b.daysUntil)
 
   bubbleContent.innerHTML = sortedEvents
@@ -409,26 +364,6 @@ function loadEventsBubble() {
         <p>${event.description}</p>
       </div>
       <div class="bubble-event-days">${event.daysUntil} ${event.daysUntil === 1 ? "día" : "días"}</div>
-    </div>
-  `,
-    )
-    .join("")
-}
-
-// Cargar actualizaciones
-function loadUpdates() {
-  const container = document.getElementById("updates-container")
-  if (!container) return
-
-  container.innerHTML = BLOG_DATA.updates
-    .map(
-      (update) => `
-    <div class="update-item ${update.type}">
-      <div class="update-date">${formatDate(update.date)}</div>
-      <div class="update-content">
-        <h3>${update.title}</h3>
-        <p>${update.description}</p>
-      </div>
     </div>
   `,
     )
@@ -462,14 +397,38 @@ function loadStats() {
   `
 }
 
-// Formatear fecha
-function formatDate(dateString) {
-  const date = new Date(dateString)
-  return date.toLocaleDateString("es-ES", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  })
+// Cargar canciones
+function loadSongs() {
+  const container = document.getElementById("songs-grid")
+  if (!container) return
+
+  container.innerHTML = Object.entries(SONGS_DATABASE)
+    .map(
+      ([id, song]) => `
+    <div class="song-card" data-song="${id}">
+      <div class="song-info">
+        <h3>${song.title}</h3>
+        <p>${song.artist}</p>
+        <span class="duration">${song.duration}</span>
+      </div>
+      <div class="song-actions">
+        <button onclick="playSong('${id}')" class="action-btn play-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5,3 19,12 5,21"></polygon>
+          </svg>
+          <span>Reproducir</span>
+        </button>
+        <button onclick="showSongDedication(SONGS_DATABASE.${id})" class="action-btn story-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          <span>Historia</span>
+        </button>
+      </div>
+    </div>
+  `,
+    )
+    .join("")
 }
 
 // Sistema de reproducción de música
@@ -590,7 +549,6 @@ class MusicPlayer {
       return
     }
 
-    // Seleccionar una canción aleatoria para música de fondo
     const songIds = Object.keys(SONGS_DATABASE)
     const randomSongId = songIds[Math.floor(Math.random() * songIds.length)]
     const song = SONGS_DATABASE[randomSongId]
@@ -618,18 +576,16 @@ class MusicPlayer {
         },
         events: {
           onReady: (event) => {
-            event.target.setVolume(8) // Volumen más bajo y atenuado
+            event.target.setVolume(8)
             console.log("Música de fondo iniciada:", song.title)
           },
           onStateChange: (event) => {
-            // Asegurar que se repita indefinidamente
             if (event.data === window.YT.PlayerState.ENDED) {
               event.target.playVideo()
             }
           },
           onError: (event) => {
             console.error("Error en música de fondo:", event.data)
-            // Intentar con otra canción si hay error
             setTimeout(() => {
               this.playBackgroundMusic()
             }, 2000)
@@ -949,20 +905,16 @@ class AdminSystem {
 
   setupKeyListener() {
     document.addEventListener("keydown", (e) => {
-      // Limpiar secuencia anterior si ha pasado mucho tiempo
       if (this.sequenceTimeout) {
         clearTimeout(this.sequenceTimeout)
       }
 
-      // Agregar tecla a la secuencia
       this.keySequence.push(e.code)
 
-      // Mantener solo las últimas teclas necesarias
       if (this.keySequence.length > this.targetSequence.length) {
         this.keySequence.shift()
       }
 
-      // Verificar si la secuencia coincide
       if (this.keySequence.length === this.targetSequence.length) {
         const matches = this.keySequence.every((key, index) => key === this.targetSequence[index])
         if (matches) {
@@ -972,7 +924,6 @@ class AdminSystem {
         }
       }
 
-      // Limpiar secuencia después de 2 segundos
       this.sequenceTimeout = setTimeout(() => {
         this.keySequence = []
       }, 2000)
@@ -993,35 +944,22 @@ class AdminSystem {
     this.currentEvent = eventType
     this.eventStartTime = new Date().toISOString()
 
-    // Aplicar tema del evento
     document.documentElement.setAttribute("data-event", eventType)
 
-    // Mostrar título flotante
     this.showFloatingTitle(eventType)
-
-    // Mostrar pestaña de evento
     this.showEventTab(eventType)
-
-    // Comprimir eventos en burbuja
     this.compressEvents()
 
-    // Iniciar música de fondo si está habilitada
     if (settingsManager.settings.backgroundMusic) {
       setTimeout(() => {
         musicPlayer.playBackgroundMusic()
       }, 2000)
     }
 
-    // Guardar estado
     this.saveEventState()
-
-    // Mostrar notificación del evento
     this.showEventNotification(eventType)
-
-    // Cerrar panel de admin
     this.closeAdminPanel()
 
-    // Actualizar estadísticas si es aniversario mensual
     if (eventType === "monthly") {
       this.updateMonthlyStats()
     }
@@ -1031,22 +969,14 @@ class AdminSystem {
     this.currentEvent = null
     this.eventStartTime = null
 
-    // Remover tema del evento
     document.documentElement.removeAttribute("data-event")
 
-    // Ocultar título flotante
     this.hideFloatingTitle()
-
-    // Ocultar pestaña de evento
     this.hideEventTab()
-
-    // Descomprimir eventos
     this.decompressEvents()
 
-    // Detener música de fondo
     musicPlayer.stopBackgroundMusic()
 
-    // Guardar estado
     this.saveEventState()
 
     showNotification("Todos los eventos desactivados", "info")
@@ -1079,7 +1009,6 @@ class AdminSystem {
     eventTabName.textContent = "EVENTO"
     eventTab.classList.remove("hidden")
 
-    // Mostrar navegación compacta
     compactNav.classList.remove("hidden")
   }
 
@@ -1123,10 +1052,8 @@ class AdminSystem {
 
     document.getElementById("event-overlay").classList.remove("hidden")
 
-    // Efectos especiales según el evento
     this.triggerEventEffects(eventType)
 
-    // Auto-cerrar después de 5 segundos
     setTimeout(() => {
       this.closeEventNotification()
     }, 5000)
@@ -1135,7 +1062,6 @@ class AdminSystem {
   closeEventNotification() {
     document.getElementById("event-overlay").classList.add("hidden")
 
-    // Cambiar automáticamente a la sección de evento
     setTimeout(() => {
       switchSection("evento-especial")
       this.setupEventSection()
@@ -1148,14 +1074,10 @@ class AdminSystem {
     const eventData = this.getEventData(this.currentEvent)
     const eventTexts = EVENT_TEXTS[this.currentEvent]
 
-    // Actualizar título y subtítulo de la sección
     document.getElementById("event-section-title").textContent = eventData.title
     document.getElementById("event-section-subtitle").textContent = eventData.message
 
-    // Configurar carta
     this.setupLoveLetter(eventTexts.letter)
-
-    // Configurar cubo
     this.setupLoveCube(eventTexts.cubeMessage)
   }
 
@@ -1172,13 +1094,11 @@ class AdminSystem {
 
     letterTextEl.textContent = letterText
 
-    // Configurar evento de click en el sobre
     const letterEnvelope = document.getElementById("letter-envelope")
     letterEnvelope.addEventListener("click", this.openLetter.bind(this))
   }
 
   setupLoveCube(cubeMessage) {
-    // Guardar el mensaje del cubo para cuando se abra
     this.cubeMessage = cubeMessage
   }
 
@@ -1186,12 +1106,10 @@ class AdminSystem {
     const envelope = document.getElementById("letter-envelope")
     const letterContent = document.getElementById("letter-content")
 
-    // Reproducir sonido de papel (si está habilitado)
     if (settingsManager.settings.soundEffects) {
       this.playSound("paper")
     }
 
-    // Animación de apertura
     envelope.classList.add("opening")
 
     setTimeout(() => {
@@ -1204,12 +1122,10 @@ class AdminSystem {
     const letterContainer = document.getElementById("love-letter-container")
     const cubeContainer = document.getElementById("love-cube-container")
 
-    // Reproducir sonido de éxito
     if (settingsManager.settings.soundEffects) {
       this.playSound("success")
     }
 
-    // Animación de guardar carta
     letterContainer.style.transform = "scale(0.8)"
     letterContainer.style.opacity = "0.5"
 
@@ -1220,18 +1136,15 @@ class AdminSystem {
   }
 
   openLoveCube() {
-    // Reproducir sonido de regalo
     if (settingsManager.settings.soundEffects) {
       this.playSound("gift")
     }
 
-    // Mostrar mensaje de amor enfocado
     const messageText = document.getElementById("love-message-text")
     messageText.textContent = this.cubeMessage || "¡Te amo con todo mi corazón! 💕"
 
     document.getElementById("love-message-overlay").classList.remove("hidden")
 
-    // Efectos especiales
     this.triggerHeartRain(10)
   }
 
@@ -1240,8 +1153,6 @@ class AdminSystem {
   }
 
   playSound(type) {
-    // Crear sonidos usando Web Audio API o simplemente efectos visuales
-    // Por ahora, solo efectos visuales
     switch (type) {
       case "paper":
         this.createSoundEffect("📄")
@@ -1332,12 +1243,10 @@ class AdminSystem {
   }
 
   triggerEventEffects(eventType) {
-    // Lluvia de corazones especial
     setTimeout(() => {
       this.triggerHeartRain(20)
     }, 1000)
 
-    // Efectos específicos por evento
     switch (eventType) {
       case "birthday":
         this.triggerBirthdayEffects()
@@ -1356,7 +1265,6 @@ class AdminSystem {
   }
 
   triggerBirthdayEffects() {
-    // Confeti de cumpleaños
     for (let i = 0; i < 30; i++) {
       setTimeout(() => {
         this.createConfetti()
@@ -1365,7 +1273,6 @@ class AdminSystem {
   }
 
   triggerAnniversaryEffects() {
-    // Corazones dorados
     for (let i = 0; i < 15; i++) {
       setTimeout(() => {
         this.createSpecialHeart("💖")
@@ -1374,7 +1281,6 @@ class AdminSystem {
   }
 
   triggerChristmasEffects() {
-    // Nieve digital
     for (let i = 0; i < 25; i++) {
       setTimeout(() => {
         this.createSnowflake()
@@ -1383,7 +1289,6 @@ class AdminSystem {
   }
 
   triggerValentineEffects() {
-    // Corazones rojos intensos
     for (let i = 0; i < 20; i++) {
       setTimeout(() => {
         this.createSpecialHeart("💘")
@@ -1481,7 +1386,6 @@ class AdminSystem {
   }
 
   updateMonthlyStats() {
-    // Actualizar estadísticas para aniversario mensual
     const monthlyCount = this.getMonthlyCount()
     showNotification(`¡${monthlyCount} meses de amor puro! 💜`, "success")
   }
@@ -1528,7 +1432,6 @@ class AdminSystem {
         this.showEventTab(state.currentEvent)
         this.compressEvents()
 
-        // Iniciar música de fondo si está habilitada
         if (settingsManager.settings.backgroundMusic) {
           setTimeout(() => {
             musicPlayer.playBackgroundMusic()
@@ -1594,7 +1497,12 @@ function switchSection(sectionName) {
     btn.classList.remove("active")
   })
 
-  event.target.closest(".nav-btn").classList.add("active")
+  if (event && event.target) {
+    const navBtn = event.target.closest(".nav-btn")
+    if (navBtn) {
+      navBtn.classList.add("active")
+    }
+  }
 }
 
 function openSettings() {
@@ -1627,7 +1535,6 @@ function updateSettingsUI() {
   }
 }
 
-// Función para alternar burbuja de eventos
 function toggleEventsBubble() {
   const bubbleContent = document.getElementById("bubble-content")
   const bubbleToggle = document.querySelector(".bubble-toggle")
@@ -1641,17 +1548,14 @@ function toggleEventsBubble() {
   }
 }
 
-// Función para marcar carta como leída
 function markLetterAsRead() {
   adminSystem.markLetterAsRead()
 }
 
-// Función para abrir cubo de amor
 function openLoveCube() {
   adminSystem.openLoveCube()
 }
 
-// Función para cerrar mensaje de amor
 function closeLoveMessage() {
   adminSystem.closeLoveMessage()
 }
@@ -1688,7 +1592,6 @@ function showNotification(message, type = "info") {
   }, 4000)
 }
 
-// Corazones flotantes
 function createFloatingHeart() {
   const hearts = ["💖", "💕", "💗", "💝", "💘"]
   const heart = document.createElement("div")
@@ -1705,7 +1608,6 @@ function createFloatingHeart() {
   }, 6000)
 }
 
-// Funciones globales para el panel de administrador
 function closeAdminPanel() {
   adminSystem.closeAdminPanel()
 }
@@ -1734,7 +1636,6 @@ function playRandomSong() {
   adminSystem.playRandomSong()
 }
 
-// Función para alternar navegación compacta
 function toggleCompactNav() {
   const menu = document.getElementById("compact-nav-menu")
   if (menu.classList.contains("hidden")) {
@@ -1744,7 +1645,6 @@ function toggleCompactNav() {
   }
 }
 
-// Cerrar menú compacto al hacer click fuera
 document.addEventListener("click", (e) => {
   const compactNav = document.getElementById("compact-nav")
   const menu = document.getElementById("compact-nav-menu")
@@ -1754,37 +1654,29 @@ document.addEventListener("click", (e) => {
   }
 })
 
-// Inicialización
 document.addEventListener("DOMContentLoaded", () => {
-  // Pantalla de carga
   setTimeout(() => {
     document.getElementById("loading-screen").classList.add("hidden")
   }, 3000)
 
-  // Cargar contenido del blog
   loadEvents()
-  loadUpdates()
   loadStats()
+  loadSongs()
 
-  // Configurar event listeners de configuración
   setupSettingsListeners()
 
-  // Mostrar notificación sobre el panel secreto
   setTimeout(() => {
     showNotification("💡 Tip: Presiona P + L para acceder al panel secreto", "info")
   }, 8000)
 
-  // Corazones flotantes
   setInterval(createFloatingHeart, 2000)
 
-  // Mostrar notificación de bienvenida
   setTimeout(() => {
     showNotification("¡Bienvenida a nuestro blog de amor! 💕", "success")
   }, 4000)
 })
 
 function setupSettingsListeners() {
-  // Theme buttons
   document.querySelectorAll(".theme-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       document.querySelectorAll(".theme-btn").forEach((b) => b.classList.remove("active"))
@@ -1793,7 +1685,6 @@ function setupSettingsListeners() {
     })
   })
 
-  // Toggle switches
   document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
     checkbox.addEventListener("change", () => {
       const setting = checkbox.id.replace("-", "_")
@@ -1801,7 +1692,6 @@ function setupSettingsListeners() {
     })
   })
 
-  // Audio quality
   const audioQualitySelect = document.getElementById("audio-quality")
   if (audioQualitySelect) {
     audioQualitySelect.addEventListener("change", (e) => {
@@ -1810,7 +1700,6 @@ function setupSettingsListeners() {
   }
 }
 
-// Inicializar sistemas
 const musicPlayer = new MusicPlayer()
 const settingsManager = new SettingsManager()
 const adminSystem = new AdminSystem()
