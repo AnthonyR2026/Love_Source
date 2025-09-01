@@ -89,7 +89,6 @@
   box-sizing: border-box;
 }
 
-/* Arreglar overflow global */
 html,
 body {
   overflow-x: hidden;
@@ -124,7 +123,7 @@ body {
   backdrop-filter: none !important;
 }
 
-/* Pantalla de carga mejorada */
+/* Pantalla de carga */
 .loading-screen {
   position: fixed;
   top: 0;
@@ -239,6 +238,95 @@ body {
   }
 }
 
+/* Navegación compacta para eventos */
+.compact-nav {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 150;
+  transition: var(--transition);
+}
+
+.compact-nav.hidden {
+  display: none;
+}
+
+.compact-nav-toggle {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-lg);
+}
+
+.compact-nav-toggle:hover {
+  background: var(--glass-hover);
+  transform: scale(1.1);
+  box-shadow: var(--shadow-xl);
+}
+
+.compact-nav-menu {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-lg);
+  padding: 12px;
+  box-shadow: var(--shadow-xl);
+  min-width: 200px;
+  animation: compactMenuSlide 0.3s ease;
+}
+
+.compact-nav-menu.hidden {
+  display: none;
+}
+
+@keyframes compactMenuSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.compact-nav-btn {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.compact-nav-btn:hover {
+  background: var(--glass-hover);
+  color: var(--primary);
+  transform: translateX(5px);
+}
+
+.compact-nav-btn:last-child {
+  margin-bottom: 0;
+}
+
 /* Título flotante del evento */
 .floating-event-title {
   position: fixed;
@@ -296,7 +384,7 @@ body {
   }
 }
 
-/* Navegación mejorada con blur */
+/* Navegación principal */
 .nav-container {
   position: fixed;
   top: 20px;
@@ -411,7 +499,26 @@ body {
   }
 }
 
-/* Secciones con animaciones mejoradas */
+/* Ocultar navegación principal durante eventos */
+[data-event] .nav-container {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+[data-event] .compact-nav {
+  display: block;
+}
+
+/* Título flotante centrado durante eventos */
+[data-event] .floating-event-title {
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+}
+
+/* Secciones */
 .section {
   display: none;
   min-height: 100vh;
@@ -444,7 +551,7 @@ body {
   box-sizing: border-box;
 }
 
-/* Header con efectos mejorados */
+/* Header */
 .header {
   text-align: center;
   margin-bottom: 50px;
@@ -528,7 +635,6 @@ body {
 /* Estilos del Blog */
 .events-section,
 .features-section,
-.updates-section,
 .stats-section {
   margin-bottom: 80px;
 }
@@ -989,7 +1095,7 @@ body {
   background: linear-gradient(135deg, #20c997, #28a745);
 }
 
-/* Cubo 3D de Amor */
+/* Regalo 3D */
 .love-cube-container {
   text-align: center;
   margin-bottom: 60px;
@@ -1017,7 +1123,6 @@ body {
   height: 300px;
 }
 
-/* Cubo regalo mejorado */
 .love-cube {
   position: relative;
   width: 150px;
@@ -1071,7 +1176,6 @@ body {
   overflow: hidden;
 }
 
-/* Cintas del regalo */
 .gift-ribbon-v {
   position: absolute;
   top: 0;
@@ -1096,7 +1200,6 @@ body {
   z-index: 2;
 }
 
-/* Moños del regalo */
 .gift-bow {
   position: absolute;
   top: 20%;
@@ -1160,6 +1263,30 @@ body {
     text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
     opacity: 1;
   }
+}
+
+.cube-front {
+  transform: rotateY(0deg) translateZ(75px);
+}
+
+.cube-back {
+  transform: rotateY(180deg) translateZ(75px);
+}
+
+.cube-right {
+  transform: rotateY(90deg) translateZ(75px);
+}
+
+.cube-left {
+  transform: rotateY(-90deg) translateZ(75px);
+}
+
+.cube-top {
+  transform: rotateX(90deg) translateZ(75px);
+}
+
+.cube-bottom {
+  transform: rotateX(-90deg) translateZ(75px);
 }
 
 /* Mensaje de Amor Enfocado */
@@ -1323,80 +1450,6 @@ body {
   font-size: 0.9rem;
 }
 
-/* Actualizaciones */
-.updates-timeline {
-  position: relative;
-  padding-left: 30px;
-}
-
-.updates-timeline::before {
-  content: "";
-  position: absolute;
-  left: 15px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--glass-border);
-}
-
-.update-item {
-  position: relative;
-  margin-bottom: 30px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border-radius: var(--border-radius);
-  padding: 25px;
-  border: 1px solid var(--glass-border);
-  transition: var(--transition);
-}
-
-.update-item::before {
-  content: "";
-  position: absolute;
-  left: -37px;
-  top: 25px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--primary);
-  border: 3px solid var(--bg-primary);
-}
-
-.update-item:hover {
-  background: var(--glass-hover);
-  transform: translateX(10px);
-}
-
-.update-date {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  margin-bottom: 10px;
-}
-
-.update-item h3 {
-  color: var(--text-primary);
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-.update-item p {
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-.update-item.major::before {
-  background: var(--accent);
-}
-
-.update-item.feature::before {
-  background: var(--success);
-}
-
-.update-item.enhancement::before {
-  background: var(--secondary);
-}
-
 /* Estadísticas */
 .stats-grid {
   display: grid;
@@ -1479,7 +1532,7 @@ body {
   margin: 0 auto;
 }
 
-/* Grid de canciones con blur */
+/* Grid de canciones */
 .songs-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -1611,7 +1664,7 @@ body {
   height: 18px;
 }
 
-/* Reproductor flotante mejorado con blur */
+/* Reproductor flotante */
 .floating-player {
   position: fixed;
   bottom: 20px;
@@ -1747,7 +1800,7 @@ body {
   font-weight: 500;
 }
 
-/* Modal de dedicatoria mejorado */
+/* Modal de dedicatoria */
 .dedication-modal {
   position: fixed;
   top: 0;
@@ -1823,7 +1876,7 @@ body {
   box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
 }
 
-/* Modal de configuración mejorado */
+/* Modal de configuración */
 .settings-modal {
   position: fixed;
   top: 0;
@@ -2039,56 +2092,6 @@ input[type="checkbox"] {
 .audio-settings select:hover {
   background: var(--glass-hover);
   border-color: var(--primary);
-}
-
-/* Corazones flotantes */
-.floating-hearts {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.heart {
-  position: absolute;
-  color: rgba(255, 255, 255, 0.6);
-  animation: floatHeart 6s linear infinite;
-  filter: blur(0.5px);
-}
-
-@keyframes floatHeart {
-  0% {
-    transform: translateY(100vh) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-100px) rotate(360deg);
-    opacity: 0;
-  }
-}
-
-/* Animaciones adicionales */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
 }
 
 /* Panel de Administrador */
@@ -2412,9 +2415,57 @@ input[type="checkbox"] {
   box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
 }
 
-/* Temas de Eventos Especiales */
+/* Corazones flotantes */
+.floating-hearts {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
 
-/* Evento: Cumpleaños */
+.heart {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.6);
+  animation: floatHeart 6s linear infinite;
+  filter: blur(0.5px);
+}
+
+@keyframes floatHeart {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.heart-rain {
+  position: fixed;
+  top: -50px;
+  font-size: 30px;
+  color: var(--primary);
+  animation: heartRainFall 3s linear;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+@keyframes heartRainFall {
+  0% {
+    transform: translateY(-50px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Temas de Eventos Especiales */
 [data-event="birthday"] {
   --primary: #ff6b35;
   --primary-dark: #e55a2b;
@@ -2439,7 +2490,6 @@ input[type="checkbox"] {
   }
 }
 
-/* Evento: Aniversario */
 [data-event="anniversary"] {
   --primary: #e91e63;
   --primary-dark: #c2185b;
@@ -2465,7 +2515,6 @@ input[type="checkbox"] {
   }
 }
 
-/* Evento: Aniversario Mensual */
 [data-event="monthly"] {
   --primary: #9c27b0;
   --primary-dark: #7b1fa2;
@@ -2490,7 +2539,6 @@ input[type="checkbox"] {
   }
 }
 
-/* Evento: Navidad */
 [data-event="christmas"] {
   --primary: #d32f2f;
   --primary-dark: #b71c1c;
@@ -2516,7 +2564,6 @@ input[type="checkbox"] {
   }
 }
 
-/* Evento: San Valentín */
 [data-event="valentine"] {
   --primary: #ff1744;
   --primary-dark: #d50000;
@@ -2569,7 +2616,6 @@ input[type="checkbox"] {
   content: "💘💕💖💗";
 }
 
-/* Animaciones especiales de eventos */
 [data-event] .title {
   animation: eventTitleGlow 2s ease-in-out infinite alternate !important;
 }
@@ -2583,137 +2629,7 @@ input[type="checkbox"] {
   }
 }
 
-/* Lluvia de corazones especial */
-.heart-rain {
-  position: fixed;
-  top: -50px;
-  font-size: 30px;
-  color: var(--primary);
-  animation: heartRainFall 3s linear;
-  z-index: 1000;
-  pointer-events: none;
-}
-
-@keyframes heartRainFall {
-  0% {
-    transform: translateY(-50px) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100vh) rotate(360deg);
-    opacity: 0;
-  }
-}
-
-/* Navegación compacta durante eventos */
-.compact-nav {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 150;
-  transition: var(--transition);
-}
-
-.compact-nav.hidden {
-  display: none;
-}
-
-.compact-nav-toggle {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: var(--transition);
-  box-shadow: var(--shadow-lg);
-}
-
-.compact-nav-toggle:hover {
-  background: var(--glass-hover);
-  transform: scale(1.1);
-  box-shadow: var(--shadow-xl);
-}
-
-.compact-nav-menu {
-  position: absolute;
-  top: 60px;
-  left: 0;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--border-radius-lg);
-  padding: 12px;
-  box-shadow: var(--shadow-xl);
-  min-width: 200px;
-  animation: compactMenuSlide 0.3s ease;
-}
-
-.compact-nav-menu.hidden {
-  display: none;
-}
-
-@keyframes compactMenuSlide {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.compact-nav-btn {
-  display: block;
-  width: 100%;
-  padding: 12px 16px;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  text-align: left;
-  cursor: pointer;
-  border-radius: var(--border-radius-sm);
-  transition: var(--transition);
-  font-weight: 500;
-  margin-bottom: 4px;
-}
-
-.compact-nav-btn:hover {
-  background: var(--glass-hover);
-  color: var(--primary);
-  transform: translateX(5px);
-}
-
-.compact-nav-btn:last-child {
-  margin-bottom: 0;
-}
-
-/* Ocultar navegación principal durante eventos */
-[data-event] .nav-container {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-[data-event] .compact-nav {
-  display: block;
-}
-
-/* Título flotante centrado durante eventos */
-[data-event] .floating-event-title {
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
-}
-
-/* Responsive mejorado */
+/* Responsive */
 @media (max-width: 768px) {
   .nav-container {
     flex-wrap: wrap;
@@ -2767,18 +2683,6 @@ input[type="checkbox"] {
 
   .theme-options {
     grid-template-columns: 1fr;
-  }
-
-  .updates-timeline {
-    padding-left: 20px;
-  }
-
-  .updates-timeline::before {
-    left: 10px;
-  }
-
-  .update-item::before {
-    left: -32px;
   }
 
   .floating-event-title {
