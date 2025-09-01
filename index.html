@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Pacifico&family=Satisfy&display=swap" rel="stylesheet">
 </head>
 <body>
-     Pantalla de carga mejorada 
+     Pantalla de carga 
     <div id="loading-screen" class="loading-screen">
         <div class="loading-content">
             <div class="loading-heart">
@@ -22,6 +22,25 @@
         </div>
     </div>
 
+     Navegación compacta para eventos 
+    <div id="compact-nav" class="compact-nav hidden">
+        <button class="compact-nav-toggle" onclick="toggleCompactNav()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <div id="compact-nav-menu" class="compact-nav-menu hidden">
+            <button class="compact-nav-btn" onclick="switchSection('blog'); toggleCompactNav()">BLOG</button>
+            <button class="compact-nav-btn" onclick="switchSection('canciones'); toggleCompactNav()">CANCIONES</button>
+            <button class="compact-nav-btn" onclick="switchSection('recuerdos'); toggleCompactNav()">RECUERDOS</button>
+            <button class="compact-nav-btn" onclick="switchSection('poemas'); toggleCompactNav()">POEMAS</button>
+            <button class="compact-nav-btn" onclick="switchSection('notas'); toggleCompactNav()">NOTAS</button>
+            <button class="compact-nav-btn" onclick="openSettings(); toggleCompactNav()">CONFIGURACIÓN</button>
+        </div>
+    </div>
+
      Título flotante del evento activo 
     <div id="floating-event-title" class="floating-event-title hidden">
         <div class="floating-title-content">
@@ -30,8 +49,8 @@
         </div>
     </div>
     
-     Navegación mejorada 
-    <nav class="nav-container">
+     Navegación principal 
+    <nav class="nav-container" id="main-nav">
         <button class="nav-btn active" onclick="switchSection('blog')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -68,7 +87,7 @@
             </svg>
             <span>NOTAS</span>
         </button>
-         Pestaña de evento especial (solo visible durante eventos) 
+         Pestaña de evento especial 
         <button class="nav-btn event-tab hidden" id="event-tab" onclick="switchSection('evento-especial')">
             <span class="event-tab-emoji" id="event-tab-emoji">🎉</span>
             <span id="event-tab-name">EVENTO</span>
@@ -89,7 +108,7 @@
                 <p class="subtitle">Nuestro diario de amor digital - Eventos, recuerdos y todo sobre nosotros ❤️</p>
             </div>
 
-             Próximos Eventos (se comprimen durante eventos activos) 
+             Próximos Eventos 
             <div class="events-section" id="events-section">
                 <h2 class="section-title">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -105,7 +124,7 @@
                      Los eventos se cargarán dinámicamente 
                 </div>
 
-                 Burbuja comprimida para eventos (solo visible durante eventos activos) 
+                 Burbuja comprimida para eventos 
                 <div class="events-bubble hidden" id="events-bubble">
                     <button class="bubble-toggle" onclick="toggleEventsBubble()">
                         <span class="bubble-text">Próximos Eventos</span>
@@ -174,20 +193,6 @@
                 </div>
             </div>
 
-             Actualizaciones Recientes 
-            <div class="updates-section">
-                <h2 class="section-title">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                    Actualizaciones de la Página
-                </h2>
-                
-                <div class="updates-timeline" id="updates-container">
-                     Las actualizaciones se cargarán dinámicamente 
-                </div>
-            </div>
-
              Estadísticas de Amor 
             <div class="stats-section">
                 <h2 class="section-title">
@@ -247,29 +252,40 @@
                 </div>
             </div>
 
-             Cubo 3D de Amor 
+             Regalo 3D 
             <div class="love-cube-container hidden" id="love-cube-container">
                 <h2 class="cube-title">Un regalo especial para ti</h2>
                 <div class="love-cube-scene">
                     <div class="love-cube" id="love-cube" onclick="openLoveCube()">
                         <div class="cube-face cube-front">
-                            <div class="cube-heart">💕</div>
-                            <div class="cube-text">Click me</div>
+                            <div class="gift-ribbon-v"></div>
+                            <div class="gift-ribbon-h"></div>
+                            <div class="gift-bow">🎀</div>
+                            <div class="cube-text">Abrir Regalo</div>
                         </div>
                         <div class="cube-face cube-back">
-                            <div class="cube-pattern">💖💗💝</div>
+                            <div class="gift-ribbon-v"></div>
+                            <div class="gift-ribbon-h"></div>
+                            <div class="gift-pattern">💖💗💝</div>
                         </div>
                         <div class="cube-face cube-right">
-                            <div class="cube-pattern">💘💞💓</div>
+                            <div class="gift-ribbon-v"></div>
+                            <div class="gift-ribbon-h"></div>
+                            <div class="gift-pattern">💘💞💓</div>
                         </div>
                         <div class="cube-face cube-left">
-                            <div class="cube-pattern">💌💐🌹</div>
+                            <div class="gift-ribbon-v"></div>
+                            <div class="gift-ribbon-h"></div>
+                            <div class="gift-pattern">💌💐🌹</div>
                         </div>
                         <div class="cube-face cube-top">
-                            <div class="cube-pattern">✨⭐💫</div>
+                            <div class="gift-bow-top">🎁</div>
+                            <div class="gift-pattern">✨⭐💫</div>
                         </div>
                         <div class="cube-face cube-bottom">
-                            <div class="cube-pattern">🎀🎁💎</div>
+                            <div class="gift-ribbon-v"></div>
+                            <div class="gift-ribbon-h"></div>
+                            <div class="gift-pattern">🎀🎁💎</div>
                         </div>
                     </div>
                 </div>
@@ -292,144 +308,14 @@
         </div>
     </section>
 
-     Sección Canciones Mejorada 
+     Sección Canciones 
     <section id="canciones" class="section">
         <div class="container">
             <h2 class="section-title">🎵 Canciones de Nuestro Amor</h2>
             <p class="section-subtitle">Cada canción tiene una historia especial para nosotros</p>
             
-            <div class="songs-grid">
-                <div class="song-card" data-song="heather">
-                    <div class="song-info">
-                        <h3>Heather</h3>
-                        <p>Conan Gray</p>
-                        <span class="duration">3:25</span>
-                    </div>
-                    <div class="song-actions">
-                        <button onclick="playSong('heather')" class="action-btn play-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polygon points="5,3 19,12 5,21"></polygon>
-                            </svg>
-                            <span>Reproducir</span>
-                        </button>
-                        <button onclick="showSongDedication(SONGS_DATABASE.heather)" class="action-btn story-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                            <span>Historia</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="song-card" data-song="line_without_a_hook">
-                    <div class="song-info">
-                        <h3>Line Without a Hook</h3>
-                        <p>Ricky Montgomery</p>
-                        <span class="duration">4:09</span>
-                    </div>
-                    <div class="song-actions">
-                        <button onclick="playSong('line_without_a_hook')" class="action-btn play-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polygon points="5,3 19,12 5,21"></polygon>
-                            </svg>
-                            <span>Reproducir</span>
-                        </button>
-                        <button onclick="showSongDedication(SONGS_DATABASE.line_without_a_hook)" class="action-btn story-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                            <span>Historia</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="song-card" data-song="golden_hour">
-                    <div class="song-info">
-                        <h3>golden hour</h3>
-                        <p>JVKE</p>
-                        <span class="duration">3:51</span>
-                    </div>
-                    <div class="song-actions">
-                        <button onclick="playSong('golden_hour')" class="action-btn play-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polygon points="5,3 19,12 5,21"></polygon>
-                            </svg>
-                            <span>Reproducir</span>
-                        </button>
-                        <button onclick="showSongDedication(SONGS_DATABASE.golden_hour)" class="action-btn story-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                            <span>Historia</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="song-card" data-song="this_is_what_falling_in_love_feels_like">
-                    <div class="song-info">
-                        <h3>this is what falling in love feels like</h3>
-                        <p>JVKE</p>
-                        <span class="duration">2:34</span>
-                    </div>
-                    <div class="song-actions">
-                        <button onclick="playSong('this_is_what_falling_in_love_feels_like')" class="action-btn play-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polygon points="5,3 19,12 5,21"></polygon>
-                            </svg>
-                            <span>Reproducir</span>
-                        </button>
-                        <button onclick="showSongDedication(SONGS_DATABASE.this_is_what_falling_in_love_feels_like)" class="action-btn story-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                            <span>Historia</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="song-card" data-song="catorce">
-                    <div class="song-info">
-                        <h3>Catorce</h3>
-                        <p>Sebastian Romero</p>
-                        <span class="duration">3:44</span>
-                    </div>
-                    <div class="song-actions">
-                        <button onclick="playSong('catorce')" class="action-btn play-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polygon points="5,3 19,12 5,21"></polygon>
-                            </svg>
-                            <span>Reproducir</span>
-                        </button>
-                        <button onclick="showSongDedication(SONGS_DATABASE.catorce)" class="action-btn story-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                            <span>Historia</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="song-card" data-song="me_gustas">
-                    <div class="song-info">
-                        <h3>Me Gustas</h3>
-                        <p>TIMØ</p>
-                        <span class="duration">3:03</span>
-                    </div>
-                    <div class="song-actions">
-                        <button onclick="playSong('me_gustas')" class="action-btn play-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polygon points="5,3 19,12 5,21"></polygon>
-                            </svg>
-                            <span>Reproducir</span>
-                        </button>
-                        <button onclick="showSongDedication(SONGS_DATABASE.me_gustas)" class="action-btn story-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                            <span>Historia</span>
-                        </button>
-                    </div>
-                </div>
+            <div class="songs-grid" id="songs-grid">
+                 Las canciones se cargarán dinámicamente 
             </div>
         </div>
     </section>
@@ -587,7 +473,7 @@
         </div>
     </div>
 
-     Panel de Administrador Secreto 
+     Panel de Administrador 
     <div id="admin-panel" class="admin-panel hidden">
         <div class="admin-content">
             <div class="admin-header">
@@ -734,9 +620,7 @@
     </div>
 
      Audio para música de fondo 
-    <audio id="background-music" loop style="display: none;">
-         Se cargará dinámicamente 
-    </audio>
+    <audio id="background-music" loop style="display: none;"></audio>
 
      Corazones flotantes 
     <div class="floating-hearts"></div>
