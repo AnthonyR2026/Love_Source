@@ -289,8 +289,10 @@ class CameraSystem {
     this.container = document.getElementById("camera-container")
     this.worldContent = document.getElementById("world-content")
     this.fixedUI = document.querySelector(".fixed-ui")
+    this.mainNav = document.querySelector(".main-navigation")
     this.currentSection = "blog"
     this.isScrolling = false
+    this.mouseTimer = null
 
     this.init()
   }
@@ -299,6 +301,42 @@ class CameraSystem {
     this.setupScrollListener()
     this.setupResizeListener()
     this.setupNavigation()
+    this.setupMouseListener()
+  }
+
+  setupMouseListener() {
+    // Mostrar navegación al mover el mouse
+    document.addEventListener("mousemove", () => {
+      if (this.mainNav) {
+        this.mainNav.classList.add("visible")
+      }
+
+      // Ocultar después de 3 segundos de inactividad
+      if (this.mouseTimer) {
+        clearTimeout(this.mouseTimer)
+      }
+
+      this.mouseTimer = setTimeout(() => {
+        if (this.mainNav) {
+          this.mainNav.classList.remove("visible")
+        }
+      }, 3000)
+    })
+
+    // Mantener visible cuando el mouse está sobre la navegación
+    if (this.mainNav) {
+      this.mainNav.addEventListener("mouseenter", () => {
+        if (this.mouseTimer) {
+          clearTimeout(this.mouseTimer)
+        }
+      })
+
+      this.mainNav.addEventListener("mouseleave", () => {
+        this.mouseTimer = setTimeout(() => {
+          this.mainNav.classList.remove("visible")
+        }, 1000)
+      })
+    }
   }
 
   setupScrollListener() {
@@ -1007,17 +1045,23 @@ class AdminSystem {
     this.sequenceTimeout = null
     this.currentEvent = null
     this.eventStartTime = null
+    this.isListening = true
     this.setupKeyListener()
     this.loadEventState()
   }
 
   setupKeyListener() {
     document.addEventListener("keydown", (e) => {
+      if (!this.isListening) return
+
+      console.log("Key pressed:", e.code) // Debug log
+
       if (this.sequenceTimeout) {
         clearTimeout(this.sequenceTimeout)
       }
 
       this.keySequence.push(e.code)
+      console.log("Current sequence:", this.keySequence) // Debug log
 
       if (this.keySequence.length > this.targetSequence.length) {
         this.keySequence.shift()
@@ -1025,6 +1069,7 @@ class AdminSystem {
 
       if (this.keySequence.length === this.targetSequence.length) {
         const matches = this.keySequence.every((key, index) => key === this.targetSequence[index])
+        console.log("Sequence matches:", matches) // Debug log
         if (matches) {
           this.openAdminPanel()
           this.keySequence = []
@@ -1193,6 +1238,7 @@ class AdminSystem {
   setupLoveLetter(letterText) {
     const letterDate = document.getElementById("letter-date")
     const letterTextEl = document.getElementById("letter-text")
+    const letterEnvelope = document.getElementById("letter-envelope")
 
     if (letterDate) {
       letterDate.textContent = new Date().toLocaleDateString("es-ES", {
@@ -1205,10 +1251,43 @@ class AdminSystem {
 
     if (letterTextEl) letterTextEl.textContent = letterText
 
-    const letterEnvelope = document.getElementById("letter-envelope")
+    // Remove any existing event listeners
     if (letterEnvelope) {
-      letterEnvelope.addEventListener("click", this.openLetter.bind(this))
+      letterEnvelope.replaceWith(letterEnvelope.cloneNode(true))
+      const newEnvelope = document.getElementById("letter-envelope")
+      if (newEnvelope) {
+        newEnvelope.addEventListener("click", () => {
+          this.openLetter()
+        })
+        newEnvelope.style.cursor = "pointer"
+      }
     }
+  }
+
+  markLetterAsRead() {
+    const letterArea = document.getElementById("love-letter-area")
+    const giftArea = document.getElementById("gift-area")
+    const readBtn = document.querySelector(".letter-read-btn")
+
+    if (settingsManager && settingsManager.settings.soundEffects) {
+      this.playSound("success")
+    }
+
+    if (readBtn) {
+      readBtn.disabled = true
+      readBtn.textContent = "✓ Leído"
+    }
+
+    if (letterArea) {
+      letterArea.style.transform = "scale(0.8)"
+      letterArea.style.opacity = "0.5"
+      letterArea.style.transition = "all 0.8s ease"
+    }
+
+    setTimeout(() => {
+      if (letterArea) letterArea.style.display = "none"
+      if (giftArea) giftArea.classList.remove("hidden")
+    }, 800)
   }
 
   setupGift(giftMessage) {
@@ -1622,11 +1701,11 @@ function updateSettingsUI() {
     }
   })
 
-  Object.keys(settingsManager.settings).forEach((key) => {
-    const checkbox = document.getElementById(key.replace("_", "-"))
-    if (checkbox && typeof settingsManager.settings[key] === "boolean") {
-      checkbox.checked = settingsManager.settings[key]
-    }
+  document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+    checkbox.addEventListener("change", () => {
+      const setting = checkbox.id.replace("_", "-")
+      settingsManager.updateSetting(setting, checkbox.checked)
+    })
   })
 
   const audioQuality = document.getElementById("audio-quality")
@@ -1770,29 +1849,75 @@ let musicPlayer
 let settingsManager
 let adminSystem
 
-// Inicialización
+// Inicialización mejorada
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM loaded, initializing...") // Debug log
+
   // Ocultar pantalla de carga
   setTimeout(() => {
     const loadingScreen = document.getElementById("loading-screen")
-    if (loadingScreen) loadingScreen.classList.add("hidden")
+    if (loadingScreen) {
+      loadingScreen.classList.add("hidden")
+      console.log("Loading screen hidden") // Debug log
+    }
   }, 3000)
 
-  // Inicializar sistemas
-  cameraSystem = new CameraSystem()
-  shaderSystem = new ShaderSystem()
-  musicPlayer = new MusicPlayer()
-  settingsManager = new SettingsManager()
-  adminSystem = new AdminSystem()
+  // Inicializar sistemas con verificación
+  try {
+    cameraSystem = new CameraSystem()
+    console.log("Camera system initialized") // Debug log
+  } catch (error) {
+    console.error("Error initializing camera system:", error)
+  }
+
+  try {
+    shaderSystem = new ShaderSystem()
+    console.log("Shader system initialized") // Debug log
+  } catch (error) {
+    console.error("Error initializing shader system:", error)
+  }
+
+  try {
+    musicPlayer = new MusicPlayer()
+    console.log("Music player initialized") // Debug log
+  } catch (error) {
+    console.error("Error initializing music player:", error)
+  }
+
+  try {
+    settingsManager = new SettingsManager()
+    console.log("Settings manager initialized") // Debug log
+  } catch (error) {
+    console.error("Error initializing settings manager:", error)
+  }
+
+  try {
+    adminSystem = new AdminSystem()
+    console.log("Admin system initialized") // Debug log
+  } catch (error) {
+    console.error("Error initializing admin system:", error)
+  }
 
   // Cargar contenido
-  loadEvents()
-  loadStats()
-  loadSongs()
+  try {
+    loadEvents()
+    loadStats()
+    loadSongs()
+    console.log("Content loaded") // Debug log
+  } catch (error) {
+    console.error("Error loading content:", error)
+  }
 
   // Configurar listeners
-  setupSettingsListeners()
-  musicPlayer.setupPlayerEvents()
+  try {
+    setupSettingsListeners()
+    if (musicPlayer) {
+      musicPlayer.setupPlayerEvents()
+    }
+    console.log("Event listeners set up") // Debug log
+  } catch (error) {
+    console.error("Error setting up listeners:", error)
+  }
 
   // Mostrar tip inicial
   setTimeout(() => {
@@ -1806,7 +1931,43 @@ document.addEventListener("DOMContentLoaded", () => {
   setTimeout(() => {
     showScreenCenterNotification("¡Bienvenida a nuestro blog de amor! 💕", "success")
   }, 4000)
+
+  // Mostrar navegación inicialmente por 5 segundos
+  setTimeout(() => {
+    const mainNav = document.querySelector(".main-navigation")
+    if (mainNav) {
+      mainNav.classList.add("visible")
+      setTimeout(() => {
+        mainNav.classList.remove("visible")
+      }, 5000)
+    }
+  }, 3500)
 })
+
+// Fix the global functions to ensure they work properly
+function markLetterAsRead() {
+  if (adminSystem) {
+    adminSystem.markLetterAsRead()
+  } else {
+    console.error("Admin system not initialized")
+  }
+}
+
+function openGift() {
+  if (adminSystem) {
+    adminSystem.openGift()
+  } else {
+    console.error("Admin system not initialized")
+  }
+}
+
+function closeAdminPanel() {
+  if (adminSystem) {
+    adminSystem.closeAdminPanel()
+  } else {
+    console.error("Admin system not initialized")
+  }
+}
 
 // Cleanup al cerrar la página
 window.addEventListener("beforeunload", () => {
