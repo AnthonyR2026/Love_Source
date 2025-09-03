@@ -283,6 +283,212 @@ Anthony ❤️`,
   },
 }
 
+// Sistema de cámara y viewport
+class CameraSystem {
+  constructor() {
+    this.container = document.getElementById("camera-container")
+    this.worldContent = document.getElementById("world-content")
+    this.fixedUI = document.querySelector(".fixed-ui")
+    this.currentSection = "blog"
+    this.isScrolling = false
+
+    this.init()
+  }
+
+  init() {
+    this.setupScrollListener()
+    this.setupResizeListener()
+    this.setupNavigation()
+  }
+
+  setupScrollListener() {
+    this.container.addEventListener("scroll", () => {
+      this.updateCameraEffects()
+    })
+  }
+
+  setupResizeListener() {
+    window.addEventListener("resize", () => {
+      this.updateViewport()
+    })
+  }
+
+  setupNavigation() {
+    const navItems = document.querySelectorAll(".nav-item")
+    navItems.forEach((item) => {
+      item.addEventListener("click", (e) => {
+        e.preventDefault()
+        const section = item.dataset.section
+        this.switchToSection(section)
+      })
+    })
+
+    const featureCards = document.querySelectorAll(".feature-card")
+    featureCards.forEach((card) => {
+      card.addEventListener("click", (e) => {
+        const section = card.dataset.section
+        if (section) {
+          this.switchToSection(section)
+        }
+      })
+    })
+  }
+
+  switchToSection(sectionName) {
+    // Actualizar navegación activa
+    document.querySelectorAll(".nav-item").forEach((item) => {
+      item.classList.remove("active")
+    })
+
+    const activeNavItem = document.querySelector(`[data-section="${sectionName}"]`)
+    if (activeNavItem) {
+      activeNavItem.classList.add("active")
+    }
+
+    // Cambiar sección
+    document.querySelectorAll(".content-section").forEach((section) => {
+      section.classList.remove("active")
+    })
+
+    const targetSection = document.getElementById(sectionName)
+    if (targetSection) {
+      targetSection.classList.add("active")
+      this.currentSection = sectionName
+
+      // Scroll suave al inicio de la sección
+      this.container.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      })
+    }
+  }
+
+  updateCameraEffects() {
+    const scrollY = this.container.scrollTop
+    const maxScroll = this.container.scrollHeight - this.container.clientHeight
+    const scrollProgress = scrollY / maxScroll
+
+    // Efectos de paralaje en el fondo
+    const backgroundEffects = document.querySelector(".background-effects")
+    if (backgroundEffects) {
+      backgroundEffects.style.transform = `translateY(${scrollY * 0.5}px)`
+    }
+
+    // Efectos en las luces ambientales
+    const lights = document.querySelectorAll(".light")
+    lights.forEach((light, index) => {
+      const offset = (index + 1) * 0.3
+      light.style.transform = `translateY(${scrollY * offset}px) scale(${1 + scrollProgress * 0.2})`
+    })
+  }
+
+  updateViewport() {
+    // Actualizar efectos basados en el tamaño de la ventana
+    const vh = window.innerHeight * 0.01
+    document.documentElement.style.setProperty("--vh", `${vh}px`)
+  }
+
+  centerNotification(element) {
+    const rect = this.container.getBoundingClientRect()
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
+
+    element.style.position = "fixed"
+    element.style.left = `${centerX}px`
+    element.style.top = `${centerY}px`
+    element.style.transform = "translate(-50%, -50%)"
+    element.style.zIndex = "2000"
+  }
+}
+
+// Sistema de shaders y efectos visuales
+class ShaderSystem {
+  constructor() {
+    this.canvas = document.getElementById("shader-canvas")
+    this.ctx = null
+    this.animationId = null
+    this.time = 0
+
+    this.init()
+  }
+
+  init() {
+    if (!this.canvas) return
+
+    this.ctx = this.canvas.getContext("2d")
+    this.resize()
+    this.startAnimation()
+
+    window.addEventListener("resize", () => this.resize())
+  }
+
+  resize() {
+    this.canvas.width = window.innerWidth
+    this.canvas.height = window.innerHeight
+  }
+
+  startAnimation() {
+    const animate = () => {
+      this.time += 0.016 // ~60fps
+      this.render()
+      this.animationId = requestAnimationFrame(animate)
+    }
+    animate()
+  }
+
+  render() {
+    const { width, height } = this.canvas
+    this.ctx.clearRect(0, 0, width, height)
+
+    // Crear gradiente animado
+    const gradient = this.ctx.createRadialGradient(
+      width * 0.5 + Math.sin(this.time * 0.5) * 100,
+      height * 0.5 + Math.cos(this.time * 0.3) * 100,
+      0,
+      width * 0.5,
+      height * 0.5,
+      Math.max(width, height) * 0.8,
+    )
+
+    const hue1 = (this.time * 20) % 360
+    const hue2 = (this.time * 30 + 120) % 360
+    const hue3 = (this.time * 25 + 240) % 360
+
+    gradient.addColorStop(0, `hsla(${hue1}, 70%, 60%, 0.1)`)
+    gradient.addColorStop(0.5, `hsla(${hue2}, 60%, 50%, 0.05)`)
+    gradient.addColorStop(1, `hsla(${hue3}, 80%, 40%, 0.02)`)
+
+    this.ctx.fillStyle = gradient
+    this.ctx.fillRect(0, 0, width, height)
+
+    // Añadir partículas flotantes
+    this.renderParticles()
+  }
+
+  renderParticles() {
+    const { width, height } = this.canvas
+    const particleCount = 20
+
+    for (let i = 0; i < particleCount; i++) {
+      const x = width * 0.5 + Math.sin(this.time * 0.5 + i * 0.5) * (width * 0.3)
+      const y = height * 0.5 + Math.cos(this.time * 0.3 + i * 0.7) * (height * 0.3)
+      const size = 2 + Math.sin(this.time * 2 + i) * 1
+      const opacity = 0.1 + Math.sin(this.time + i) * 0.05
+
+      this.ctx.beginPath()
+      this.ctx.arc(x, y, size, 0, Math.PI * 2)
+      this.ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`
+      this.ctx.fill()
+    }
+  }
+
+  destroy() {
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId)
+    }
+  }
+}
+
 // Función para calcular días hasta un evento
 function calculateDaysUntil(dateString) {
   const eventDate = new Date(dateString)
@@ -413,15 +619,11 @@ function loadSongs() {
       </div>
       <div class="song-actions">
         <button onclick="playSong('${id}')" class="action-btn play-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="5,3 19,12 5,21"></polygon>
-          </svg>
+          <span>▶</span>
           <span>Reproducir</span>
         </button>
         <button onclick="showSongDedication(SONGS_DATABASE.${id})" class="action-btn story-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-          </svg>
+          <span>💕</span>
           <span>Historia</span>
         </button>
       </div>
@@ -455,66 +657,6 @@ class MusicPlayer {
         console.log("YouTube API cargada correctamente")
       }
     }
-  }
-
-  initializePlayer() {
-    const playerHTML = `
-      <div id="floating-player" class="floating-player hidden">
-        <div class="player-header">
-          <div class="song-info">
-            <div class="song-title">Selecciona una canción</div>
-            <div class="song-artist">para comenzar a escuchar</div>
-          </div>
-          <button id="close-player-btn" class="close-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-        </div>
-        
-        <div class="player-controls">
-          <button id="prev-btn" class="control-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="19,20 9,12 19,4"></polygon>
-              <line x1="5" y1="19" x2="5" y2="5"></line>
-            </svg>
-          </button>
-          <button id="play-pause-btn" class="control-btn play-btn">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="5,3 19,12 5,21"></polygon>
-            </svg>
-          </button>
-          <button id="next-btn" class="control-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="5,4 15,12 5,20"></polygon>
-              <line x1="19" y1="5" x2="19" y2="19"></line>
-            </svg>
-          </button>
-          <button id="volume-btn" class="control-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="11,5 6,9 2,9 2,15 6,15 11,19"></polygon>
-              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-            </svg>
-          </button>
-        </div>
-        
-        <div class="progress-container">
-          <div class="progress-bar" id="progress-bar">
-            <div class="progress-fill" id="progress-fill"></div>
-          </div>
-          <div class="time-display">
-            <span class="current-time" id="current-time">0:00</span>
-            <span class="total-time" id="total-time">0:00</span>
-          </div>
-        </div>
-        
-        <div id="youtube-player" style="display: none;"></div>
-      </div>
-    `
-
-    document.body.insertAdjacentHTML("beforeend", playerHTML)
-    this.setupPlayerEvents()
   }
 
   async playSong(songId) {
@@ -690,9 +832,13 @@ class MusicPlayer {
 
         if (total > 0) {
           const progressPercent = (current / total) * 100
-          document.getElementById("progress-fill").style.width = `${progressPercent}%`
-          document.getElementById("current-time").textContent = this.formatTime(current)
-          document.getElementById("total-time").textContent = this.formatTime(total)
+          const progressFill = document.getElementById("progress-fill")
+          const currentTime = document.getElementById("current-time")
+          const totalTime = document.getElementById("total-time")
+
+          if (progressFill) progressFill.style.width = `${progressPercent}%`
+          if (currentTime) currentTime.textContent = this.formatTime(current)
+          if (totalTime) totalTime.textContent = this.formatTime(total)
         }
       }
     }, 1000)
@@ -707,15 +853,7 @@ class MusicPlayer {
   updatePlayButton() {
     const btn = document.getElementById("play-pause-btn")
     if (btn) {
-      const svg = this.isPlaying
-        ? `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-             <rect x="6" y="4" width="4" height="16"></rect>
-             <rect x="14" y="4" width="4" height="16"></rect>
-           </svg>`
-        : `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-             <polygon points="5,3 19,12 5,21"></polygon>
-           </svg>`
-      btn.innerHTML = svg
+      btn.textContent = this.isPlaying ? "⏸" : "▶"
     }
   }
 
@@ -728,11 +866,14 @@ class MusicPlayer {
   }
 
   showPlayer() {
-    document.getElementById("floating-player").classList.remove("hidden")
+    const player = document.getElementById("floating-player")
+    if (player) player.classList.remove("hidden")
   }
 
   hidePlayer() {
-    document.getElementById("floating-player").classList.add("hidden")
+    const player = document.getElementById("floating-player")
+    if (player) player.classList.add("hidden")
+
     if (this.player) {
       this.player.pauseVideo()
     }
@@ -743,87 +884,55 @@ class MusicPlayer {
   }
 
   showError(message) {
-    this.showNotification(message, "error")
+    showScreenCenterNotification(message, "error")
   }
 
   showSuccess(message) {
-    this.showNotification(message, "success")
-  }
-
-  showNotification(message, type = "info") {
-    const notification = document.createElement("div")
-    notification.className = `notification ${type}`
-    notification.textContent = message
-
-    const styles = {
-      error: "background: #ef4444; color: white;",
-      success: "background: #10b981; color: white;",
-      info: "background: #3b82f6; color: white;",
-    }
-
-    notification.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 15px 20px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      z-index: 3000;
-      animation: slideInRight 0.3s ease;
-      font-weight: 500;
-      backdrop-filter: blur(10px);
-      ${styles[type]}
-    `
-
-    document.body.appendChild(notification)
-
-    setTimeout(() => {
-      notification.remove()
-    }, 4000)
+    showScreenCenterNotification(message, "success")
   }
 
   setupPlayerEvents() {
-    document.getElementById("play-pause-btn").addEventListener("click", () => {
-      this.togglePlayPause()
-    })
+    const playPauseBtn = document.getElementById("play-pause-btn")
+    const closeBtn = document.getElementById("close-player-btn")
+    const volumeBtn = document.getElementById("volume-btn")
+    const progressBar = document.getElementById("progress-bar")
 
-    document.getElementById("close-player-btn").addEventListener("click", () => {
-      this.hidePlayer()
-    })
+    if (playPauseBtn) {
+      playPauseBtn.addEventListener("click", () => {
+        this.togglePlayPause()
+      })
+    }
 
-    document.getElementById("volume-btn").addEventListener("click", () => {
-      if (this.player) {
-        const currentVolume = this.player.getVolume()
-        const newVolume = currentVolume > 0 ? 0 : 50
-        this.player.setVolume(newVolume)
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => {
+        this.hidePlayer()
+      })
+    }
 
-        const volumeBtn = document.getElementById("volume-btn")
-        const svg =
-          newVolume > 0
-            ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-               <polygon points="11,5 6,9 2,9 2,15 6,15 11,19"></polygon>
-               <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-             </svg>`
-            : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-               <polygon points="11,5 6,9 2,9 2,15 6,15 11,19"></polygon>
-               <line x1="23" y1="9" x2="17" y2="15"></line>
-               <line x1="17" y1="9" x2="23" y2="15"></line>
-             </svg>`
-        volumeBtn.innerHTML = svg
-      }
-    })
+    if (volumeBtn) {
+      volumeBtn.addEventListener("click", () => {
+        if (this.player) {
+          const currentVolume = this.player.getVolume()
+          const newVolume = currentVolume > 0 ? 0 : 50
+          this.player.setVolume(newVolume)
+          volumeBtn.textContent = newVolume > 0 ? "🔊" : "🔇"
+        }
+      })
+    }
 
-    document.getElementById("progress-bar").addEventListener("click", (e) => {
-      if (this.player) {
-        const rect = e.target.getBoundingClientRect()
-        const clickX = e.clientX - rect.left
-        const width = rect.width
-        const percentage = clickX / width
-        const duration = this.player.getDuration()
-        const seekTime = duration * percentage
-        this.player.seekTo(seekTime)
-      }
-    })
+    if (progressBar) {
+      progressBar.addEventListener("click", (e) => {
+        if (this.player) {
+          const rect = e.target.getBoundingClientRect()
+          const clickX = e.clientX - rect.left
+          const width = rect.width
+          const percentage = clickX / width
+          const duration = this.player.getDuration()
+          const seekTime = duration * percentage
+          this.player.seekTo(seekTime)
+        }
+      })
+    }
   }
 }
 
@@ -837,7 +946,6 @@ class SettingsManager {
       largeText: false,
       lowResources: false,
       audioQuality: "medium",
-      visualizerEnabled: true,
       backgroundMusic: true,
       soundEffects: true,
     }
@@ -933,7 +1041,7 @@ class AdminSystem {
   openAdminPanel() {
     document.getElementById("admin-panel").classList.remove("hidden")
     this.updateAdminStatus()
-    showNotification("Panel de administrador activado", "success")
+    showScreenCenterNotification("Panel de administrador activado", "success")
   }
 
   closeAdminPanel() {
@@ -947,7 +1055,7 @@ class AdminSystem {
     document.documentElement.setAttribute("data-event", eventType)
 
     this.showFloatingTitle(eventType)
-    this.showEventTab(eventType)
+    this.showEventNav(eventType)
     this.compressEvents()
 
     if (settingsManager.settings.backgroundMusic) {
@@ -972,14 +1080,14 @@ class AdminSystem {
     document.documentElement.removeAttribute("data-event")
 
     this.hideFloatingTitle()
-    this.hideEventTab()
+    this.hideEventNav()
     this.decompressEvents()
 
     musicPlayer.stopBackgroundMusic()
 
     this.saveEventState()
 
-    showNotification("Todos los eventos desactivados", "info")
+    showScreenCenterNotification("Todos los eventos desactivados", "info")
     this.closeAdminPanel()
   }
 
@@ -989,35 +1097,28 @@ class AdminSystem {
     const floatingEmoji = document.getElementById("floating-event-emoji")
     const floatingName = document.getElementById("floating-event-name")
 
-    floatingEmoji.textContent = eventData.icon
-    floatingName.textContent = eventData.title
-    floatingTitle.classList.remove("hidden")
+    if (floatingEmoji) floatingEmoji.textContent = eventData.icon
+    if (floatingName) floatingName.textContent = eventData.title
+    if (floatingTitle) floatingTitle.classList.remove("hidden")
   }
 
   hideFloatingTitle() {
-    document.getElementById("floating-event-title").classList.add("hidden")
+    const floatingTitle = document.getElementById("floating-event-title")
+    if (floatingTitle) floatingTitle.classList.add("hidden")
   }
 
-  showEventTab(eventType) {
+  showEventNav(eventType) {
     const eventData = this.getEventData(eventType)
-    const eventTab = document.getElementById("event-tab")
-    const eventTabEmoji = document.getElementById("event-tab-emoji")
-    const eventTabName = document.getElementById("event-tab-name")
-    const compactNav = document.getElementById("compact-nav")
+    const eventNav = document.getElementById("event-nav")
+    const eventNavIcon = document.getElementById("event-nav-icon")
 
-    eventTabEmoji.textContent = eventData.icon
-    eventTabName.textContent = "EVENTO"
-    eventTab.classList.remove("hidden")
-
-    compactNav.classList.remove("hidden")
+    if (eventNavIcon) eventNavIcon.textContent = eventData.icon
+    if (eventNav) eventNav.classList.remove("hidden")
   }
 
-  hideEventTab() {
-    const eventTab = document.getElementById("event-tab")
-    const compactNav = document.getElementById("compact-nav")
-
-    eventTab.classList.add("hidden")
-    compactNav.classList.add("hidden")
+  hideEventNav() {
+    const eventNav = document.getElementById("event-nav")
+    if (eventNav) eventNav.classList.add("hidden")
   }
 
   compressEvents() {
@@ -1028,7 +1129,7 @@ class AdminSystem {
     if (eventsGrid && eventsBubble) {
       eventsGrid.style.display = "none"
       eventsBubble.classList.remove("hidden")
-      bubbleCount.textContent = BLOG_DATA.events.length
+      if (bubbleCount) bubbleCount.textContent = BLOG_DATA.events.length
       loadEventsBubble()
     }
   }
@@ -1046,11 +1147,15 @@ class AdminSystem {
   showEventNotification(eventType) {
     const eventData = this.getEventData(eventType)
 
-    document.getElementById("event-icon").textContent = eventData.icon
-    document.getElementById("event-title").textContent = eventData.title
-    document.getElementById("event-message").textContent = eventData.message
+    const overlay = document.getElementById("event-notification-overlay")
+    const icon = document.getElementById("event-notification-icon")
+    const title = document.getElementById("event-notification-title")
+    const message = document.getElementById("event-notification-message")
 
-    document.getElementById("event-overlay").classList.remove("hidden")
+    if (icon) icon.textContent = eventData.icon
+    if (title) title.textContent = eventData.title
+    if (message) message.textContent = eventData.message
+    if (overlay) overlay.classList.remove("hidden")
 
     this.triggerEventEffects(eventType)
 
@@ -1060,10 +1165,11 @@ class AdminSystem {
   }
 
   closeEventNotification() {
-    document.getElementById("event-overlay").classList.add("hidden")
+    const overlay = document.getElementById("event-notification-overlay")
+    if (overlay) overlay.classList.add("hidden")
 
     setTimeout(() => {
-      switchSection("evento-especial")
+      cameraSystem.switchToSection("evento-especial")
       this.setupEventSection()
     }, 500)
   }
@@ -1074,32 +1180,39 @@ class AdminSystem {
     const eventData = this.getEventData(this.currentEvent)
     const eventTexts = EVENT_TEXTS[this.currentEvent]
 
-    document.getElementById("event-section-title").textContent = eventData.title
-    document.getElementById("event-section-subtitle").textContent = eventData.message
+    const sectionTitle = document.getElementById("event-section-title")
+    const sectionSubtitle = document.getElementById("event-section-subtitle")
+
+    if (sectionTitle) sectionTitle.textContent = eventData.title
+    if (sectionSubtitle) sectionSubtitle.textContent = eventData.message
 
     this.setupLoveLetter(eventTexts.letter)
-    this.setupLoveCube(eventTexts.cubeMessage)
+    this.setupGift(eventTexts.cubeMessage)
   }
 
   setupLoveLetter(letterText) {
     const letterDate = document.getElementById("letter-date")
     const letterTextEl = document.getElementById("letter-text")
 
-    letterDate.textContent = new Date().toLocaleDateString("es-ES", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })
+    if (letterDate) {
+      letterDate.textContent = new Date().toLocaleDateString("es-ES", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    }
 
-    letterTextEl.textContent = letterText
+    if (letterTextEl) letterTextEl.textContent = letterText
 
     const letterEnvelope = document.getElementById("letter-envelope")
-    letterEnvelope.addEventListener("click", this.openLetter.bind(this))
+    if (letterEnvelope) {
+      letterEnvelope.addEventListener("click", this.openLetter.bind(this))
+    }
   }
 
-  setupLoveCube(cubeMessage) {
-    this.cubeMessage = cubeMessage
+  setupGift(giftMessage) {
+    this.giftMessage = giftMessage
   }
 
   openLetter() {
@@ -1110,46 +1223,52 @@ class AdminSystem {
       this.playSound("paper")
     }
 
-    envelope.classList.add("opening")
+    if (envelope) envelope.classList.add("opening")
 
     setTimeout(() => {
-      envelope.style.display = "none"
-      letterContent.classList.remove("hidden")
+      if (envelope) envelope.style.display = "none"
+      if (letterContent) letterContent.classList.remove("hidden")
     }, 1000)
   }
 
   markLetterAsRead() {
-    const letterContainer = document.getElementById("love-letter-container")
-    const cubeContainer = document.getElementById("love-cube-container")
+    const letterArea = document.getElementById("love-letter-area")
+    const giftArea = document.getElementById("gift-area")
 
     if (settingsManager.settings.soundEffects) {
       this.playSound("success")
     }
 
-    letterContainer.style.transform = "scale(0.8)"
-    letterContainer.style.opacity = "0.5"
+    if (letterArea) {
+      letterArea.style.transform = "scale(0.8)"
+      letterArea.style.opacity = "0.5"
+    }
 
     setTimeout(() => {
-      letterContainer.style.display = "none"
-      cubeContainer.classList.remove("hidden")
+      if (letterArea) letterArea.style.display = "none"
+      if (giftArea) giftArea.classList.remove("hidden")
     }, 800)
   }
 
-  openLoveCube() {
+  openGift() {
     if (settingsManager.settings.soundEffects) {
       this.playSound("gift")
     }
 
     const messageText = document.getElementById("love-message-text")
-    messageText.textContent = this.cubeMessage || "¡Te amo con todo mi corazón! 💕"
+    if (messageText) {
+      messageText.textContent = this.giftMessage || "¡Te amo con todo mi corazón! 💕"
+    }
 
-    document.getElementById("love-message-overlay").classList.remove("hidden")
+    const overlay = document.getElementById("love-message-overlay")
+    if (overlay) overlay.classList.remove("hidden")
 
     this.triggerHeartRain(10)
   }
 
   closeLoveMessage() {
-    document.getElementById("love-message-overlay").classList.add("hidden")
+    const overlay = document.getElementById("love-message-overlay")
+    if (overlay) overlay.classList.add("hidden")
   }
 
   playSound(type) {
@@ -1376,7 +1495,7 @@ class AdminSystem {
     ]
 
     const randomMessage = messages[Math.floor(Math.random() * messages.length)]
-    showNotification(randomMessage, "success")
+    showScreenCenterNotification(randomMessage, "success")
   }
 
   playRandomSong() {
@@ -1387,7 +1506,7 @@ class AdminSystem {
 
   updateMonthlyStats() {
     const monthlyCount = this.getMonthlyCount()
-    showNotification(`¡${monthlyCount} meses de amor puro! 💜`, "success")
+    showScreenCenterNotification(`¡${monthlyCount} meses de amor puro! 💜`, "success")
   }
 
   getMonthlyCount() {
@@ -1404,11 +1523,11 @@ class AdminSystem {
 
     if (this.currentEvent) {
       const eventData = this.getEventData(this.currentEvent)
-      activeEventName.textContent = eventData.title
-      eventStartTime.textContent = new Date(this.eventStartTime).toLocaleString("es-ES")
+      if (activeEventName) activeEventName.textContent = eventData.title
+      if (eventStartTime) eventStartTime.textContent = new Date(this.eventStartTime).toLocaleString("es-ES")
     } else {
-      activeEventName.textContent = "Ninguno"
-      eventStartTime.textContent = "-"
+      if (activeEventName) activeEventName.textContent = "Ninguno"
+      if (eventStartTime) eventStartTime.textContent = "-"
     }
   }
 
@@ -1429,7 +1548,7 @@ class AdminSystem {
         this.eventStartTime = state.eventStartTime
         document.documentElement.setAttribute("data-event", state.currentEvent)
         this.showFloatingTitle(state.currentEvent)
-        this.showEventTab(state.currentEvent)
+        this.showEventNav(state.currentEvent)
         this.compressEvents()
 
         if (settingsManager.settings.backgroundMusic) {
@@ -1456,23 +1575,24 @@ function playSong(songId) {
 
 function showSongDedication(song) {
   const modal = document.createElement("div")
-  modal.className = "dedication-modal"
+  modal.className = "modal-overlay"
   modal.innerHTML = `
-    <div class="dedication-content">
-      <div class="dedication-header">
-        <h3>${song.title}</h3>
-        <p class="artist">por ${song.artist} (${song.year})</p>
+    <div class="modal-content" style="width: 500px;">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <span class="modal-icon">🎵</span>
+          ${song.title}
+        </h2>
+        <button onclick="this.closest('.modal-overlay').remove()" class="modal-close">✕</button>
       </div>
-      <div class="dedication-text">
-        <p>${song.dedication}</p>
+      <div class="modal-body">
+        <div style="margin-bottom: 16px;">
+          <strong>Artista:</strong> ${song.artist} (${song.year})
+        </div>
+        <div style="font-style: italic; line-height: 1.6; color: var(--text-secondary);">
+          ${song.dedication}
+        </div>
       </div>
-      <button onclick="this.parentElement.parentElement.remove()" class="close-dedication">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-        Cerrar
-      </button>
     </div>
   `
 
@@ -1483,26 +1603,6 @@ function showSongDedication(song) {
       modal.remove()
     }
   }, 15000)
-}
-
-// Funciones de navegación
-function switchSection(sectionName) {
-  document.querySelectorAll(".section").forEach((section) => {
-    section.classList.remove("active")
-  })
-
-  document.getElementById(sectionName).classList.add("active")
-
-  document.querySelectorAll(".nav-btn").forEach((btn) => {
-    btn.classList.remove("active")
-  })
-
-  if (event && event.target) {
-    const navBtn = event.target.closest(".nav-btn")
-    if (navBtn) {
-      navBtn.classList.add("active")
-    }
-  }
 }
 
 function openSettings() {
@@ -1539,12 +1639,14 @@ function toggleEventsBubble() {
   const bubbleContent = document.getElementById("bubble-content")
   const bubbleToggle = document.querySelector(".bubble-toggle")
 
-  if (bubbleContent.classList.contains("hidden")) {
-    bubbleContent.classList.remove("hidden")
-    bubbleToggle.classList.add("expanded")
-  } else {
-    bubbleContent.classList.add("hidden")
-    bubbleToggle.classList.remove("expanded")
+  if (bubbleContent && bubbleToggle) {
+    if (bubbleContent.classList.contains("hidden")) {
+      bubbleContent.classList.remove("hidden")
+      bubbleToggle.classList.add("expanded")
+    } else {
+      bubbleContent.classList.add("hidden")
+      bubbleToggle.classList.remove("expanded")
+    }
   }
 }
 
@@ -1552,44 +1654,42 @@ function markLetterAsRead() {
   adminSystem.markLetterAsRead()
 }
 
-function openLoveCube() {
-  adminSystem.openLoveCube()
+function openGift() {
+  adminSystem.openGift()
 }
 
 function closeLoveMessage() {
   adminSystem.closeLoveMessage()
 }
 
-function showNotification(message, type = "info") {
+function showScreenCenterNotification(message, type = "info") {
   const notification = document.createElement("div")
-  notification.className = `notification ${type}`
-  notification.textContent = message
+  notification.className = `screen-notification ${type}`
 
   const styles = {
-    error: "background: #ef4444; color: white;",
-    success: "background: #10b981; color: white;",
-    info: "background: #3b82f6; color: white;",
+    error: "border-color: #ef4444; background: rgba(239, 68, 68, 0.1);",
+    success: "border-color: #10b981; background: rgba(16, 185, 129, 0.1);",
+    info: "border-color: #3b82f6; background: rgba(59, 130, 246, 0.1);",
   }
 
   notification.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 15px 20px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    z-index: 3000;
-    animation: slideInRight 0.3s ease;
-    font-weight: 500;
-    backdrop-filter: blur(10px);
     ${styles[type]}
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 1.1rem;
+    text-align: center;
   `
 
-  document.body.appendChild(notification)
+  notification.textContent = message
 
-  setTimeout(() => {
-    notification.remove()
-  }, 4000)
+  const container = document.getElementById("screen-center-notifications")
+  if (container) {
+    container.appendChild(notification)
+
+    setTimeout(() => {
+      notification.remove()
+    }, 4000)
+  }
 }
 
 function createFloatingHeart() {
@@ -1601,11 +1701,14 @@ function createFloatingHeart() {
   heart.style.animationDuration = Math.random() * 3 + 3 + "s"
   heart.style.fontSize = Math.random() * 10 + 15 + "px"
 
-  document.querySelector(".floating-hearts").appendChild(heart)
+  const container = document.querySelector(".floating-hearts")
+  if (container) {
+    container.appendChild(heart)
 
-  setTimeout(() => {
-    heart.remove()
-  }, 6000)
+    setTimeout(() => {
+      heart.remove()
+    }, 6000)
+  }
 }
 
 function closeAdminPanel() {
@@ -1636,46 +1739,6 @@ function playRandomSong() {
   adminSystem.playRandomSong()
 }
 
-function toggleCompactNav() {
-  const menu = document.getElementById("compact-nav-menu")
-  if (menu.classList.contains("hidden")) {
-    menu.classList.remove("hidden")
-  } else {
-    menu.classList.add("hidden")
-  }
-}
-
-document.addEventListener("click", (e) => {
-  const compactNav = document.getElementById("compact-nav")
-  const menu = document.getElementById("compact-nav-menu")
-
-  if (compactNav && !compactNav.contains(e.target)) {
-    menu.classList.add("hidden")
-  }
-})
-
-document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    document.getElementById("loading-screen").classList.add("hidden")
-  }, 3000)
-
-  loadEvents()
-  loadStats()
-  loadSongs()
-
-  setupSettingsListeners()
-
-  setTimeout(() => {
-    showNotification("💡 Tip: Presiona P + L para acceder al panel secreto", "info")
-  }, 8000)
-
-  setInterval(createFloatingHeart, 2000)
-
-  setTimeout(() => {
-    showNotification("¡Bienvenida a nuestro blog de amor! 💕", "success")
-  }, 4000)
-})
-
 function setupSettingsListeners() {
   document.querySelectorAll(".theme-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -1700,6 +1763,54 @@ function setupSettingsListeners() {
   }
 }
 
-const musicPlayer = new MusicPlayer()
-const settingsManager = new SettingsManager()
-const adminSystem = new AdminSystem()
+// Variables globales
+let cameraSystem
+let shaderSystem
+let musicPlayer
+let settingsManager
+let adminSystem
+
+// Inicialización
+document.addEventListener("DOMContentLoaded", () => {
+  // Ocultar pantalla de carga
+  setTimeout(() => {
+    const loadingScreen = document.getElementById("loading-screen")
+    if (loadingScreen) loadingScreen.classList.add("hidden")
+  }, 3000)
+
+  // Inicializar sistemas
+  cameraSystem = new CameraSystem()
+  shaderSystem = new ShaderSystem()
+  musicPlayer = new MusicPlayer()
+  settingsManager = new SettingsManager()
+  adminSystem = new AdminSystem()
+
+  // Cargar contenido
+  loadEvents()
+  loadStats()
+  loadSongs()
+
+  // Configurar listeners
+  setupSettingsListeners()
+  musicPlayer.setupPlayerEvents()
+
+  // Mostrar tip inicial
+  setTimeout(() => {
+    showScreenCenterNotification("💡 Tip: Presiona P + L para acceder al panel secreto", "info")
+  }, 8000)
+
+  // Iniciar efectos flotantes
+  setInterval(createFloatingHeart, 2000)
+
+  // Mensaje de bienvenida
+  setTimeout(() => {
+    showScreenCenterNotification("¡Bienvenida a nuestro blog de amor! 💕", "success")
+  }, 4000)
+})
+
+// Cleanup al cerrar la página
+window.addEventListener("beforeunload", () => {
+  if (shaderSystem) {
+    shaderSystem.destroy()
+  }
+})
