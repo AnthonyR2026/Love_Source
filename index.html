@@ -193,7 +193,7 @@
                                         <div class="signature-text">Con todo mi amor,</div>
                                         <div class="signature-name">Anthony ❤️</div>
                                     </div>
-                                    <button class="letter-read-btn" onclick="markLetterAsRead()">
+                                    <button class="letter-read-btn" onclick="markLetterAsRead()" type="button">
                                         <span class="btn-icon">✓</span>
                                         <span class="btn-text">Leído</span>
                                     </button>
@@ -206,7 +206,7 @@
                     <div class="gift-area hidden" id="gift-area">
                         <h2 class="gift-title">Un regalo especial para ti</h2>
                         <div class="gift-scene">
-                            <div class="gift-box" id="gift-box" onclick="openGift()">
+                            <div class="gift-box" id="gift-box" onclick="openGift()" style="cursor: pointer;">
                                 <div class="gift-face gift-top">
                                     <div class="gift-bow">🎀</div>
                                     <div class="gift-ribbon-h"></div>
@@ -558,7 +558,7 @@
     </div>
 
      Audio para música de fondo 
-    <audio id="background-music" loop style="display: none;"></audio>
+    <audio id="background-music-audio" loop style="display: none;"></audio>
 
      Efectos flotantes 
     <div class="floating-effects">
