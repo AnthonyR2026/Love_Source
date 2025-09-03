@@ -22,608 +22,548 @@
         </div>
     </div>
 
-     Navegación compacta para eventos 
-    <div id="compact-nav" class="compact-nav hidden">
-        <button class="compact-nav-toggle" onclick="toggleCompactNav()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-        </button>
-        <div id="compact-nav-menu" class="compact-nav-menu hidden">
-            <button class="compact-nav-btn" onclick="switchSection('blog'); toggleCompactNav()">BLOG</button>
-            <button class="compact-nav-btn" onclick="switchSection('canciones'); toggleCompactNav()">CANCIONES</button>
-            <button class="compact-nav-btn" onclick="switchSection('recuerdos'); toggleCompactNav()">RECUERDOS</button>
-            <button class="compact-nav-btn" onclick="switchSection('poemas'); toggleCompactNav()">POEMAS</button>
-            <button class="compact-nav-btn" onclick="switchSection('notas'); toggleCompactNav()">NOTAS</button>
-            <button class="compact-nav-btn" onclick="openSettings(); toggleCompactNav()">CONFIGURACIÓN</button>
+     Efectos de fondo y shaders 
+    <div class="background-effects">
+        <canvas id="shader-canvas" class="shader-canvas"></canvas>
+        <div class="floating-particles"></div>
+        <div class="ambient-lights">
+            <div class="light light-1"></div>
+            <div class="light light-2"></div>
+            <div class="light light-3"></div>
         </div>
     </div>
 
-     Título flotante del evento activo 
-    <div id="floating-event-title" class="floating-event-title hidden">
-        <div class="floating-title-content">
-            <span class="event-emoji" id="floating-event-emoji">🎉</span>
-            <span class="event-name" id="floating-event-name">Evento Activo</span>
-        </div>
-    </div>
-    
-     Navegación principal 
-    <nav class="nav-container" id="main-nav">
-        <button class="nav-btn active" onclick="switchSection('blog')">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-            </svg>
-            <span>BLOG</span>
-        </button>
-        <button class="nav-btn" onclick="switchSection('canciones')">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 18V5l12-2v13"></path>
-                <circle cx="6" cy="18" r="3"></circle>
-                <circle cx="18" cy="16" r="3"></circle>
-            </svg>
-            <span>CANCIONES</span>
-        </button>
-        <button class="nav-btn" onclick="switchSection('recuerdos')">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                <circle cx="12" cy="13" r="4"></circle>
-            </svg>
-            <span>RECUERDOS</span>
-        </button>
-        <button class="nav-btn" onclick="switchSection('poemas')">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            <span>POEMAS</span>
-        </button>
-        <button class="nav-btn" onclick="switchSection('notas')">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M16 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="16,3 16,8 21,8"></polyline>
-            </svg>
-            <span>NOTAS</span>
-        </button>
-         Pestaña de evento especial 
-        <button class="nav-btn event-tab hidden" id="event-tab" onclick="switchSection('evento-especial')">
-            <span class="event-tab-emoji" id="event-tab-emoji">🎉</span>
-            <span id="event-tab-name">EVENTO</span>
-        </button>
-        <button class="nav-btn settings-btn" onclick="openSettings()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
-            </svg>
-        </button>
-    </nav>
-
-     Sección Blog Principal 
-    <section id="blog" class="section active">
-        <div class="container">
-            <div class="header">
-                <h1 class="title">💕 Para Glendys, Mi Amor Eterno</h1>
-                <p class="subtitle">Nuestro diario de amor digital - Eventos, recuerdos y todo sobre nosotros ❤️</p>
+     UI fija que sigue la cámara 
+    <div class="fixed-ui">
+         Navegación principal 
+        <nav class="main-navigation" id="main-nav">
+            <div class="nav-brand">
+                <span class="brand-icon">💕</span>
+                <span class="brand-text">Glendys & Anthony</span>
             </div>
-
-             Próximos Eventos 
-            <div class="events-section" id="events-section">
-                <h2 class="section-title">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    Próximos Eventos Especiales
-                </h2>
-                
-                <div class="events-grid" id="events-container">
-                     Los eventos se cargarán dinámicamente 
-                </div>
-
-                 Burbuja comprimida para eventos 
-                <div class="events-bubble hidden" id="events-bubble">
-                    <button class="bubble-toggle" onclick="toggleEventsBubble()">
-                        <span class="bubble-text">Próximos Eventos</span>
-                        <span class="bubble-count" id="bubble-count">4</span>
-                        <svg class="bubble-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="6,9 12,15 18,9"></polyline>
-                        </svg>
-                    </button>
-                    <div class="bubble-content hidden" id="bubble-content">
-                         Eventos comprimidos 
-                    </div>
-                </div>
-            </div>
-
-             Funcionalidades de la Página 
-            <div class="features-section">
-                <h2 class="section-title">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                    </svg>
-                    ¿Qué puedes hacer aquí?
-                </h2>
-                
-                <div class="features-grid">
-                    <div class="feature-card" onclick="switchSection('canciones')">
-                        <div class="feature-icon">🎵</div>
-                        <h3>Escuchar Nuestras Canciones</h3>
-                        <p>Reproduce las canciones que más significan para nosotros, cada una con su historia especial</p>
-                        <div class="feature-stats">13 canciones disponibles</div>
-                    </div>
-
-                    <div class="feature-card" onclick="switchSection('recuerdos')">
-                        <div class="feature-icon">📸</div>
-                        <h3>Ver Nuestros Recuerdos</h3>
-                        <p>Galería de fotos y momentos especiales que hemos vivido juntos</p>
-                        <div class="feature-stats">Próximamente</div>
-                    </div>
-
-                    <div class="feature-card" onclick="switchSection('poemas')">
-                        <div class="feature-icon">✨</div>
-                        <h3>Leer Poemas de Amor</h3>
-                        <p>Versos escritos desde el corazón, dedicados especialmente para ti</p>
-                        <div class="feature-stats">Próximamente</div>
-                    </div>
-
-                    <div class="feature-card" onclick="switchSection('notas')">
-                        <div class="feature-icon">📝</div>
-                        <h3>Notas y Mensajes</h3>
-                        <p>Pequeñas notas de amor y mensajes especiales para ti</p>
-                        <div class="feature-stats">Próximamente</div>
-                    </div>
-
-                    <div class="feature-card" onclick="openSettings()">
-                        <div class="feature-icon">⚙️</div>
-                        <h3>Personalizar Experiencia</h3>
-                        <p>Cambia temas, ajusta configuraciones y personaliza tu experiencia</p>
-                        <div class="feature-stats">4 temas disponibles</div>
-                    </div>
-
-                    <div class="feature-card">
-                        <div class="feature-icon">💝</div>
-                        <h3>Sorpresas Especiales</h3>
-                        <p>Efectos visuales, animaciones y sorpresas que aparecen mientras navegas</p>
-                        <div class="feature-stats">Siempre activo</div>
-                    </div>
-                </div>
-            </div>
-
-             Estadísticas de Amor 
-            <div class="stats-section">
-                <h2 class="section-title">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                    Nuestras Estadísticas de Amor
-                </h2>
-                
-                <div class="stats-grid" id="stats-container">
-                     Las estadísticas se cargarán dinámicamente 
-                </div>
-            </div>
-        </div>
-    </section>
-
-     Sección Evento Especial 
-    <section id="evento-especial" class="section event-section">
-        <div class="container">
-            <div class="event-header">
-                <h1 class="event-title" id="event-section-title">🎉 Evento Especial</h1>
-                <p class="event-subtitle" id="event-section-subtitle">Celebrando un momento único</p>
-            </div>
-
-             Carta de Amor 
-            <div class="love-letter-container" id="love-letter-container">
-                <div class="love-letter" id="love-letter">
-                    <div class="letter-envelope" id="letter-envelope">
-                        <div class="envelope-flap"></div>
-                        <div class="envelope-body">
-                            <div class="envelope-heart">💕</div>
-                            <div class="envelope-text">Para ti, mi amor</div>
-                        </div>
-                    </div>
-                    
-                    <div class="letter-content hidden" id="letter-content">
-                        <div class="letter-paper">
-                            <div class="letter-header">
-                                <div class="letter-date" id="letter-date"></div>
-                                <div class="letter-to">Para mi amada Glendys 💕</div>
-                            </div>
-                            <div class="letter-text" id="letter-text">
-                                 El texto se cargará dinámicamente según el evento 
-                            </div>
-                            <div class="letter-signature">
-                                <div class="signature-text">Con todo mi amor,</div>
-                                <div class="signature-name">Anthony ❤️</div>
-                            </div>
-                            <button class="letter-read-btn" onclick="markLetterAsRead()">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20,6 9,17 4,12"></polyline>
-                                </svg>
-                                Leído
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-             Regalo 3D 
-            <div class="love-cube-container hidden" id="love-cube-container">
-                <h2 class="cube-title">Un regalo especial para ti</h2>
-                <div class="love-cube-scene">
-                    <div class="love-cube" id="love-cube" onclick="openLoveCube()">
-                        <div class="cube-face cube-front">
-                            <div class="gift-ribbon-v"></div>
-                            <div class="gift-ribbon-h"></div>
-                            <div class="gift-bow">🎀</div>
-                            <div class="cube-text">Abrir Regalo</div>
-                        </div>
-                        <div class="cube-face cube-back">
-                            <div class="gift-ribbon-v"></div>
-                            <div class="gift-ribbon-h"></div>
-                            <div class="gift-pattern">💖💗💝</div>
-                        </div>
-                        <div class="cube-face cube-right">
-                            <div class="gift-ribbon-v"></div>
-                            <div class="gift-ribbon-h"></div>
-                            <div class="gift-pattern">💘💞💓</div>
-                        </div>
-                        <div class="cube-face cube-left">
-                            <div class="gift-ribbon-v"></div>
-                            <div class="gift-ribbon-h"></div>
-                            <div class="gift-pattern">💌💐🌹</div>
-                        </div>
-                        <div class="cube-face cube-top">
-                            <div class="gift-bow-top">🎁</div>
-                            <div class="gift-pattern">✨⭐💫</div>
-                        </div>
-                        <div class="cube-face cube-bottom">
-                            <div class="gift-ribbon-v"></div>
-                            <div class="gift-ribbon-h"></div>
-                            <div class="gift-pattern">🎀🎁💎</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-             Mensaje de Amor Enfocado 
-            <div class="love-message-overlay hidden" id="love-message-overlay">
-                <div class="love-message-content">
-                    <button class="close-message-btn" onclick="closeLoveMessage()">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
-                    <div class="love-message-text" id="love-message-text">
-                         El mensaje se cargará dinámicamente 
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-     Sección Canciones 
-    <section id="canciones" class="section">
-        <div class="container">
-            <h2 class="section-title">🎵 Canciones de Nuestro Amor</h2>
-            <p class="section-subtitle">Cada canción tiene una historia especial para nosotros</p>
-            
-            <div class="songs-grid" id="songs-grid">
-                 Las canciones se cargarán dinámicamente 
-            </div>
-        </div>
-    </section>
-
-     Sección Recuerdos 
-    <section id="recuerdos" class="section">
-        <div class="container">
-            <h2 class="section-title">📸 Nuestros Recuerdos</h2>
-            <p class="section-subtitle">Próximamente: Galería de nuestros momentos especiales</p>
-            
-            <div class="coming-soon">
-                <div class="coming-soon-icon">🚧</div>
-                <h3>Sección en Desarrollo</h3>
-                <p>Estoy trabajando en una hermosa galería para nuestros recuerdos más preciados</p>
-            </div>
-        </div>
-    </section>
-
-     Sección Poemas 
-    <section id="poemas" class="section">
-        <div class="container">
-            <h2 class="section-title">✨ Poemas de Amor</h2>
-            <p class="section-subtitle">Próximamente: Versos escritos desde el corazón</p>
-            
-            <div class="coming-soon">
-                <div class="coming-soon-icon">📝</div>
-                <h3>Sección en Desarrollo</h3>
-                <p>Estoy escribiendo poemas especiales dedicados solo para ti</p>
-            </div>
-        </div>
-    </section>
-
-     Sección Notas 
-    <section id="notas" class="section">
-        <div class="container">
-            <h2 class="section-title">📝 Notas de Amor</h2>
-            <p class="section-subtitle">Próximamente: Notas y mensajes especiales</p>
-            
-            <div class="coming-soon">
-                <div class="coming-soon-icon">💌</div>
-                <h3>Sección en Desarrollo</h3>
-                <p>Pequeñas notas de amor y mensajes que te harán sonreír</p>
-            </div>
-        </div>
-    </section>
-
-     Modal de Configuración 
-    <div id="settings-modal" class="settings-modal hidden">
-        <div class="settings-content">
-            <div class="settings-header">
-                <h2>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
-                    </svg>
-                    Configuración
-                </h2>
-                <button class="close-settings" onclick="closeSettings()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
+            <div class="nav-items">
+                <button class="nav-item active" data-section="blog">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-label">Inicio</span>
+                </button>
+                <button class="nav-item" data-section="canciones">
+                    <span class="nav-icon">🎵</span>
+                    <span class="nav-label">Canciones</span>
+                </button>
+                <button class="nav-item" data-section="recuerdos">
+                    <span class="nav-icon">📸</span>
+                    <span class="nav-label">Recuerdos</span>
+                </button>
+                <button class="nav-item" data-section="poemas">
+                    <span class="nav-icon">✨</span>
+                    <span class="nav-label">Poemas</span>
+                </button>
+                <button class="nav-item" data-section="notas">
+                    <span class="nav-icon">📝</span>
+                    <span class="nav-label">Notas</span>
+                </button>
+                <button class="nav-item event-nav hidden" id="event-nav" data-section="evento-especial">
+                    <span class="nav-icon" id="event-nav-icon">🎉</span>
+                    <span class="nav-label">Evento</span>
                 </button>
             </div>
-            
-            <div class="settings-body">
-                <div class="setting-group">
-                    <h3>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="13.5" cy="6.5" r=".5"></circle>
-                            <circle cx="17.5" cy="10.5" r=".5"></circle>
-                            <circle cx="8.5" cy="7.5" r=".5"></circle>
-                            <circle cx="6.5" cy="12.5" r=".5"></circle>
-                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
-                        </svg>
-                        Tema
-                    </h3>
-                    <div class="theme-options">
-                        <button class="theme-btn active" data-theme="romantic">Romántico</button>
-                        <button class="theme-btn" data-theme="dark">Oscuro</button>
-                        <button class="theme-btn" data-theme="light">Claro</button>
-                        <button class="theme-btn" data-theme="sunset">Atardecer</button>
-                    </div>
-                </div>
-
-                <div class="setting-group">
-                    <h3>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                        </svg>
-                        Accesibilidad
-                    </h3>
-                    <div class="accessibility-options">
-                        <label class="setting-toggle">
-                            <span>Reducir animaciones</span>
-                            <input type="checkbox" id="reduce-motion">
-                            <span class="toggle-slider"></span>
-                        </label>
-                        <label class="setting-toggle">
-                            <span>Alto contraste</span>
-                            <input type="checkbox" id="high-contrast">
-                            <span class="toggle-slider"></span>
-                        </label>
-                        <label class="setting-toggle">
-                            <span>Texto grande</span>
-                            <input type="checkbox" id="large-text">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="setting-group">
-                    <h3>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="13,2 3,14 12,14 11,22 21,10 12,10"></polygon>
-                        </svg>
-                        Rendimiento
-                    </h3>
-                    <label class="setting-toggle">
-                        <span>Modo bajo recursos</span>
-                        <input type="checkbox" id="low-resources">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-
-                <div class="setting-group">
-                    <h3>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="11,5 6,9 2,9 2,15 6,15 11,19"></polygon>
-                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                        </svg>
-                        Audio
-                    </h3>
-                    <div class="audio-settings">
-                        <label>Calidad de sonido:</label>
-                        <select id="audio-quality">
-                            <option value="high">Alta</option>
-                            <option value="medium" selected>Media</option>
-                            <option value="low">Baja</option>
-                        </select>
-                        <label class="setting-toggle">
-                            <span>Música de fondo en eventos</span>
-                            <input type="checkbox" id="background-music" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
-                        <label class="setting-toggle">
-                            <span>Efectos de sonido</span>
-                            <input type="checkbox" id="sound-effects" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-     Panel de Administrador 
-    <div id="admin-panel" class="admin-panel hidden">
-        <div class="admin-content">
-            <div class="admin-header">
-                <h2>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                    </svg>
-                    Panel de Administrador
-                </h2>
-                <button class="close-admin" onclick="closeAdminPanel()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
-            
-            <div class="admin-body">
-                <div class="admin-section">
-                    <h3>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                        Eventos Especiales
-                    </h3>
-                    <p class="admin-description">Activa eventos temáticos que cambiarán toda la página</p>
-                    
-                    <div class="events-admin-grid">
-                        <div class="event-admin-card">
-                            <div class="event-admin-info">
-                                <h4>🎂 Cumpleaños de Glendys</h4>
-                                <p>Tema festivo con colores vibrantes y animaciones de celebración</p>
-                            </div>
-                            <button onclick="activateEvent('birthday')" class="activate-btn">
-                                Activar
-                            </button>
-                        </div>
-
-                        <div class="event-admin-card">
-                            <div class="event-admin-info">
-                                <h4>💕 Aniversario Anual</h4>
-                                <p>Tema romántico especial para celebrar nuestro aniversario</p>
-                            </div>
-                            <button onclick="activateEvent('anniversary')" class="activate-btn">
-                                Activar
-                            </button>
-                        </div>
-
-                        <div class="event-admin-card">
-                            <div class="event-admin-info">
-                                <h4>📅 Aniversario Mensual</h4>
-                                <p>Celebración mensual de nuestro amor - cada día 3 del mes</p>
-                            </div>
-                            <button onclick="activateEvent('monthly')" class="activate-btn">
-                                Activar
-                            </button>
-                        </div>
-
-                        <div class="event-admin-card">
-                            <div class="event-admin-info">
-                                <h4>🎄 Navidad Juntos</h4>
-                                <p>Tema navideño con colores festivos y nieve digital</p>
-                            </div>
-                            <button onclick="activateEvent('christmas')" class="activate-btn">
-                                Activar
-                            </button>
-                        </div>
-
-                        <div class="event-admin-card">
-                            <div class="event-admin-info">
-                                <h4>💝 San Valentín</h4>
-                                <p>Tema ultra romántico con corazones y colores rosados</p>
-                            </div>
-                            <button onclick="activateEvent('valentine')" class="activate-btn">
-                                Activar
-                            </button>
-                        </div>
-
-                        <div class="event-admin-card special">
-                            <div class="event-admin-info">
-                                <h4>✨ Modo Normal</h4>
-                                <p>Desactivar todos los eventos y volver al tema normal</p>
-                            </div>
-                            <button onclick="deactivateAllEvents()" class="deactivate-btn">
-                                Desactivar Todo
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="admin-section">
-                    <h3>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
-                        </svg>
-                        Estado Actual
-                    </h3>
-                    <div class="current-status" id="current-event-status">
-                        <div class="status-item">
-                            <span class="status-label">Evento Activo:</span>
-                            <span class="status-value" id="active-event-name">Ninguno</span>
-                        </div>
-                        <div class="status-item">
-                            <span class="status-label">Desde:</span>
-                            <span class="status-value" id="event-start-time">-</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="admin-section">
-                    <h3>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
-                        </svg>
-                        Acciones Rápidas
-                    </h3>
-                    <div class="quick-actions">
-                        <button onclick="triggerHeartRain()" class="quick-action-btn">
-                            💕 Lluvia de Corazones
-                        </button>
-                        <button onclick="showLoveMessage()" class="quick-action-btn">
-                            💌 Mensaje de Amor
-                        </button>
-                        <button onclick="playRandomSong()" class="quick-action-btn">
-                            🎵 Canción Aleatoria
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-     Overlay para eventos especiales 
-    <div id="event-overlay" class="event-overlay hidden">
-        <div class="event-notification">
-            <div class="event-icon" id="event-icon">🎉</div>
-            <h2 id="event-title">¡Evento Activado!</h2>
-            <p id="event-message">La página se ha tematizado para este evento especial</p>
-            <button onclick="closeEventNotification()" class="close-event-btn">
-                Continuar
+            <button class="settings-toggle" onclick="openSettings()">
+                <span class="settings-icon">⚙️</span>
             </button>
+        </nav>
+
+         Título flotante de evento 
+        <div id="floating-event-title" class="floating-event-title hidden">
+            <div class="event-badge">
+                <span class="event-emoji" id="floating-event-emoji">🎉</span>
+                <div class="event-info">
+                    <span class="event-name" id="floating-event-name">Evento Activo</span>
+                    <span class="event-status">En curso</span>
+                </div>
+            </div>
         </div>
+
+         Notificaciones centradas en pantalla 
+        <div id="screen-center-notifications" class="screen-center-notifications"></div>
+    </div>
+
+     Contenido principal con cámara 
+    <div class="camera-container" id="camera-container">
+        <div class="world-content" id="world-content">
+            
+             Sección Blog Principal 
+            <section id="blog" class="content-section active">
+                <div class="section-container">
+                    <header class="page-header">
+                        <h1 class="main-title">Para Glendys, Mi Amor Eterno</h1>
+                        <p class="main-subtitle">Nuestro diario de amor digital donde cada momento es especial</p>
+                    </header>
+
+                     Próximos Eventos 
+                    <div class="events-showcase" id="events-showcase">
+                        <h2 class="showcase-title">Próximos Eventos Especiales</h2>
+                        <div class="events-grid" id="events-container">
+                             Los eventos se cargarán dinámicamente 
+                        </div>
+                        
+                         Burbuja comprimida para eventos 
+                        <div class="events-bubble hidden" id="events-bubble">
+                            <button class="bubble-toggle" onclick="toggleEventsBubble()">
+                                <span class="bubble-icon">📅</span>
+                                <span class="bubble-text">Eventos</span>
+                                <span class="bubble-count" id="bubble-count">4</span>
+                                <span class="bubble-arrow">▼</span>
+                            </button>
+                            <div class="bubble-content hidden" id="bubble-content">
+                                 Eventos comprimidos 
+                            </div>
+                        </div>
+                    </div>
+
+                     Funcionalidades 
+                    <div class="features-showcase">
+                        <h2 class="showcase-title">¿Qué puedes hacer aquí?</h2>
+                        <div class="features-grid">
+                            <div class="feature-card" data-section="canciones">
+                                <div class="feature-icon">🎵</div>
+                                <h3 class="feature-title">Nuestras Canciones</h3>
+                                <p class="feature-description">Escucha las 13 canciones que cuentan nuestra historia de amor</p>
+                                <div class="feature-badge">13 canciones</div>
+                            </div>
+                            <div class="feature-card" data-section="recuerdos">
+                                <div class="feature-icon">📸</div>
+                                <h3 class="feature-title">Recuerdos Especiales</h3>
+                                <p class="feature-description">Galería de nuestros momentos más preciados</p>
+                                <div class="feature-badge">Próximamente</div>
+                            </div>
+                            <div class="feature-card" data-section="poemas">
+                                <div class="feature-icon">✨</div>
+                                <h3 class="feature-title">Poemas de Amor</h3>
+                                <p class="feature-description">Versos escritos desde el corazón para ti</p>
+                                <div class="feature-badge">Próximamente</div>
+                            </div>
+                            <div class="feature-card" data-section="notas">
+                                <div class="feature-icon">📝</div>
+                                <h3 class="feature-title">Notas de Amor</h3>
+                                <p class="feature-description">Pequeños mensajes que te harán sonreír</p>
+                                <div class="feature-badge">Próximamente</div>
+                            </div>
+                        </div>
+                    </div>
+
+                     Estadísticas de Amor 
+                    <div class="stats-showcase">
+                        <h2 class="showcase-title">Nuestras Estadísticas de Amor</h2>
+                        <div class="stats-grid" id="stats-container">
+                             Las estadísticas se cargarán dinámicamente 
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+             Sección Evento Especial 
+            <section id="evento-especial" class="content-section event-section">
+                <div class="section-container">
+                    <header class="event-header">
+                        <h1 class="event-title" id="event-section-title">🎉 Evento Especial</h1>
+                        <p class="event-subtitle" id="event-section-subtitle">Celebrando un momento único</p>
+                    </header>
+
+                     Carta de Amor 
+                    <div class="love-letter-area" id="love-letter-area">
+                        <div class="letter-container" id="letter-container">
+                            <div class="letter-envelope" id="letter-envelope">
+                                <div class="envelope-flap"></div>
+                                <div class="envelope-body">
+                                    <div class="envelope-heart">💕</div>
+                                    <div class="envelope-text">Para ti, mi amor</div>
+                                </div>
+                            </div>
+                            
+                            <div class="letter-content hidden" id="letter-content">
+                                <div class="letter-paper">
+                                    <div class="letter-header">
+                                        <div class="letter-date" id="letter-date"></div>
+                                        <div class="letter-to">Para mi amada Glendys 💕</div>
+                                    </div>
+                                    <div class="letter-text" id="letter-text">
+                                         El texto se cargará dinámicamente 
+                                    </div>
+                                    <div class="letter-signature">
+                                        <div class="signature-text">Con todo mi amor,</div>
+                                        <div class="signature-name">Anthony ❤️</div>
+                                    </div>
+                                    <button class="letter-read-btn" onclick="markLetterAsRead()">
+                                        <span class="btn-icon">✓</span>
+                                        <span class="btn-text">Leído</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                     Regalo 3D Real 
+                    <div class="gift-area hidden" id="gift-area">
+                        <h2 class="gift-title">Un regalo especial para ti</h2>
+                        <div class="gift-scene">
+                            <div class="gift-box" id="gift-box" onclick="openGift()">
+                                <div class="gift-face gift-top">
+                                    <div class="gift-bow">🎀</div>
+                                    <div class="gift-ribbon-h"></div>
+                                    <div class="gift-ribbon-v"></div>
+                                </div>
+                                <div class="gift-face gift-front">
+                                    <div class="gift-ribbon-v"></div>
+                                    <div class="gift-pattern">💕</div>
+                                </div>
+                                <div class="gift-face gift-back">
+                                    <div class="gift-ribbon-v"></div>
+                                    <div class="gift-pattern">💖</div>
+                                </div>
+                                <div class="gift-face gift-left">
+                                    <div class="gift-ribbon-h"></div>
+                                    <div class="gift-pattern">💗</div>
+                                </div>
+                                <div class="gift-face gift-right">
+                                    <div class="gift-ribbon-h"></div>
+                                    <div class="gift-pattern">💝</div>
+                                </div>
+                                <div class="gift-face gift-bottom">
+                                    <div class="gift-ribbon-h"></div>
+                                    <div class="gift-ribbon-v"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="gift-instruction">Haz click en el regalo para abrirlo</p>
+                    </div>
+                </div>
+            </section>
+
+             Sección Canciones 
+            <section id="canciones" class="content-section">
+                <div class="section-container">
+                    <header class="section-header">
+                        <h2 class="section-title">🎵 Canciones de Nuestro Amor</h2>
+                        <p class="section-subtitle">Cada canción tiene una historia especial para nosotros</p>
+                    </header>
+                    
+                    <div class="songs-grid" id="songs-grid">
+                         Las canciones se cargarán dinámicamente 
+                    </div>
+                </div>
+            </section>
+
+             Sección Recuerdos 
+            <section id="recuerdos" class="content-section">
+                <div class="section-container">
+                    <header class="section-header">
+                        <h2 class="section-title">📸 Nuestros Recuerdos</h2>
+                        <p class="section-subtitle">Galería de nuestros momentos especiales</p>
+                    </header>
+                    
+                    <div class="coming-soon">
+                        <div class="coming-soon-icon">🚧</div>
+                        <h3 class="coming-soon-title">Sección en Desarrollo</h3>
+                        <p class="coming-soon-text">Estoy trabajando en una hermosa galería para nuestros recuerdos más preciados</p>
+                    </div>
+                </div>
+            </section>
+
+             Sección Poemas 
+            <section id="poemas" class="content-section">
+                <div class="section-container">
+                    <header class="section-header">
+                        <h2 class="section-title">✨ Poemas de Amor</h2>
+                        <p class="section-subtitle">Versos escritos desde el corazón</p>
+                    </header>
+                    
+                    <div class="coming-soon">
+                        <div class="coming-soon-icon">📝</div>
+                        <h3 class="coming-soon-title">Sección en Desarrollo</h3>
+                        <p class="coming-soon-text">Estoy escribiendo poemas especiales dedicados solo para ti</p>
+                    </div>
+                </div>
+            </section>
+
+             Sección Notas 
+            <section id="notas" class="content-section">
+                <div class="section-container">
+                    <header class="section-header">
+                        <h2 class="section-title">📝 Notas de Amor</h2>
+                        <p class="section-subtitle">Notas y mensajes especiales</p>
+                    </header>
+                    
+                    <div class="coming-soon">
+                        <div class="coming-soon-icon">💌</div>
+                        <h3 class="coming-soon-title">Sección en Desarrollo</h3>
+                        <p class="coming-soon-text">Pequeñas notas de amor y mensajes que te harán sonreír</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+     Modales y Overlays 
+    <div class="modals-container">
+         Modal de Configuración 
+        <div id="settings-modal" class="modal-overlay hidden">
+            <div class="modal-content settings-modal">
+                <div class="modal-header">
+                    <h2 class="modal-title">
+                        <span class="modal-icon">⚙️</span>
+                        Configuración
+                    </h2>
+                    <button class="modal-close" onclick="closeSettings()">✕</button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="settings-group">
+                        <h3 class="settings-group-title">
+                            <span class="group-icon">🎨</span>
+                            Tema
+                        </h3>
+                        <div class="theme-options">
+                            <button class="theme-btn active" data-theme="romantic">Romántico</button>
+                            <button class="theme-btn" data-theme="dark">Oscuro</button>
+                            <button class="theme-btn" data-theme="light">Claro</button>
+                            <button class="theme-btn" data-theme="sunset">Atardecer</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3 class="settings-group-title">
+                            <span class="group-icon">♿</span>
+                            Accesibilidad
+                        </h3>
+                        <div class="settings-toggles">
+                            <label class="setting-toggle">
+                                <span class="toggle-label">Reducir animaciones</span>
+                                <input type="checkbox" id="reduce-motion">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <label class="setting-toggle">
+                                <span class="toggle-label">Alto contraste</span>
+                                <input type="checkbox" id="high-contrast">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <label class="setting-toggle">
+                                <span class="toggle-label">Texto grande</span>
+                                <input type="checkbox" id="large-text">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3 class="settings-group-title">
+                            <span class="group-icon">🔊</span>
+                            Audio
+                        </h3>
+                        <div class="audio-settings">
+                            <div class="setting-item">
+                                <label class="setting-label">Calidad de sonido:</label>
+                                <select id="audio-quality" class="setting-select">
+                                    <option value="high">Alta</option>
+                                    <option value="medium" selected>Media</option>
+                                    <option value="low">Baja</option>
+                                </select>
+                            </div>
+                            <label class="setting-toggle">
+                                <span class="toggle-label">Música de fondo en eventos</span>
+                                <input type="checkbox" id="background-music" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <label class="setting-toggle">
+                                <span class="toggle-label">Efectos de sonido</span>
+                                <input type="checkbox" id="sound-effects" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         Panel de Administrador 
+        <div id="admin-panel" class="modal-overlay hidden">
+            <div class="modal-content admin-panel">
+                <div class="modal-header admin-header">
+                    <h2 class="modal-title">
+                        <span class="modal-icon">👑</span>
+                        Panel de Administrador
+                    </h2>
+                    <button class="modal-close" onclick="closeAdminPanel()">✕</button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="admin-section">
+                        <h3 class="admin-section-title">
+                            <span class="section-icon">🎉</span>
+                            Eventos Especiales
+                        </h3>
+                        <p class="admin-description">Activa eventos temáticos que cambiarán toda la página</p>
+                        
+                        <div class="events-admin-grid">
+                            <div class="event-admin-card">
+                                <div class="event-admin-info">
+                                    <h4 class="event-admin-title">🎂 Cumpleaños de Glendys</h4>
+                                    <p class="event-admin-desc">Tema festivo con colores vibrantes y animaciones de celebración</p>
+                                </div>
+                                <button onclick="activateEvent('birthday')" class="admin-btn activate-btn">
+                                    Activar
+                                </button>
+                            </div>
+
+                            <div class="event-admin-card">
+                                <div class="event-admin-info">
+                                    <h4 class="event-admin-title">💕 Aniversario Anual</h4>
+                                    <p class="event-admin-desc">Tema romántico especial para celebrar nuestro aniversario</p>
+                                </div>
+                                <button onclick="activateEvent('anniversary')" class="admin-btn activate-btn">
+                                    Activar
+                                </button>
+                            </div>
+
+                            <div class="event-admin-card">
+                                <div class="event-admin-info">
+                                    <h4 class="event-admin-title">📅 Aniversario Mensual</h4>
+                                    <p class="event-admin-desc">Celebración mensual de nuestro amor - cada día 3 del mes</p>
+                                </div>
+                                <button onclick="activateEvent('monthly')" class="admin-btn activate-btn">
+                                    Activar
+                                </button>
+                            </div>
+
+                            <div class="event-admin-card">
+                                <div class="event-admin-info">
+                                    <h4 class="event-admin-title">🎄 Navidad Juntos</h4>
+                                    <p class="event-admin-desc">Tema navideño con colores festivos y nieve digital</p>
+                                </div>
+                                <button onclick="activateEvent('christmas')" class="admin-btn activate-btn">
+                                    Activar
+                                </button>
+                            </div>
+
+                            <div class="event-admin-card">
+                                <div class="event-admin-info">
+                                    <h4 class="event-admin-title">💝 San Valentín</h4>
+                                    <p class="event-admin-desc">Tema ultra romántico con corazones y colores rosados</p>
+                                </div>
+                                <button onclick="activateEvent('valentine')" class="admin-btn activate-btn">
+                                    Activar
+                                </button>
+                            </div>
+
+                            <div class="event-admin-card special">
+                                <div class="event-admin-info">
+                                    <h4 class="event-admin-title">✨ Modo Normal</h4>
+                                    <p class="event-admin-desc">Desactivar todos los eventos y volver al tema normal</p>
+                                </div>
+                                <button onclick="deactivateAllEvents()" class="admin-btn deactivate-btn">
+                                    Desactivar Todo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <h3 class="admin-section-title">
+                            <span class="section-icon">📊</span>
+                            Estado Actual
+                        </h3>
+                        <div class="current-status" id="current-event-status">
+                            <div class="status-item">
+                                <span class="status-label">Evento Activo:</span>
+                                <span class="status-value" id="active-event-name">Ninguno</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Desde:</span>
+                                <span class="status-value" id="event-start-time">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <h3 class="admin-section-title">
+                            <span class="section-icon">⚡</span>
+                            Acciones Rápidas
+                        </h3>
+                        <div class="quick-actions">
+                            <button onclick="triggerHeartRain()" class="admin-btn quick-action-btn">
+                                💕 Lluvia de Corazones
+                            </button>
+                            <button onclick="showLoveMessage()" class="admin-btn quick-action-btn">
+                                💌 Mensaje de Amor
+                            </button>
+                            <button onclick="playRandomSong()" class="admin-btn quick-action-btn">
+                                🎵 Canción Aleatoria
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         Overlay de notificación de evento 
+        <div id="event-notification-overlay" class="modal-overlay hidden">
+            <div class="event-notification">
+                <div class="event-notification-icon" id="event-notification-icon">🎉</div>
+                <h2 class="event-notification-title" id="event-notification-title">¡Evento Activado!</h2>
+                <p class="event-notification-message" id="event-notification-message">La página se ha tematizado para este evento especial</p>
+                <button onclick="closeEventNotification()" class="event-notification-btn">
+                    Continuar
+                </button>
+            </div>
+        </div>
+
+         Mensaje de amor enfocado 
+        <div id="love-message-overlay" class="modal-overlay hidden">
+            <div class="love-message-content">
+                <button class="modal-close" onclick="closeLoveMessage()">✕</button>
+                <div class="love-message-text" id="love-message-text">
+                     El mensaje se cargará dinámicamente 
+                </div>
+            </div>
+        </div>
+    </div>
+
+     Reproductor flotante 
+    <div id="floating-player" class="floating-player hidden">
+        <div class="player-header">
+            <div class="song-info">
+                <div class="song-title">Selecciona una canción</div>
+                <div class="song-artist">para comenzar a escuchar</div>
+            </div>
+            <button id="close-player-btn" class="player-close">✕</button>
+        </div>
+        
+        <div class="player-controls">
+            <button id="prev-btn" class="control-btn">⏮</button>
+            <button id="play-pause-btn" class="control-btn play-btn">▶</button>
+            <button id="next-btn" class="control-btn">⏭</button>
+            <button id="volume-btn" class="control-btn">🔊</button>
+        </div>
+        
+        <div class="player-progress">
+            <div class="progress-bar" id="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="time-display">
+                <span class="current-time" id="current-time">0:00</span>
+                <span class="total-time" id="total-time">0:00</span>
+            </div>
+        </div>
+        
+        <div id="youtube-player" style="display: none;"></div>
     </div>
 
      Audio para música de fondo 
     <audio id="background-music" loop style="display: none;"></audio>
 
-     Corazones flotantes 
-    <div class="floating-hearts"></div>
+     Efectos flotantes 
+    <div class="floating-effects">
+        <div class="floating-hearts"></div>
+    </div>
 
     <script src="script.js"></script>
 </body>
