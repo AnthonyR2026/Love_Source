@@ -1,3 +1,23 @@
+/* Ocultar scrollbars */
+body {
+  overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+body::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+.camera-container {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.camera-container::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
 /* Variables CSS mejoradas */
 :root {
   --primary: #ff6b9d;
@@ -353,7 +373,7 @@ body {
   pointer-events: auto;
 }
 
-/* Navegación principal mejorada */
+/* Navegación principal mejorada - oculta por defecto */
 .main-navigation {
   position: absolute;
   top: 20px;
@@ -369,12 +389,33 @@ body {
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-lg);
   transition: var(--transition);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.main-navigation.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .main-navigation:hover {
   background: var(--glass-hover);
-  transform: translateX(-50%) translateY(-2px);
+  transform: translateX(-50%) translateY(-2px) scale(1.05);
   box-shadow: var(--shadow-xl);
+  z-index: 1000;
+}
+
+/* Efecto de desenfoque del fondo cuando se hace hover en la navegación */
+.main-navigation:hover ~ .world-content {
+  filter: blur(2px);
+  transition: filter 0.3s ease;
+}
+
+.fixed-ui:hover .background-effects {
+  filter: blur(1px);
+  transition: filter 0.3s ease;
 }
 
 .nav-brand {
@@ -2832,4 +2873,11 @@ input[type="checkbox"] {
   .quick-actions {
     flex-direction: column;
   }
+}
+
+/* Ocultar navegaciones duplicadas */
+.nav-duplicate,
+.secondary-nav,
+.extra-navigation {
+  display: none !important;
 }
