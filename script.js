@@ -986,6 +986,7 @@ class SettingsManager {
       audioQuality: "medium",
       backgroundMusic: true,
       soundEffects: true,
+      visualEffects: true,
     }
     this.loadSettings()
     this.applySettings()
@@ -1027,6 +1028,22 @@ class SettingsManager {
       document.body.classList.add("low-resources")
     } else {
       document.body.classList.remove("low-resources")
+    }
+
+    if (!this.settings.visualEffects) {
+      if (shaderSystem) {
+        shaderSystem.destroy()
+      }
+      document.querySelector(".shader-canvas")?.style.setProperty("display", "none")
+      document.querySelector(".floating-particles")?.style.setProperty("display", "none")
+      document.querySelector(".ambient-lights")?.style.setProperty("display", "none")
+    } else {
+      document.querySelector(".shader-canvas")?.style.removeProperty("display")
+      document.querySelector(".floating-particles")?.style.removeProperty("display")
+      document.querySelector(".ambient-lights")?.style.removeProperty("display")
+      if (!shaderSystem && !this.settings.lowResources) {
+        shaderSystem = new ShaderSystem()
+      }
     }
   }
 
