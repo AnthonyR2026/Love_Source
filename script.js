@@ -1,4 +1,3 @@
-// Base de datos de canciones
 const SONGS_DATABASE = {
   heather: {
     title: "Heather",
@@ -108,7 +107,6 @@ const SONGS_DATABASE = {
   },
 }
 
-// Datos del blog
 const BLOG_DATA = {
   events: [
     {
@@ -150,7 +148,6 @@ const BLOG_DATA = {
   ],
 }
 
-// Textos de eventos especiales
 const EVENT_TEXTS = {
   birthday: {
     letter: `Mi querida Glendys,
@@ -283,16 +280,17 @@ Anthony ❤️`,
   },
 }
 
-// Sistema de cámara y viewport
 class CameraSystem {
   constructor() {
     this.container = document.getElementById("camera-container")
     this.worldContent = document.getElementById("world-content")
     this.fixedUI = document.querySelector(".fixed-ui")
     this.mainNav = document.querySelector(".main-navigation")
+    this.compressedNav = document.getElementById("nav-compressed")
     this.currentSection = "blog"
     this.isScrolling = false
     this.mouseTimer = null
+    this.isTransitioning = false
 
     this.init()
   }
@@ -305,25 +303,36 @@ class CameraSystem {
   }
 
   setupMouseListener() {
-    // Mostrar navegación al mover el mouse
+    const isEventActive = () => document.documentElement.hasAttribute("data-event")
+
     document.addEventListener("mousemove", () => {
-      if (this.mainNav) {
-        this.mainNav.classList.add("visible")
+      if (isEventActive()) {
+        if (this.compressedNav) {
+          this.compressedNav.classList.add("visible")
+        }
+      } else {
+        if (this.mainNav) {
+          this.mainNav.classList.add("visible")
+        }
       }
 
-      // Ocultar después de 3 segundos de inactividad
       if (this.mouseTimer) {
         clearTimeout(this.mouseTimer)
       }
 
       this.mouseTimer = setTimeout(() => {
-        if (this.mainNav) {
-          this.mainNav.classList.remove("visible")
+        if (isEventActive()) {
+          if (this.compressedNav) {
+            this.compressedNav.classList.remove("visible")
+          }
+        } else {
+          if (this.mainNav) {
+            this.mainNav.classList.remove("visible")
+          }
         }
-      }, 3000)
+      }, 8000)
     })
 
-    // Mantener visible cuando el mouse está sobre la navegación
     if (this.mainNav) {
       this.mainNav.addEventListener("mouseenter", () => {
         if (this.mouseTimer) {
@@ -334,7 +343,21 @@ class CameraSystem {
       this.mainNav.addEventListener("mouseleave", () => {
         this.mouseTimer = setTimeout(() => {
           this.mainNav.classList.remove("visible")
-        }, 1000)
+        }, 2000)
+      })
+    }
+
+    if (this.compressedNav) {
+      this.compressedNav.addEventListener("mouseenter", () => {
+        if (this.mouseTimer) {
+          clearTimeout(this.mouseTimer)
+        }
+      })
+
+      this.compressedNav.addEventListener("mouseleave", () => {
+        this.mouseTimer = setTimeout(() => {
+          this.compressedNav.classList.remove("visible")
+        }, 2000)
       })
     }
   }
@@ -373,7 +396,13 @@ class CameraSystem {
   }
 
   switchToSection(sectionName) {
-    // Actualizar navegación activa
+    if (this.isTransitioning) return
+
+    this.isTransitioning = true
+    this.container.classList.add("transitioning")
+
+    playSound("transition")
+
     document.querySelectorAll(".nav-item").forEach((item) => {
       item.classList.remove("active")
     })
@@ -383,22 +412,27 @@ class CameraSystem {
       activeNavItem.classList.add("active")
     }
 
-    // Cambiar sección
-    document.querySelectorAll(".content-section").forEach((section) => {
-      section.classList.remove("active")
-    })
-
-    const targetSection = document.getElementById(sectionName)
-    if (targetSection) {
-      targetSection.classList.add("active")
-      this.currentSection = sectionName
-
-      // Scroll suave al inicio de la sección
-      this.container.scrollTo({
-        top: 0,
-        behavior: "smooth",
+    setTimeout(() => {
+      document.querySelectorAll(".content-section").forEach((section) => {
+        section.classList.remove("active")
       })
-    }
+
+      const targetSection = document.getElementById(sectionName)
+      if (targetSection) {
+        targetSection.classList.add("active")
+        this.currentSection = sectionName
+
+        this.container.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        })
+      }
+
+      setTimeout(() => {
+        this.container.classList.remove("transitioning")
+        this.isTransitioning = false
+      }, 400)
+    }, 200)
   }
 
   updateCameraEffects() {
@@ -406,40 +440,24 @@ class CameraSystem {
     const maxScroll = this.container.scrollHeight - this.container.clientHeight
     const scrollProgress = scrollY / maxScroll
 
-    // Efectos de paralaje en el fondo
     const backgroundEffects = document.querySelector(".background-effects")
     if (backgroundEffects) {
-      backgroundEffects.style.transform = `translateY(${scrollY * 0.5}px)`
+      backgroundEffects.style.transform = `translateY(${scrollY * 0.3}px)`
     }
 
-    // Efectos en las luces ambientales
     const lights = document.querySelectorAll(".light")
     lights.forEach((light, index) => {
-      const offset = (index + 1) * 0.3
-      light.style.transform = `translateY(${scrollY * offset}px) scale(${1 + scrollProgress * 0.2})`
+      const offset = (index + 1) * 0.2
+      light.style.transform = `translateY(${scrollY * offset}px) scale(${1 + scrollProgress * 0.15})`
     })
   }
 
   updateViewport() {
-    // Actualizar efectos basados en el tamaño de la ventana
     const vh = window.innerHeight * 0.01
     document.documentElement.style.setProperty("--vh", `${vh}px`)
   }
-
-  centerNotification(element) {
-    const rect = this.container.getBoundingClientRect()
-    const centerX = rect.left + rect.width / 2
-    const centerY = rect.top + rect.height / 2
-
-    element.style.position = "fixed"
-    element.style.left = `${centerX}px`
-    element.style.top = `${centerY}px`
-    element.style.transform = "translate(-50%, -50%)"
-    element.style.zIndex = "2000"
-  }
 }
 
-// Sistema de shaders y efectos visuales
 class ShaderSystem {
   constructor() {
     this.canvas = document.getElementById("shader-canvas")
@@ -467,7 +485,7 @@ class ShaderSystem {
 
   startAnimation() {
     const animate = () => {
-      this.time += 0.016 // ~60fps
+      this.time += 0.016
       this.render()
       this.animationId = requestAnimationFrame(animate)
     }
@@ -478,46 +496,59 @@ class ShaderSystem {
     const { width, height } = this.canvas
     this.ctx.clearRect(0, 0, width, height)
 
-    // Crear gradiente animado
     const gradient = this.ctx.createRadialGradient(
-      width * 0.5 + Math.sin(this.time * 0.5) * 100,
-      height * 0.5 + Math.cos(this.time * 0.3) * 100,
+      width * 0.5 + Math.sin(this.time * 0.4) * 150,
+      height * 0.5 + Math.cos(this.time * 0.3) * 150,
       0,
       width * 0.5,
       height * 0.5,
-      Math.max(width, height) * 0.8,
+      Math.max(width, height) * 0.9,
     )
 
-    const hue1 = (this.time * 20) % 360
-    const hue2 = (this.time * 30 + 120) % 360
-    const hue3 = (this.time * 25 + 240) % 360
+    const hue1 = (this.time * 15) % 360
+    const hue2 = (this.time * 25 + 120) % 360
+    const hue3 = (this.time * 20 + 240) % 360
 
-    gradient.addColorStop(0, `hsla(${hue1}, 70%, 60%, 0.1)`)
-    gradient.addColorStop(0.5, `hsla(${hue2}, 60%, 50%, 0.05)`)
-    gradient.addColorStop(1, `hsla(${hue3}, 80%, 40%, 0.02)`)
+    gradient.addColorStop(0, `hsla(${hue1}, 80%, 65%, 0.15)`)
+    gradient.addColorStop(0.5, `hsla(${hue2}, 70%, 55%, 0.08)`)
+    gradient.addColorStop(1, `hsla(${hue3}, 90%, 45%, 0.03)`)
 
     this.ctx.fillStyle = gradient
     this.ctx.fillRect(0, 0, width, height)
 
-    // Añadir partículas flotantes
     this.renderParticles()
+    this.renderBorderEffects()
   }
 
   renderParticles() {
     const { width, height } = this.canvas
-    const particleCount = 20
+    const particleCount = 30
 
     for (let i = 0; i < particleCount; i++) {
-      const x = width * 0.5 + Math.sin(this.time * 0.5 + i * 0.5) * (width * 0.3)
-      const y = height * 0.5 + Math.cos(this.time * 0.3 + i * 0.7) * (height * 0.3)
-      const size = 2 + Math.sin(this.time * 2 + i) * 1
-      const opacity = 0.1 + Math.sin(this.time + i) * 0.05
+      const x = width * 0.5 + Math.sin(this.time * 0.4 + i * 0.4) * (width * 0.4)
+      const y = height * 0.5 + Math.cos(this.time * 0.3 + i * 0.6) * (height * 0.4)
+      const size = 3 + Math.sin(this.time * 1.5 + i) * 1.5
+      const opacity = 0.15 + Math.sin(this.time + i) * 0.08
 
       this.ctx.beginPath()
       this.ctx.arc(x, y, size, 0, Math.PI * 2)
       this.ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`
       this.ctx.fill()
     }
+  }
+
+  renderBorderEffects() {
+    const { width, height } = this.canvas
+    const borderGradient = this.ctx.createLinearGradient(0, 0, width, height)
+
+    const hue = (this.time * 30) % 360
+    borderGradient.addColorStop(0, `hsla(${hue}, 100%, 70%, 0.3)`)
+    borderGradient.addColorStop(0.5, `hsla(${(hue + 60) % 360}, 100%, 70%, 0.2)`)
+    borderGradient.addColorStop(1, `hsla(${(hue + 120) % 360}, 100%, 70%, 0.3)`)
+
+    this.ctx.strokeStyle = borderGradient
+    this.ctx.lineWidth = 4
+    this.ctx.strokeRect(2, 2, width - 4, height - 4)
   }
 
   destroy() {
@@ -527,7 +558,6 @@ class ShaderSystem {
   }
 }
 
-// Función para calcular días hasta un evento
 function calculateDaysUntil(dateString) {
   const eventDate = new Date(dateString)
   const today = new Date()
@@ -543,7 +573,6 @@ function calculateDaysUntil(dateString) {
   return diffDays
 }
 
-// Función para calcular tiempo juntos
 function calculateTimeTogetherStats() {
   const startDate = new Date("2024-12-03")
   const now = new Date()
@@ -557,7 +586,6 @@ function calculateTimeTogetherStats() {
   return { days, months, weeks, hours }
 }
 
-// Cargar eventos
 function loadEvents() {
   const container = document.getElementById("events-container")
   if (!container) return
@@ -571,7 +599,7 @@ function loadEvents() {
   container.innerHTML = sortedEvents
     .map(
       (event) => `
-    <div class="event-card ${event.type}">
+    <div class="event-card ${event.type}" onclick="playSound('click')">
       <div class="event-icon">${event.icon}</div>
       <div class="event-content">
         <h3>${event.title}</h3>
@@ -587,7 +615,6 @@ function loadEvents() {
     .join("")
 }
 
-// Cargar eventos en burbuja
 function loadEventsBubble() {
   const bubbleContent = document.getElementById("bubble-content")
   if (!bubbleContent) return
@@ -601,7 +628,7 @@ function loadEventsBubble() {
   bubbleContent.innerHTML = sortedEvents
     .map(
       (event) => `
-    <div class="bubble-event">
+    <div class="bubble-event" onclick="playSound('click')">
       <div class="bubble-event-icon">${event.icon}</div>
       <div class="bubble-event-info">
         <h4>${event.title}</h4>
@@ -614,7 +641,6 @@ function loadEventsBubble() {
     .join("")
 }
 
-// Cargar estadísticas
 function loadStats() {
   const container = document.getElementById("stats-container")
   if (!container) return
@@ -622,26 +648,25 @@ function loadStats() {
   const stats = calculateTimeTogetherStats()
 
   container.innerHTML = `
-    <div class="stat-card">
+    <div class="stat-card" onclick="playSound('click')">
       <div class="stat-number">${Math.abs(stats.days)}</div>
       <div class="stat-label">Días ${stats.days >= 0 ? "juntos" : "hasta estar juntos"}</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" onclick="playSound('click')">
       <div class="stat-number">${Object.keys(SONGS_DATABASE).length}</div>
       <div class="stat-label">Canciones Especiales</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" onclick="playSound('click')">
       <div class="stat-number">∞</div>
       <div class="stat-label">Amor Infinito</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" onclick="playSound('click')">
       <div class="stat-number">1</div>
       <div class="stat-label">Amor Verdadero</div>
     </div>
   `
 }
 
-// Cargar canciones
 function loadSongs() {
   const container = document.getElementById("songs-grid")
   if (!container) return
@@ -671,7 +696,6 @@ function loadSongs() {
     .join("")
 }
 
-// Sistema de reproducción de música
 class MusicPlayer {
   constructor() {
     this.currentSong = null
@@ -679,6 +703,8 @@ class MusicPlayer {
     this.player = null
     this.playerReady = false
     this.backgroundMusic = null
+    this.currentSongIndex = 0
+    this.songsList = Object.keys(SONGS_DATABASE)
     this.initializePlayer()
     this.loadYouTubeAPI()
   }
@@ -694,7 +720,13 @@ class MusicPlayer {
         this.playerReady = true
         console.log("YouTube API cargada correctamente")
       }
+    } else {
+      this.playerReady = true
     }
+  }
+
+  initializePlayer() {
+    this.setupPlayerEvents()
   }
 
   async playSong(songId) {
@@ -705,6 +737,7 @@ class MusicPlayer {
     }
 
     this.currentSong = song
+    this.currentSongIndex = this.songsList.indexOf(songId)
     this.showPlayer()
     this.updateSongInfo(song)
 
@@ -717,6 +750,7 @@ class MusicPlayer {
     try {
       await this.playYouTubeVideo(song.youtubeId)
       this.showSuccess(`Reproduciendo: ${song.title}`)
+      playSound("play")
     } catch (error) {
       console.error("Error reproduciendo:", error)
       this.showError("Error al reproducir la canción")
@@ -738,7 +772,12 @@ class MusicPlayer {
         this.backgroundMusic.destroy()
       }
 
-      this.backgroundMusic = new window.YT.Player("background-music", {
+      const bgPlayerDiv = document.createElement("div")
+      bgPlayerDiv.id = "background-music-player"
+      bgPlayerDiv.style.display = "none"
+      document.body.appendChild(bgPlayerDiv)
+
+      this.backgroundMusic = new window.YT.Player("background-music-player", {
         height: "0",
         width: "0",
         videoId: song.youtubeId,
@@ -756,7 +795,7 @@ class MusicPlayer {
         },
         events: {
           onReady: (event) => {
-            event.target.setVolume(8)
+            event.target.setVolume(12)
             console.log("Música de fondo iniciada:", song.title)
           },
           onStateChange: (event) => {
@@ -781,6 +820,10 @@ class MusicPlayer {
     if (this.backgroundMusic) {
       this.backgroundMusic.destroy()
       this.backgroundMusic = null
+      const bgPlayer = document.getElementById("background-music-player")
+      if (bgPlayer) {
+        bgPlayer.remove()
+      }
     }
   }
 
@@ -843,7 +886,7 @@ class MusicPlayer {
       case window.YT.PlayerState.ENDED:
         this.isPlaying = false
         this.updatePlayButton()
-        this.showSuccess("Canción terminada")
+        this.nextSong()
         break
     }
   }
@@ -853,9 +896,23 @@ class MusicPlayer {
 
     if (this.isPlaying) {
       this.player.pauseVideo()
+      playSound("pause")
     } else {
       this.player.playVideo()
+      playSound("play")
     }
+  }
+
+  nextSong() {
+    this.currentSongIndex = (this.currentSongIndex + 1) % this.songsList.length
+    const nextSongId = this.songsList[this.currentSongIndex]
+    this.playSong(nextSongId)
+  }
+
+  prevSong() {
+    this.currentSongIndex = (this.currentSongIndex - 1 + this.songsList.length) % this.songsList.length
+    const prevSongId = this.songsList[this.currentSongIndex]
+    this.playSong(prevSongId)
   }
 
   startProgressTracking() {
@@ -919,6 +976,7 @@ class MusicPlayer {
       clearInterval(this.progressInterval)
     }
     this.isPlaying = false
+    playSound("close")
   }
 
   showError(message) {
@@ -930,51 +988,70 @@ class MusicPlayer {
   }
 
   setupPlayerEvents() {
-    const playPauseBtn = document.getElementById("play-pause-btn")
-    const closeBtn = document.getElementById("close-player-btn")
-    const volumeBtn = document.getElementById("volume-btn")
-    const progressBar = document.getElementById("progress-bar")
+    document.addEventListener("DOMContentLoaded", () => {
+      const playPauseBtn = document.getElementById("play-pause-btn")
+      const closeBtn = document.getElementById("close-player-btn")
+      const volumeBtn = document.getElementById("volume-btn")
+      const progressBar = document.getElementById("progress-bar")
+      const prevBtn = document.getElementById("prev-btn")
+      const nextBtn = document.getElementById("next-btn")
 
-    if (playPauseBtn) {
-      playPauseBtn.addEventListener("click", () => {
-        this.togglePlayPause()
-      })
-    }
+      if (playPauseBtn) {
+        playPauseBtn.addEventListener("click", () => {
+          this.togglePlayPause()
+        })
+      }
 
-    if (closeBtn) {
-      closeBtn.addEventListener("click", () => {
-        this.hidePlayer()
-      })
-    }
+      if (closeBtn) {
+        closeBtn.addEventListener("click", () => {
+          this.hidePlayer()
+        })
+      }
 
-    if (volumeBtn) {
-      volumeBtn.addEventListener("click", () => {
-        if (this.player) {
-          const currentVolume = this.player.getVolume()
-          const newVolume = currentVolume > 0 ? 0 : 50
-          this.player.setVolume(newVolume)
-          volumeBtn.textContent = newVolume > 0 ? "🔊" : "🔇"
-        }
-      })
-    }
+      if (prevBtn) {
+        prevBtn.addEventListener("click", () => {
+          this.prevSong()
+          playSound("click")
+        })
+      }
 
-    if (progressBar) {
-      progressBar.addEventListener("click", (e) => {
-        if (this.player) {
-          const rect = e.target.getBoundingClientRect()
-          const clickX = e.clientX - rect.left
-          const width = rect.width
-          const percentage = clickX / width
-          const duration = this.player.getDuration()
-          const seekTime = duration * percentage
-          this.player.seekTo(seekTime)
-        }
-      })
-    }
+      if (nextBtn) {
+        nextBtn.addEventListener("click", () => {
+          this.nextSong()
+          playSound("click")
+        })
+      }
+
+      if (volumeBtn) {
+        volumeBtn.addEventListener("click", () => {
+          if (this.player) {
+            const currentVolume = this.player.getVolume()
+            const newVolume = currentVolume > 0 ? 0 : 50
+            this.player.setVolume(newVolume)
+            volumeBtn.textContent = newVolume > 0 ? "🔊" : "🔇"
+            playSound("click")
+          }
+        })
+      }
+
+      if (progressBar) {
+        progressBar.addEventListener("click", (e) => {
+          if (this.player) {
+            const rect = e.target.getBoundingClientRect()
+            const clickX = e.clientX - rect.left
+            const width = rect.width
+            const percentage = clickX / width
+            const duration = this.player.getDuration()
+            const seekTime = duration * percentage
+            this.player.seekTo(seekTime)
+            playSound("click")
+          }
+        })
+      }
+    })
   }
 }
 
-// Sistema de configuración
 class SettingsManager {
   constructor() {
     this.settings = {
@@ -1009,7 +1086,7 @@ class SettingsManager {
     if (this.settings.reduceMotion) {
       document.documentElement.style.setProperty("--transition", "none")
     } else {
-      document.documentElement.style.setProperty("--transition", "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)")
+      document.documentElement.style.setProperty("--transition", "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)")
     }
 
     if (this.settings.highContrast) {
@@ -1054,7 +1131,6 @@ class SettingsManager {
   }
 }
 
-// Sistema de Administrador
 class AdminSystem {
   constructor() {
     this.keySequence = []
@@ -1071,14 +1147,11 @@ class AdminSystem {
     document.addEventListener("keydown", (e) => {
       if (!this.isListening) return
 
-      console.log("Key pressed:", e.code) // Debug log
-
       if (this.sequenceTimeout) {
         clearTimeout(this.sequenceTimeout)
       }
 
       this.keySequence.push(e.code)
-      console.log("Current sequence:", this.keySequence) // Debug log
 
       if (this.keySequence.length > this.targetSequence.length) {
         this.keySequence.shift()
@@ -1086,7 +1159,6 @@ class AdminSystem {
 
       if (this.keySequence.length === this.targetSequence.length) {
         const matches = this.keySequence.every((key, index) => key === this.targetSequence[index])
-        console.log("Sequence matches:", matches) // Debug log
         if (matches) {
           this.openAdminPanel()
           this.keySequence = []
@@ -1104,10 +1176,12 @@ class AdminSystem {
     document.getElementById("admin-panel").classList.remove("hidden")
     this.updateAdminStatus()
     showScreenCenterNotification("Panel de administrador activado", "success")
+    playSound("admin")
   }
 
   closeAdminPanel() {
     document.getElementById("admin-panel").classList.add("hidden")
+    playSound("close")
   }
 
   activateEvent(eventType) {
@@ -1133,6 +1207,8 @@ class AdminSystem {
     if (eventType === "monthly") {
       this.updateMonthlyStats()
     }
+
+    playSound("event")
   }
 
   deactivateAllEvents() {
@@ -1151,6 +1227,7 @@ class AdminSystem {
 
     showScreenCenterNotification("Todos los eventos desactivados", "info")
     this.closeAdminPanel()
+    playSound("deactivate")
   }
 
   showFloatingTitle(eventType) {
@@ -1223,7 +1300,7 @@ class AdminSystem {
 
     setTimeout(() => {
       this.closeEventNotification()
-    }, 5000)
+    }, 6000)
   }
 
   closeEventNotification() {
@@ -1234,6 +1311,7 @@ class AdminSystem {
       cameraSystem.switchToSection("evento-especial")
       this.setupEventSection()
     }, 500)
+    playSound("close")
   }
 
   setupEventSection() {
@@ -1268,7 +1346,6 @@ class AdminSystem {
 
     if (letterTextEl) letterTextEl.textContent = letterText
 
-    // Remove any existing event listeners
     if (letterEnvelope) {
       letterEnvelope.replaceWith(letterEnvelope.cloneNode(true))
       const newEnvelope = document.getElementById("letter-envelope")
@@ -1281,32 +1358,6 @@ class AdminSystem {
     }
   }
 
-  markLetterAsRead() {
-    const letterArea = document.getElementById("love-letter-area")
-    const giftArea = document.getElementById("gift-area")
-    const readBtn = document.querySelector(".letter-read-btn")
-
-    if (settingsManager && settingsManager.settings.soundEffects) {
-      this.playSound("success")
-    }
-
-    if (readBtn) {
-      readBtn.disabled = true
-      readBtn.textContent = "✓ Leído"
-    }
-
-    if (letterArea) {
-      letterArea.style.transform = "scale(0.8)"
-      letterArea.style.opacity = "0.5"
-      letterArea.style.transition = "all 0.8s ease"
-    }
-
-    setTimeout(() => {
-      if (letterArea) letterArea.style.display = "none"
-      if (giftArea) giftArea.classList.remove("hidden")
-    }, 800)
-  }
-
   setupGift(giftMessage) {
     this.giftMessage = giftMessage
   }
@@ -1315,25 +1366,21 @@ class AdminSystem {
     const envelope = document.getElementById("letter-envelope")
     const letterContent = document.getElementById("letter-content")
 
-    if (settingsManager.settings.soundEffects) {
-      this.playSound("paper")
-    }
+    playSound("paper")
 
     if (envelope) envelope.classList.add("opening")
 
     setTimeout(() => {
       if (envelope) envelope.style.display = "none"
       if (letterContent) letterContent.classList.remove("hidden")
-    }, 1000)
+    }, 1200)
   }
 
   markLetterAsRead() {
     const letterArea = document.getElementById("love-letter-area")
     const giftArea = document.getElementById("gift-area")
 
-    if (settingsManager.settings.soundEffects) {
-      this.playSound("success")
-    }
+    playSound("success")
 
     if (letterArea) {
       letterArea.style.transform = "scale(0.8)"
@@ -1347,9 +1394,7 @@ class AdminSystem {
   }
 
   openGift() {
-    if (settingsManager.settings.soundEffects) {
-      this.playSound("gift")
-    }
+    playSound("gift")
 
     const messageText = document.getElementById("love-message-text")
     if (messageText) {
@@ -1359,70 +1404,13 @@ class AdminSystem {
     const overlay = document.getElementById("love-message-overlay")
     if (overlay) overlay.classList.remove("hidden")
 
-    this.triggerHeartRain(10)
+    this.triggerHeartRain(15)
   }
 
   closeLoveMessage() {
     const overlay = document.getElementById("love-message-overlay")
     if (overlay) overlay.classList.add("hidden")
-  }
-
-  playSound(type) {
-    switch (type) {
-      case "paper":
-        this.createSoundEffect("📄")
-        break
-      case "success":
-        this.createSoundEffect("✅")
-        break
-      case "gift":
-        this.createSoundEffect("🎁")
-        break
-    }
-  }
-
-  createSoundEffect(emoji) {
-    const effect = document.createElement("div")
-    effect.textContent = emoji
-    effect.style.cssText = `
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 3rem;
-      z-index: 7000;
-      pointer-events: none;
-      animation: soundEffect 1s ease-out forwards;
-    `
-
-    const keyframes = `
-      @keyframes soundEffect {
-        0% {
-          opacity: 1;
-          transform: translate(-50%, -50%) scale(0.5);
-        }
-        50% {
-          transform: translate(-50%, -50%) scale(1.2);
-        }
-        100% {
-          opacity: 0;
-          transform: translate(-50%, -50%) scale(1.5);
-        }
-      }
-    `
-
-    if (!document.getElementById("sound-effects-styles")) {
-      const style = document.createElement("style")
-      style.id = "sound-effects-styles"
-      style.textContent = keyframes
-      document.head.appendChild(style)
-    }
-
-    document.body.appendChild(effect)
-
-    setTimeout(() => {
-      effect.remove()
-    }, 1000)
+    playSound("close")
   }
 
   getEventData(eventType) {
@@ -1459,7 +1447,7 @@ class AdminSystem {
 
   triggerEventEffects(eventType) {
     setTimeout(() => {
-      this.triggerHeartRain(20)
+      this.triggerHeartRain(25)
     }, 1000)
 
     switch (eventType) {
@@ -1480,34 +1468,34 @@ class AdminSystem {
   }
 
   triggerBirthdayEffects() {
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 40; i++) {
       setTimeout(() => {
         this.createConfetti()
-      }, i * 100)
+      }, i * 80)
     }
   }
 
   triggerAnniversaryEffects() {
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 20; i++) {
       setTimeout(() => {
         this.createSpecialHeart("💖")
-      }, i * 200)
-    }
-  }
-
-  triggerChristmasEffects() {
-    for (let i = 0; i < 25; i++) {
-      setTimeout(() => {
-        this.createSnowflake()
       }, i * 150)
     }
   }
 
+  triggerChristmasEffects() {
+    for (let i = 0; i < 35; i++) {
+      setTimeout(() => {
+        this.createSnowflake()
+      }, i * 120)
+    }
+  }
+
   triggerValentineEffects() {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 30; i++) {
       setTimeout(() => {
         this.createSpecialHeart("💘")
-      }, i * 100)
+      }, i * 80)
     }
   }
 
@@ -1517,14 +1505,14 @@ class AdminSystem {
     confetti.textContent = emojis[Math.floor(Math.random() * emojis.length)]
     confetti.className = "heart-rain"
     confetti.style.left = Math.random() * 100 + "%"
-    confetti.style.fontSize = Math.random() * 20 + 20 + "px"
-    confetti.style.animationDuration = Math.random() * 2 + 2 + "s"
+    confetti.style.fontSize = Math.random() * 25 + 25 + "px"
+    confetti.style.animationDuration = Math.random() * 2 + 2.5 + "s"
 
     document.body.appendChild(confetti)
 
     setTimeout(() => {
       confetti.remove()
-    }, 4000)
+    }, 4500)
   }
 
   createSpecialHeart(emoji) {
@@ -1532,14 +1520,14 @@ class AdminSystem {
     heart.textContent = emoji
     heart.className = "heart-rain"
     heart.style.left = Math.random() * 100 + "%"
-    heart.style.fontSize = Math.random() * 15 + 20 + "px"
-    heart.style.animationDuration = Math.random() * 2 + 2 + "s"
+    heart.style.fontSize = Math.random() * 20 + 25 + "px"
+    heart.style.animationDuration = Math.random() * 2 + 2.5 + "s"
 
     document.body.appendChild(heart)
 
     setTimeout(() => {
       heart.remove()
-    }, 3000)
+    }, 4000)
   }
 
   createSnowflake() {
@@ -1548,18 +1536,18 @@ class AdminSystem {
     snow.textContent = snowEmojis[Math.floor(Math.random() * snowEmojis.length)]
     snow.className = "heart-rain"
     snow.style.left = Math.random() * 100 + "%"
-    snow.style.fontSize = Math.random() * 10 + 15 + "px"
-    snow.style.animationDuration = Math.random() * 3 + 3 + "s"
+    snow.style.fontSize = Math.random() * 15 + 20 + "px"
+    snow.style.animationDuration = Math.random() * 3 + 4 + "s"
     snow.style.color = "#ffffff"
 
     document.body.appendChild(snow)
 
     setTimeout(() => {
       snow.remove()
-    }, 6000)
+    }, 7000)
   }
 
-  triggerHeartRain(count = 10) {
+  triggerHeartRain(count = 15) {
     for (let i = 0; i < count; i++) {
       setTimeout(() => {
         const heart = document.createElement("div")
@@ -1567,15 +1555,15 @@ class AdminSystem {
         heart.textContent = hearts[Math.floor(Math.random() * hearts.length)]
         heart.className = "heart-rain"
         heart.style.left = Math.random() * 100 + "%"
-        heart.style.fontSize = Math.random() * 15 + 20 + "px"
-        heart.style.animationDuration = Math.random() * 2 + 2 + "s"
+        heart.style.fontSize = Math.random() * 20 + 25 + "px"
+        heart.style.animationDuration = Math.random() * 2 + 2.5 + "s"
 
         document.body.appendChild(heart)
 
         setTimeout(() => {
           heart.remove()
-        }, 4000)
-      }, i * 100)
+        }, 4500)
+      }, i * 80)
     }
   }
 
@@ -1592,6 +1580,7 @@ class AdminSystem {
 
     const randomMessage = messages[Math.floor(Math.random() * messages.length)]
     showScreenCenterNotification(randomMessage, "success")
+    playSound("love")
   }
 
   playRandomSong() {
@@ -1657,7 +1646,49 @@ class AdminSystem {
   }
 }
 
-// Funciones principales
+function playSound(type) {
+  if (!settingsManager || !settingsManager.settings.soundEffects) return
+
+  try {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+
+    const sounds = {
+      click: { freq: 800, duration: 0.1 },
+      play: { freq: 600, duration: 0.2 },
+      pause: { freq: 400, duration: 0.15 },
+      close: { freq: 300, duration: 0.2 },
+      success: { freq: 880, duration: 0.3 },
+      error: { freq: 200, duration: 0.4 },
+      love: { freq: 1000, duration: 0.5 },
+      gift: { freq: 1200, duration: 0.4 },
+      paper: { freq: 500, duration: 0.3 },
+      admin: { freq: 1500, duration: 0.2 },
+      event: { freq: 1100, duration: 0.6 },
+      deactivate: { freq: 350, duration: 0.3 },
+      transition: { freq: 700, duration: 0.25 },
+    }
+
+    const sound = sounds[type] || sounds.click
+
+    const oscillator = audioContext.createOscillator()
+    const gainNode = audioContext.createGain()
+
+    oscillator.connect(gainNode)
+    gainNode.connect(audioContext.destination)
+
+    oscillator.frequency.setValueAtTime(sound.freq, audioContext.currentTime)
+    oscillator.type = "sine"
+
+    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime)
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + sound.duration)
+
+    oscillator.start(audioContext.currentTime)
+    oscillator.stop(audioContext.currentTime + sound.duration)
+  } catch (error) {
+    console.log("Audio context not available")
+  }
+}
+
 function playSong(songId) {
   musicPlayer.playSong(songId)
 
@@ -1673,19 +1704,19 @@ function showSongDedication(song) {
   const modal = document.createElement("div")
   modal.className = "modal-overlay"
   modal.innerHTML = `
-    <div class="modal-content" style="width: 500px;">
+    <div class="modal-content" style="width: 600px;">
       <div class="modal-header">
         <h2 class="modal-title">
           <span class="modal-icon">🎵</span>
           ${song.title}
         </h2>
-        <button onclick="this.closest('.modal-overlay').remove()" class="modal-close">✕</button>
+        <button onclick="this.closest('.modal-overlay').remove(); playSound('close')" class="modal-close">✕</button>
       </div>
       <div class="modal-body">
-        <div style="margin-bottom: 16px;">
+        <div style="margin-bottom: 20px;">
           <strong>Artista:</strong> ${song.artist} (${song.year})
         </div>
-        <div style="font-style: italic; line-height: 1.6; color: var(--text-secondary);">
+        <div style="font-style: italic; line-height: 1.7; color: var(--text-secondary); font-family: 'Satisfy', cursive; font-size: 1.1rem;">
           ${song.dedication}
         </div>
       </div>
@@ -1693,21 +1724,24 @@ function showSongDedication(song) {
   `
 
   document.body.appendChild(modal)
+  playSound("love")
 
   setTimeout(() => {
     if (modal.parentElement) {
       modal.remove()
     }
-  }, 15000)
+  }, 20000)
 }
 
 function openSettings() {
   document.getElementById("settings-modal").classList.remove("hidden")
   updateSettingsUI()
+  playSound("click")
 }
 
 function closeSettings() {
   document.getElementById("settings-modal").classList.add("hidden")
+  playSound("close")
 }
 
 function updateSettingsUI() {
@@ -1719,15 +1753,22 @@ function updateSettingsUI() {
   })
 
   document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+    const setting = checkbox.id.replace("-", "_")
+    checkbox.checked = settingsManager.settings[setting]
+
     checkbox.addEventListener("change", () => {
-      const setting = checkbox.id.replace("_", "-")
       settingsManager.updateSetting(setting, checkbox.checked)
+      playSound("click")
     })
   })
 
   const audioQuality = document.getElementById("audio-quality")
   if (audioQuality) {
     audioQuality.value = settingsManager.settings.audioQuality
+    audioQuality.addEventListener("change", (e) => {
+      settingsManager.updateSetting("audioQuality", e.target.value)
+      playSound("click")
+    })
   }
 }
 
@@ -1743,38 +1784,83 @@ function toggleEventsBubble() {
       bubbleContent.classList.add("hidden")
       bubbleToggle.classList.remove("expanded")
     }
+    playSound("click")
   }
 }
 
+function toggleCompressedNav() {
+  playSound("click")
+  showScreenCenterNotification("Navegación comprimida activada durante eventos", "info")
+}
+
+function goToEvent() {
+  cameraSystem.switchToSection("evento-especial")
+  playSound("click")
+}
+
 function markLetterAsRead() {
-  adminSystem.markLetterAsRead()
+  if (adminSystem) {
+    adminSystem.markLetterAsRead()
+  }
 }
 
 function openGift() {
-  adminSystem.openGift()
+  if (adminSystem) {
+    adminSystem.openGift()
+  }
+}
+
+function closeAdminPanel() {
+  if (adminSystem) {
+    adminSystem.closeAdminPanel()
+  }
+}
+
+function activateEvent(eventType) {
+  if (adminSystem) {
+    adminSystem.activateEvent(eventType)
+  }
+}
+
+function deactivateAllEvents() {
+  if (adminSystem) {
+    adminSystem.deactivateAllEvents()
+  }
+}
+
+function closeEventNotification() {
+  if (adminSystem) {
+    adminSystem.closeEventNotification()
+  }
+}
+
+function triggerHeartRain() {
+  if (adminSystem) {
+    adminSystem.triggerHeartRain(20)
+  }
+}
+
+function showLoveMessage() {
+  if (adminSystem) {
+    adminSystem.showLoveMessage()
+  }
+}
+
+function playRandomSong() {
+  if (adminSystem) {
+    adminSystem.playRandomSong()
+  }
 }
 
 function closeLoveMessage() {
-  adminSystem.closeLoveMessage()
+  if (adminSystem) {
+    adminSystem.closeLoveMessage()
+  }
 }
 
 function showScreenCenterNotification(message, type = "info") {
   const notification = document.createElement("div")
   notification.className = `screen-notification ${type}`
-
-  const styles = {
-    error: "border-color: #ef4444; background: rgba(239, 68, 68, 0.1);",
-    success: "border-color: #10b981; background: rgba(16, 185, 129, 0.1);",
-    info: "border-color: #3b82f6; background: rgba(59, 130, 246, 0.1);",
-  }
-
-  notification.style.cssText = `
-    ${styles[type]}
-    color: var(--text-primary);
-    font-weight: 500;
-    font-size: 1.1rem;
-    text-align: center;
-  `
 
   notification.textContent = message
 
@@ -1784,7 +1870,7 @@ function showScreenCenterNotification(message, type = "info") {
 
     setTimeout(() => {
       notification.remove()
-    }, 4000)
+    }, 5000)
   }
 }
 
@@ -1794,8 +1880,8 @@ function createFloatingHeart() {
   heart.className = "heart"
   heart.textContent = hearts[Math.floor(Math.random() * hearts.length)]
   heart.style.left = Math.random() * 100 + "%"
-  heart.style.animationDuration = Math.random() * 3 + 3 + "s"
-  heart.style.fontSize = Math.random() * 10 + 15 + "px"
+  heart.style.animationDuration = Math.random() * 4 + 4 + "s"
+  heart.style.fontSize = Math.random() * 15 + 20 + "px"
 
   const container = document.querySelector(".floating-hearts")
   if (container) {
@@ -1803,36 +1889,8 @@ function createFloatingHeart() {
 
     setTimeout(() => {
       heart.remove()
-    }, 6000)
+    }, 8000)
   }
-}
-
-function closeAdminPanel() {
-  adminSystem.closeAdminPanel()
-}
-
-function activateEvent(eventType) {
-  adminSystem.activateEvent(eventType)
-}
-
-function deactivateAllEvents() {
-  adminSystem.deactivateAllEvents()
-}
-
-function closeEventNotification() {
-  adminSystem.closeEventNotification()
-}
-
-function triggerHeartRain() {
-  adminSystem.triggerHeartRain(15)
-}
-
-function showLoveMessage() {
-  adminSystem.showLoveMessage()
-}
-
-function playRandomSong() {
-  adminSystem.playRandomSong()
 }
 
 function setupSettingsListeners() {
@@ -1841,6 +1899,7 @@ function setupSettingsListeners() {
       document.querySelectorAll(".theme-btn").forEach((b) => b.classList.remove("active"))
       btn.classList.add("active")
       settingsManager.updateSetting("theme", btn.dataset.theme)
+      playSound("click")
     })
   })
 
@@ -1848,6 +1907,7 @@ function setupSettingsListeners() {
     checkbox.addEventListener("change", () => {
       const setting = checkbox.id.replace("-", "_")
       settingsManager.updateSetting(setting, checkbox.checked)
+      playSound("click")
     })
   })
 
@@ -1855,138 +1915,90 @@ function setupSettingsListeners() {
   if (audioQualitySelect) {
     audioQualitySelect.addEventListener("change", (e) => {
       settingsManager.updateSetting("audioQuality", e.target.value)
+      playSound("click")
     })
   }
 }
 
-// Variables globales
 let cameraSystem
 let shaderSystem
 let musicPlayer
 let settingsManager
 let adminSystem
 
-// Inicialización mejorada
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM loaded, initializing...") // Debug log
-
-  // Ocultar pantalla de carga
   setTimeout(() => {
     const loadingScreen = document.getElementById("loading-screen")
     if (loadingScreen) {
       loadingScreen.classList.add("hidden")
-      console.log("Loading screen hidden") // Debug log
     }
   }, 3000)
 
-  // Inicializar sistemas con verificación
   try {
     cameraSystem = new CameraSystem()
-    console.log("Camera system initialized") // Debug log
   } catch (error) {
     console.error("Error initializing camera system:", error)
   }
 
   try {
     shaderSystem = new ShaderSystem()
-    console.log("Shader system initialized") // Debug log
   } catch (error) {
     console.error("Error initializing shader system:", error)
   }
 
   try {
     musicPlayer = new MusicPlayer()
-    console.log("Music player initialized") // Debug log
   } catch (error) {
     console.error("Error initializing music player:", error)
   }
 
   try {
     settingsManager = new SettingsManager()
-    console.log("Settings manager initialized") // Debug log
   } catch (error) {
     console.error("Error initializing settings manager:", error)
   }
 
   try {
     adminSystem = new AdminSystem()
-    console.log("Admin system initialized") // Debug log
   } catch (error) {
     console.error("Error initializing admin system:", error)
   }
 
-  // Cargar contenido
   try {
     loadEvents()
     loadStats()
     loadSongs()
-    console.log("Content loaded") // Debug log
   } catch (error) {
     console.error("Error loading content:", error)
   }
 
-  // Configurar listeners
   try {
     setupSettingsListeners()
-    if (musicPlayer) {
-      musicPlayer.setupPlayerEvents()
-    }
-    console.log("Event listeners set up") // Debug log
   } catch (error) {
     console.error("Error setting up listeners:", error)
   }
 
-  // Mostrar tip inicial
   setTimeout(() => {
     showScreenCenterNotification("💡 Tip: Presiona P + L para acceder al panel secreto", "info")
   }, 8000)
 
-  // Iniciar efectos flotantes
   setInterval(createFloatingHeart, 2000)
 
-  // Mensaje de bienvenida
   setTimeout(() => {
     showScreenCenterNotification("¡Bienvenida a nuestro blog de amor! 💕", "success")
   }, 4000)
 
-  // Mostrar navegación inicialmente por 5 segundos
   setTimeout(() => {
     const mainNav = document.querySelector(".main-navigation")
     if (mainNav) {
       mainNav.classList.add("visible")
       setTimeout(() => {
         mainNav.classList.remove("visible")
-      }, 5000)
+      }, 10000)
     }
   }, 3500)
 })
 
-// Fix the global functions to ensure they work properly
-function markLetterAsRead() {
-  if (adminSystem) {
-    adminSystem.markLetterAsRead()
-  } else {
-    console.error("Admin system not initialized")
-  }
-}
-
-function openGift() {
-  if (adminSystem) {
-    adminSystem.openGift()
-  } else {
-    console.error("Admin system not initialized")
-  }
-}
-
-function closeAdminPanel() {
-  if (adminSystem) {
-    adminSystem.closeAdminPanel()
-  } else {
-    console.error("Admin system not initialized")
-  }
-}
-
-// Cleanup al cerrar la página
 window.addEventListener("beforeunload", () => {
   if (shaderSystem) {
     shaderSystem.destroy()
