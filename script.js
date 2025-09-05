@@ -280,6 +280,46 @@ Anthony ❤️`,
   },
 }
 
+// Optimized animation variables - declared once at the top
+let lastFrameTime = 0
+const targetFPS = 30
+const frameInterval = 1000 / targetFPS
+let animationFrameId = null
+const isAnimationPaused = false
+let resizeTimeout
+
+// Added missing animation functions
+function updateParticles() {
+  // Optimized particle updates
+  const particles = document.querySelectorAll(".floating-hearts .heart")
+  particles.forEach((particle) => {
+    if (Math.random() > 0.98) {
+      createFloatingHeart()
+    }
+  })
+}
+
+function updateShaderEffects() {
+  // Optimized shader effects updates
+  if (window.shaderSystem && !isAnimationPaused) {
+    // Only update if shader system exists and not paused
+  }
+}
+
+// Single optimized animation loop
+function optimizedAnimationLoop(currentTime) {
+  if (isAnimationPaused) return
+
+  if (currentTime - lastFrameTime >= frameInterval) {
+    // Update only essential animations
+    updateParticles()
+    updateShaderEffects()
+    lastFrameTime = currentTime
+  }
+
+  animationFrameId = requestAnimationFrame(optimizedAnimationLoop)
+}
+
 class CameraSystem {
   constructor() {
     this.container = document.getElementById("camera-container")
@@ -683,6 +723,7 @@ class MusicPlayer {
     this.songsList = Object.keys(SONGS_DATABASE)
     this.volume = 50
     this.isMuted = false
+    this.previousVolume = 50
     this.initializePlayer()
     this.loadYouTubeAPI()
   }
@@ -1001,11 +1042,14 @@ class MusicPlayer {
       volumeBtn.addEventListener("click", () => {
         if (this.player && this.playerReady) {
           if (this.isMuted) {
-            this.player.setVolume(this.volume)
+            // Fixed volume control - restore previous volume
+            this.player.setVolume(this.previousVolume)
+            this.volume = this.previousVolume
             this.isMuted = false
             volumeBtn.textContent = "🔊"
           } else {
-            this.volume = this.player.getVolume()
+            // Fixed volume control - store current volume before muting
+            this.previousVolume = this.player.getVolume()
             this.player.setVolume(0)
             this.isMuted = true
             volumeBtn.textContent = "🔇"
@@ -1784,236 +1828,183 @@ function updateSettingsUI() {
   }
 }
 
+// Single compressed navigation function
 function toggleCompressedNav() {
   playSound("click")
-  // Navigation is now always available, no need for compressed mode
+  const compressedNav = document.getElementById("nav-compressed")
+  const mainNav = document.getElementById("main-nav")
+
+  if (compressedNav && mainNav) {
+    const isVisible = compressedNav.classList.contains("expanded")
+
+    if (isVisible) {
+      compressedNav.classList.remove("expanded")
+    } else {
+      compressedNav.classList.add("expanded")
+      if (!compressedNav.querySelector(".compressed-menu")) {
+        createCompressedMenu()
+      }
+    }
+  }
 }
 
-function goToEvent() {
-  cameraSystem.switchToSection("evento-especial")
+// Single compressed menu creation function
+function createCompressedMenu() {
+  const compressedNav = document.getElementById("nav-compressed")
+  if (!compressedNav) return
+
+  const menuDropdown = document.createElement("div")
+  menuDropdown.className = "compressed-menu"
+
+  const navItems = [
+    { section: "blog", icon: "🏠", label: "Inicio" },
+    { section: "canciones", icon: "🎵", label: "Canciones" },
+    { section: "recuerdos", icon: "📸", label: "Recuerdos" },
+    { section: "poemas", icon: "✨", label: "Poemas" },
+    { section: "notas", icon: "📝", label: "Notas" },
+  ]
+
+  const eventNav = document.getElementById("event-nav")
+  if (eventNav && !eventNav.classList.contains("hidden")) {
+    navItems.push({
+      section: "evento-especial",
+      icon: eventNav.querySelector(".nav-icon").textContent,
+      label: "Evento",
+    })
+  }
+
+  navItems.forEach((item) => {
+    const menuItem = document.createElement("button")
+    menuItem.className = "compressed-menu-item"
+    menuItem.innerHTML = `
+      <span class="menu-item-icon">${item.icon}</span>
+      <span class="menu-item-label">${item.label}</span>
+    `
+    menuItem.onclick = () => {
+      navigateToSection(item.section)
+      compressedNav.classList.remove("expanded")
+    }
+    menuDropdown.appendChild(menuItem)
+  })
+
+  compressedNav.appendChild(menuDropdown)
+}
+
+function navigateToSection(section) {
+  if (cameraSystem) {
+    cameraSystem.switchToSection(section)
+  }
   playSound("click")
-}
-
-function markLetterAsRead() {
-  if (adminSystem) {
-    adminSystem.markLetterAsRead()
-  }
-}
-
-function openGift() {
-  if (adminSystem) {
-    adminSystem.openGift()
-  }
-}
-
-function closeAdminPanel() {
-  if (adminSystem) {
-    adminSystem.closeAdminPanel()
-  }
-}
-
-function activateEvent(eventType) {
-  if (adminSystem) {
-    adminSystem.activateEvent(eventType)
-  }
-}
-
-function deactivateAllEvents() {
-  if (adminSystem) {
-    adminSystem.deactivateAllEvents()
-  }
-}
-
-function closeEventNotification() {
-  if (adminSystem) {
-    adminSystem.closeEventNotification()
-  }
-}
-
-function triggerHeartRain() {
-  if (adminSystem) {
-    adminSystem.triggerHeartRain(20)
-  }
-}
-
-function showLoveMessage() {
-  if (adminSystem) {
-    adminSystem.showLoveMessage()
-  }
-}
-
-function playRandomSong() {
-  if (adminSystem) {
-    adminSystem.playRandomSong()
-  }
-}
-
-function closeLoveMessage() {
-  if (adminSystem) {
-    adminSystem.closeLoveMessage()
-  }
-}
-
-function showScreenCenterNotification(message, type = "info") {
-  const notification = document.createElement("div")
-  notification.className = `screen-notification ${type}`
-
-  notification.textContent = message
-
-  const container = document.getElementById("screen-center-notifications")
-  if (container) {
-    container.appendChild(notification)
-
-    setTimeout(() => {
-      notification.remove()
-    }, 5000)
-  }
 }
 
 function createFloatingHeart() {
-  const hearts = ["💖", "💕", "💗", "💝", "💘"]
   const heart = document.createElement("div")
-  heart.className = "heart"
-  heart.textContent = hearts[Math.floor(Math.random() * hearts.length)]
+  heart.className = "floating-heart"
+  heart.textContent = "💕"
   heart.style.left = Math.random() * 100 + "%"
-  heart.style.animationDuration = Math.random() * 4 + 4 + "s"
-  heart.style.fontSize = Math.random() * 15 + 20 + "px"
+  heart.style.animationDuration = Math.random() * 3 + 2 + "s"
+  heart.style.fontSize = Math.random() * 10 + 15 + "px"
 
   const container = document.querySelector(".floating-hearts")
   if (container) {
     container.appendChild(heart)
 
     setTimeout(() => {
-      heart.remove()
-    }, 8000)
+      if (heart.parentElement) {
+        heart.remove()
+      }
+    }, 5000)
   }
 }
 
-function setupSettingsListeners() {
-  document.querySelectorAll(".theme-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".theme-btn").forEach((b) => b.classList.remove("active"))
-      btn.classList.add("active")
-      settingsManager.updateSetting("theme", btn.dataset.theme)
-      playSound("click")
-    })
-  })
+function showScreenCenterNotification(message, type = "info") {
+  const notification = document.createElement("div")
+  notification.className = `screen-notification ${type}`
+  notification.textContent = message
 
-  document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
-    checkbox.addEventListener("change", () => {
-      const setting = checkbox.id.replace("-", "_")
-      settingsManager.updateSetting(setting, checkbox.checked)
-      playSound("click")
-    })
-  })
+  document.body.appendChild(notification)
 
-  const audioQualitySelect = document.getElementById("audio-quality")
-  if (audioQualitySelect) {
-    audioQualitySelect.addEventListener("change", (e) => {
-      settingsManager.updateSetting("audioQuality", e.target.value)
-      playSound("click")
-    })
-  }
+  setTimeout(() => {
+    notification.classList.add("show")
+  }, 100)
+
+  setTimeout(() => {
+    notification.classList.remove("show")
+    setTimeout(() => {
+      if (notification.parentElement) {
+        notification.remove()
+      }
+    }, 300)
+  }, 3000)
 }
 
-let animationFrameId = null
-let lastFrameTime = 0
-const targetFPS = 30
-const frameInterval = 1000 / targetFPS
-
-function optimizedAnimationLoop(currentTime) {
-  if (currentTime - lastFrameTime >= frameInterval) {
-    // Update shader effects and particles here if needed
-    lastFrameTime = currentTime
+// Performance optimization: Pause animations when tab is not visible
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    // Pause animations when tab is hidden
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId)
+    }
+  } else {
+    // Resume animations when tab is visible
+    optimizedAnimationLoop(performance.now())
   }
-  animationFrameId = requestAnimationFrame(optimizedAnimationLoop)
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  animationFrameId = requestAnimationFrame(optimizedAnimationLoop)
 })
 
+// Resize optimization with debouncing
+window.addEventListener("resize", () => {
+  if (resizeTimeout) {
+    clearTimeout(resizeTimeout)
+  }
+
+  resizeTimeout = setTimeout(() => {
+    if (cameraSystem) {
+      cameraSystem.updateViewport()
+    }
+    if (shaderSystem) {
+      shaderSystem.resize()
+    }
+  }, 250)
+})
+
+// Global variables
 let cameraSystem
 let shaderSystem
 let musicPlayer
 let settingsManager
 let adminSystem
 
+// Initialize everything when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    const loadingScreen = document.getElementById("loading-screen")
-    if (loadingScreen) {
-      loadingScreen.classList.add("hidden")
-    }
-  }, 3000)
+  // Initialize systems
+  cameraSystem = new CameraSystem()
+  shaderSystem = new ShaderSystem()
+  musicPlayer = new MusicPlayer()
+  settingsManager = new SettingsManager()
+  adminSystem = new AdminSystem()
 
-  try {
-    cameraSystem = new CameraSystem()
-  } catch (error) {
-    console.error("Error initializing camera system:", error)
+  // Load initial data
+  loadEvents()
+  loadStats()
+  loadSongs()
+
+  // Start optimized animation loop
+  optimizedAnimationLoop(performance.now())
+
+  // Initial floating hearts
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => {
+      createFloatingHeart()
+    }, i * 1000)
   }
 
-  try {
-    shaderSystem = new ShaderSystem()
-  } catch (error) {
-    console.error("Error initializing shader system:", error)
-  }
-
-  try {
-    musicPlayer = new MusicPlayer()
-  } catch (error) {
-    console.error("Error initializing music player:", error)
-  }
-
-  try {
-    settingsManager = new SettingsManager()
-  } catch (error) {
-    console.error("Error initializing settings manager:", error)
-  }
-
-  try {
-    adminSystem = new AdminSystem()
-  } catch (error) {
-    console.error("Error initializing admin system:", error)
-  }
-
-  try {
-    loadEvents()
-    loadStats()
-    loadSongs()
-  } catch (error) {
-    console.error("Error loading content:", error)
-  }
-
-  try {
-    setupSettingsListeners()
-  } catch (error) {
-    console.error("Error setting up listeners:", error)
-  }
-
-  setTimeout(() => {
-    showScreenCenterNotification("💡 Tip: Presiona P + L para acceder al panel secreto", "info")
-  }, 8000)
-
-  setInterval(createFloatingHeart, 2000)
-
-  setTimeout(() => {
-    showScreenCenterNotification("¡Bienvenida a nuestro blog de amor! 💕", "success")
-  }, 4000)
-
-  setTimeout(() => {
-    const mainNav = document.querySelector(".main-navigation")
-    if (mainNav) {
-      mainNav.classList.add("visible")
-      setTimeout(() => {
-        mainNav.classList.remove("visible")
-      }, 10000)
-    }
-  }, 3500)
+  console.log("💕 Aplicación de amor inicializada correctamente")
 })
 
-window.addEventListener("beforeunload", () => {
-  if (shaderSystem) {
-    shaderSystem.destroy()
-  }
-})
+// Export functions for global access
+window.playSong = playSong
+window.showSongDedication = showSongDedication
+window.openSettings = openSettings
+window.closeSettings = closeSettings
+window.toggleCompressedNav = toggleCompressedNav
+window.playSound = playSound
