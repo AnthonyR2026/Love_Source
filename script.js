@@ -284,7 +284,6 @@ class CameraSystem {
   constructor() {
     this.container = document.getElementById("camera-container")
     this.worldContent = document.getElementById("world-content")
-    this.fixedUI = document.querySelector(".fixed-ui")
     this.mainNav = document.querySelector(".main-navigation")
     this.compressedNav = document.getElementById("nav-compressed")
     this.currentSection = "blog"
@@ -303,17 +302,9 @@ class CameraSystem {
   }
 
   setupMouseListener() {
-    const isEventActive = () => document.documentElement.hasAttribute("data-event")
-
     document.addEventListener("mousemove", () => {
-      if (isEventActive()) {
-        if (this.compressedNav) {
-          this.compressedNav.classList.add("visible")
-        }
-      } else {
-        if (this.mainNav) {
-          this.mainNav.classList.add("visible")
-        }
+      if (this.mainNav) {
+        this.mainNav.classList.add("visible")
       }
 
       if (this.mouseTimer) {
@@ -321,16 +312,10 @@ class CameraSystem {
       }
 
       this.mouseTimer = setTimeout(() => {
-        if (isEventActive()) {
-          if (this.compressedNav) {
-            this.compressedNav.classList.remove("visible")
-          }
-        } else {
-          if (this.mainNav) {
-            this.mainNav.classList.remove("visible")
-          }
+        if (this.mainNav) {
+          this.mainNav.classList.remove("visible")
         }
-      }, 8000)
+      }, 6000)
     })
 
     if (this.mainNav) {
@@ -343,20 +328,6 @@ class CameraSystem {
       this.mainNav.addEventListener("mouseleave", () => {
         this.mouseTimer = setTimeout(() => {
           this.mainNav.classList.remove("visible")
-        }, 2000)
-      })
-    }
-
-    if (this.compressedNav) {
-      this.compressedNav.addEventListener("mouseenter", () => {
-        if (this.mouseTimer) {
-          clearTimeout(this.mouseTimer)
-        }
-      })
-
-      this.compressedNav.addEventListener("mouseleave", () => {
-        this.mouseTimer = setTimeout(() => {
-          this.compressedNav.classList.remove("visible")
         }, 2000)
       })
     }
@@ -399,40 +370,45 @@ class CameraSystem {
     if (this.isTransitioning) return
 
     this.isTransitioning = true
-    this.container.classList.add("transitioning")
+    const sections = document.querySelectorAll(".content-section")
+    const navItems = document.querySelectorAll(".nav-item")
 
-    playSound("transition")
+    sections.forEach((section) => section.classList.remove("active"))
+    navItems.forEach((item) => item.classList.remove("active"))
 
-    document.querySelectorAll(".nav-item").forEach((item) => {
-      item.classList.remove("active")
-    })
+    const targetSection = document.getElementById(sectionName)
+    const targetNavItem = document.querySelector(`[data-section="${sectionName}"]`)
 
-    const activeNavItem = document.querySelector(`[data-section="${sectionName}"]`)
-    if (activeNavItem) {
-      activeNavItem.classList.add("active")
+    if (targetSection) {
+      targetSection.classList.add("active")
+      this.currentSection = sectionName
     }
 
+    if (targetNavItem) {
+      targetNavItem.classList.add("active")
+    }
+
+    this.updateFloatingEventButton()
+
     setTimeout(() => {
-      document.querySelectorAll(".content-section").forEach((section) => {
-        section.classList.remove("active")
-      })
+      this.isTransitioning = false
+    }, 600)
 
-      const targetSection = document.getElementById(sectionName)
-      if (targetSection) {
-        targetSection.classList.add("active")
-        this.currentSection = sectionName
+    playSound("transition")
+  }
 
-        this.container.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        })
+  updateFloatingEventButton() {
+    const floatingEventTitle = document.getElementById("floating-event-title")
+    const isEventActive = document.documentElement.hasAttribute("data-event")
+    const isInEventSection = this.currentSection === "evento-especial"
+
+    if (floatingEventTitle) {
+      if (isEventActive && !isInEventSection) {
+        floatingEventTitle.classList.remove("hidden")
+      } else {
+        floatingEventTitle.classList.add("hidden")
       }
-
-      setTimeout(() => {
-        this.container.classList.remove("transitioning")
-        this.isTransitioning = false
-      }, 400)
-    }, 200)
+    }
   }
 
   updateCameraEffects() {
@@ -705,6 +681,8 @@ class MusicPlayer {
     this.backgroundMusic = null
     this.currentSongIndex = 0
     this.songsList = Object.keys(SONGS_DATABASE)
+    this.volume = 50
+    this.isMuted = false
     this.initializePlayer()
     this.loadYouTubeAPI()
   }
@@ -774,7 +752,7 @@ class MusicPlayer {
 
       const bgPlayerDiv = document.createElement("div")
       bgPlayerDiv.id = "background-music-player"
-      bgPlayerDiv.style.display = "none"
+      bgPlayerDiv.style = "display: none;"
       document.body.appendChild(bgPlayerDiv)
 
       this.backgroundMusic = new window.YT.Player("background-music-player", {
@@ -988,67 +966,68 @@ class MusicPlayer {
   }
 
   setupPlayerEvents() {
-    document.addEventListener("DOMContentLoaded", () => {
-      const playPauseBtn = document.getElementById("play-pause-btn")
-      const closeBtn = document.getElementById("close-player-btn")
-      const volumeBtn = document.getElementById("volume-btn")
-      const progressBar = document.getElementById("progress-bar")
-      const prevBtn = document.getElementById("prev-btn")
-      const nextBtn = document.getElementById("next-btn")
+    const playPauseBtn = document.getElementById("play-pause-btn")
+    const nextBtn = document.getElementById("next-btn")
+    const prevBtn = document.getElementById("prev-btn")
+    const closeBtn = document.getElementById("close-player-btn")
+    const volumeBtn = document.getElementById("volume-btn")
+    const progressBar = document.getElementById("progress-bar")
 
-      if (playPauseBtn) {
-        playPauseBtn.addEventListener("click", () => {
-          this.togglePlayPause()
-        })
-      }
+    if (playPauseBtn) {
+      playPauseBtn.addEventListener("click", () => {
+        this.togglePlayPause()
+      })
+    }
 
-      if (closeBtn) {
-        closeBtn.addEventListener("click", () => {
-          this.hidePlayer()
-        })
-      }
+    if (nextBtn) {
+      nextBtn.addEventListener("click", () => {
+        this.nextSong()
+      })
+    }
 
-      if (prevBtn) {
-        prevBtn.addEventListener("click", () => {
-          this.prevSong()
-          playSound("click")
-        })
-      }
+    if (prevBtn) {
+      prevBtn.addEventListener("click", () => {
+        this.prevSong()
+      })
+    }
 
-      if (nextBtn) {
-        nextBtn.addEventListener("click", () => {
-          this.nextSong()
-          playSound("click")
-        })
-      }
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => {
+        this.hidePlayer()
+      })
+    }
 
-      if (volumeBtn) {
-        volumeBtn.addEventListener("click", () => {
-          if (this.player) {
-            const currentVolume = this.player.getVolume()
-            const newVolume = currentVolume > 0 ? 0 : 50
-            this.player.setVolume(newVolume)
-            volumeBtn.textContent = newVolume > 0 ? "🔊" : "🔇"
-            playSound("click")
+    if (volumeBtn) {
+      volumeBtn.addEventListener("click", () => {
+        if (this.player && this.playerReady) {
+          if (this.isMuted) {
+            this.player.setVolume(this.volume)
+            this.isMuted = false
+            volumeBtn.textContent = "🔊"
+          } else {
+            this.volume = this.player.getVolume()
+            this.player.setVolume(0)
+            this.isMuted = true
+            volumeBtn.textContent = "🔇"
           }
-        })
-      }
+          playSound("click")
+        }
+      })
+    }
 
-      if (progressBar) {
-        progressBar.addEventListener("click", (e) => {
-          if (this.player) {
-            const rect = e.target.getBoundingClientRect()
-            const clickX = e.clientX - rect.left
-            const width = rect.width
-            const percentage = clickX / width
-            const duration = this.player.getDuration()
-            const seekTime = duration * percentage
-            this.player.seekTo(seekTime)
-            playSound("click")
-          }
-        })
-      }
-    })
+    if (progressBar) {
+      progressBar.addEventListener("click", (e) => {
+        if (this.player && this.playerReady) {
+          const rect = e.target.getBoundingClientRect()
+          const clickX = e.clientX - rect.left
+          const width = rect.width
+          const percentage = clickX / width
+          const duration = this.player.getDuration()
+          const seekTime = duration * percentage
+          this.player.seekTo(seekTime)
+        }
+      })
+    }
   }
 }
 
@@ -1133,11 +1112,15 @@ class SettingsManager {
 
 class AdminSystem {
   constructor() {
+    this.currentEvent = null
+    this.eventStartTime = null
+    this.setupAdminAccess()
+  }
+
+  setupAdminAccess() {
     this.keySequence = []
     this.targetSequence = ["KeyP", "KeyL"]
     this.sequenceTimeout = null
-    this.currentEvent = null
-    this.eventStartTime = null
     this.isListening = true
     this.setupKeyListener()
     this.loadEventState()
@@ -1186,26 +1169,20 @@ class AdminSystem {
 
   activateEvent(eventType) {
     this.currentEvent = eventType
-    this.eventStartTime = new Date().toISOString()
+    this.eventStartTime = new Date()
 
     document.documentElement.setAttribute("data-event", eventType)
 
-    this.showFloatingTitle(eventType)
-    this.showEventNav(eventType)
-    this.compressEvents()
-
-    if (settingsManager.settings.backgroundMusic) {
-      setTimeout(() => {
-        musicPlayer.playBackgroundMusic()
-      }, 2000)
+    if (cameraSystem) {
+      cameraSystem.updateFloatingEventButton()
     }
 
-    this.saveEventState()
+    this.updateEventNavigation(eventType)
     this.showEventNotification(eventType)
-    this.closeAdminPanel()
+    this.updateAdminStatus()
 
-    if (eventType === "monthly") {
-      this.updateMonthlyStats()
+    if (settingsManager?.settings.backgroundMusic) {
+      this.playEventMusic(eventType)
     }
 
     playSound("event")
@@ -1217,50 +1194,29 @@ class AdminSystem {
 
     document.documentElement.removeAttribute("data-event")
 
-    this.hideFloatingTitle()
-    this.hideEventNav()
-    this.decompressEvents()
+    if (cameraSystem) {
+      cameraSystem.updateFloatingEventButton()
+    }
 
-    musicPlayer.stopBackgroundMusic()
+    this.hideEventNavigation()
+    this.updateAdminStatus()
 
-    this.saveEventState()
+    if (musicPlayer?.backgroundMusic) {
+      musicPlayer.backgroundMusic.pause()
+      musicPlayer.backgroundMusic = null
+    }
 
-    showScreenCenterNotification("Todos los eventos desactivados", "info")
-    this.closeAdminPanel()
     playSound("deactivate")
   }
 
-  showFloatingTitle(eventType) {
-    const eventData = this.getEventData(eventType)
-    const floatingTitle = document.getElementById("floating-event-title")
-    const floatingEmoji = document.getElementById("floating-event-emoji")
-    const floatingName = document.getElementById("floating-event-name")
-
-    if (floatingEmoji) floatingEmoji.textContent = eventData.icon
-    if (floatingName) floatingName.textContent = eventData.title
-    if (floatingTitle) floatingTitle.classList.remove("hidden")
-  }
-
-  hideFloatingTitle() {
-    const floatingTitle = document.getElementById("floating-event-title")
-    if (floatingTitle) floatingTitle.classList.add("hidden")
-  }
-
-  showEventNav(eventType) {
+  updateEventNavigation(eventType) {
     const eventData = this.getEventData(eventType)
     const eventNav = document.getElementById("event-nav")
     const eventNavIcon = document.getElementById("event-nav-icon")
 
     if (eventNavIcon) eventNavIcon.textContent = eventData.icon
     if (eventNav) eventNav.classList.remove("hidden")
-  }
 
-  hideEventNav() {
-    const eventNav = document.getElementById("event-nav")
-    if (eventNav) eventNav.classList.add("hidden")
-  }
-
-  compressEvents() {
     const eventsGrid = document.getElementById("events-container")
     const eventsBubble = document.getElementById("events-bubble")
     const bubbleCount = document.getElementById("bubble-count")
@@ -1273,7 +1229,10 @@ class AdminSystem {
     }
   }
 
-  decompressEvents() {
+  hideEventNavigation() {
+    const eventNav = document.getElementById("event-nav")
+    if (eventNav) eventNav.classList.add("hidden")
+
     const eventsGrid = document.getElementById("events-container")
     const eventsBubble = document.getElementById("events-bubble")
 
@@ -1632,9 +1591,8 @@ class AdminSystem {
         this.currentEvent = state.currentEvent
         this.eventStartTime = state.eventStartTime
         document.documentElement.setAttribute("data-event", state.currentEvent)
-        this.showFloatingTitle(state.currentEvent)
-        this.showEventNav(state.currentEvent)
-        this.compressEvents()
+        cameraSystem.updateFloatingEventButton()
+        this.updateEventNavigation(state.currentEvent)
 
         if (settingsManager.settings.backgroundMusic) {
           setTimeout(() => {
@@ -1642,6 +1600,60 @@ class AdminSystem {
           }, 3000)
         }
       }
+    }
+  }
+
+  playEventMusic(eventType) {
+    const songIds = Object.keys(SONGS_DATABASE)
+    const randomSongId = songIds[Math.floor(Math.random() * songIds.length)]
+    const song = SONGS_DATABASE[randomSongId]
+
+    try {
+      if (musicPlayer.backgroundMusic) {
+        musicPlayer.backgroundMusic.destroy()
+      }
+
+      const bgPlayerDiv = document.createElement("div")
+      bgPlayerDiv.id = "background-music-player"
+      bgPlayerDiv.style.display = "none"
+      document.body.appendChild(bgPlayerDiv)
+
+      musicPlayer.backgroundMusic = new window.YT.Player("background-music-player", {
+        height: "0",
+        width: "0",
+        videoId: song.youtubeId,
+        playerVars: {
+          autoplay: 1,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
+          iv_load_policy: 3,
+          modestbranding: 1,
+          rel: 0,
+          showinfo: 0,
+          loop: 1,
+          playlist: song.youtubeId,
+        },
+        events: {
+          onReady: (event) => {
+            event.target.setVolume(12)
+            console.log("Música de fondo iniciada:", song.title)
+          },
+          onStateChange: (event) => {
+            if (event.data === window.YT.PlayerState.ENDED) {
+              event.target.playVideo()
+            }
+          },
+          onError: (event) => {
+            console.error("Error en música de fondo:", event.data)
+            setTimeout(() => {
+              this.playEventMusic(eventType)
+            }, 2000)
+          },
+        },
+      })
+    } catch (error) {
+      console.error("Error iniciando música de fondo:", error)
     }
   }
 }
@@ -1772,25 +1784,9 @@ function updateSettingsUI() {
   }
 }
 
-function toggleEventsBubble() {
-  const bubbleContent = document.getElementById("bubble-content")
-  const bubbleToggle = document.querySelector(".bubble-toggle")
-
-  if (bubbleContent && bubbleToggle) {
-    if (bubbleContent.classList.contains("hidden")) {
-      bubbleContent.classList.remove("hidden")
-      bubbleToggle.classList.add("expanded")
-    } else {
-      bubbleContent.classList.add("hidden")
-      bubbleToggle.classList.remove("expanded")
-    }
-    playSound("click")
-  }
-}
-
 function toggleCompressedNav() {
   playSound("click")
-  showScreenCenterNotification("Navegación comprimida activada durante eventos", "info")
+  // Navigation is now always available, no need for compressed mode
 }
 
 function goToEvent() {
@@ -1919,6 +1915,23 @@ function setupSettingsListeners() {
     })
   }
 }
+
+let animationFrameId = null
+let lastFrameTime = 0
+const targetFPS = 30
+const frameInterval = 1000 / targetFPS
+
+function optimizedAnimationLoop(currentTime) {
+  if (currentTime - lastFrameTime >= frameInterval) {
+    // Update shader effects and particles here if needed
+    lastFrameTime = currentTime
+  }
+  animationFrameId = requestAnimationFrame(optimizedAnimationLoop)
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  animationFrameId = requestAnimationFrame(optimizedAnimationLoop)
+})
 
 let cameraSystem
 let shaderSystem
