@@ -581,26 +581,26 @@ class ShaderSystem {
     const { width, height } = this.canvas
     const particleCount = 30
 
-    for (let i = 0; < particleCount; i++) {
+    for (let i = 0; i < particleCount; i++) {
       const x = width * 0.5 + Math.sin(this.time * 0.4 + i * 0.4) * (width * 0.4)
       const y = height * 0.5 + Math.cos(this.time * 0.3 + i * 0.6) * (height * 0.4)
-      const size = 3 + Math.sin(this.time * 1.5 + i) * 1.5\
+      const size = 3 + Math.sin(this.time * 1.5 + i) * 1.5
       const opacity = 0.15 + Math.sin(this.time + i) * 0.08
-\
-      this.ctx.beginPath()\
-      this.ctx.arc(x, y, size, 0, Math.PI * 2)\
-      this.ctx.fillStyle = \`rgba(255, 255, 255, ${opacity})\`\
+
+      this.ctx.beginPath()
+      this.ctx.arc(x, y, size, 0, Math.PI * 2)
+      this.ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`
       this.ctx.fill()
     }
   }
-\
-  renderBorderEffects() {\
-    const { width, height } = this.canvas\
+
+  renderBorderEffects() {
+    const { width, height } = this.canvas
     const borderGradient = this.ctx.createLinearGradient(0, 0, width, height)
-\
-    const hue = (this.time * 30) % 360\
-    borderGradient.addColorStop(0, \`hsla(${hue}, 100%, 70%, 0.3)`)\
-    borderGradient.addColorStop(0.5, \`hsla(${(hue + 60) % 360}, 100%, 70%, 0.2)`)
+
+    const hue = (this.time * 30) % 360
+    borderGradient.addColorStop(0, `hsla(${hue}, 100%, 70%, 0.3)`)
+    borderGradient.addColorStop(0.5, `hsla(${(hue + 60) % 360}, 100%, 70%, 0.2)`)
     borderGradient.addColorStop(1, `hsla(${(hue + 120) % 360}, 100%, 70%, 0.3)`)
 
     this.ctx.strokeStyle = borderGradient
@@ -618,11 +618,11 @@ class ShaderSystem {
 function calculateDaysUntil(dateString) {
   const eventDate = new Date(dateString)
   const today = new Date()
-  const diffTime = eventDate - today\
+  const diffTime = eventDate - today
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
   if (diffDays < 0) {
-    eventDate.setFullYear(eventDate.getFullYear() + 1)\
+    eventDate.setFullYear(eventDate.getFullYear() + 1)
     const newDiffTime = eventDate - today
     return Math.ceil(newDiffTime / (1000 * 60 * 60 * 24))
   }
@@ -631,13 +631,13 @@ function calculateDaysUntil(dateString) {
 }
 
 function calculateTimeTogetherStats() {
-  const startDate = new Date("2024-12-03")\
+  const startDate = new Date("2024-12-03")
   const now = new Date()
   const diffTime = now - startDate
-\
-  const days = Math.floor(diffTime / (1000 * 60 * 60 * 24))\
+
+  const days = Math.floor(diffTime / (1000 * 60 * 60 * 24))
   const months = Math.floor(days / 30.44)
-  const weeks = Math.floor(days / 7)\
+  const weeks = Math.floor(days / 7)
   const hours = Math.floor(diffTime / (1000 * 60 * 60))
 
   return { days, months, weeks, hours }
@@ -652,7 +652,7 @@ function loadEvents() {
   })
 
   const sortedEvents = BLOG_DATA.events.sort((a, b) => a.daysUntil - b.daysUntil)
-\
+
   container.innerHTML = sortedEvents
     .map(
       (event) => `
@@ -681,7 +681,7 @@ function loadEventsBubble() {
   })
 
   const sortedEvents = BLOG_DATA.events.sort((a, b) => a.daysUntil - b.daysUntil)
-\
+
   bubbleContent.innerHTML = sortedEvents
     .map(
       (event) => `
@@ -706,7 +706,7 @@ function loadStats() {
 
   container.innerHTML = `
     <div class="stat-card" onclick="playSound('click')">
-      <div class="stat-number">${Math.abs(stats.days)}</div>\
+      <div class="stat-number">${Math.abs(stats.days)}</div>
       <div class="stat-label">Días ${stats.days >= 0 ? "juntos" : "hasta estar juntos"}</div>
     </div>
     <div class="stat-card" onclick="playSound('click')">
@@ -733,7 +733,7 @@ function loadSongs() {
       ([id, song]) => `
     <div class="song-card" data-song="${id}">
       <div class="song-info">
-        <h3>${song.title}</h3>\
+        <h3>${song.title}</h3>
         <p>${song.artist}</p>
         <span class="duration">${song.duration}</span>
       </div>
@@ -765,15 +765,15 @@ class MusicPlayer {
     this.initializePlayer()
     this.loadYouTubeAPI()
   }
-\
+
   loadYouTubeAPI() {
-    if (!window.YT) {\
+    if (!window.YT) {
       const tag = document.createElement("script")
       tag.src = "https://www.youtube.com/iframe_api"
       const firstScriptTag = document.getElementsByTagName("script")[0]
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
-\
-      window.onYouTubeIframeAPIReady = () => {\
+
+      window.onYouTubeIframeAPIReady = () => {
         this.playerReady = true
         console.log("YouTube API cargada correctamente")
       }
@@ -788,7 +788,7 @@ class MusicPlayer {
 
   async playSong(songId) {
     const song = SONGS_DATABASE[songId]
-    if (!song) {\
+    if (!song) {
       this.showError("Canción no encontrada")
       return
     }
