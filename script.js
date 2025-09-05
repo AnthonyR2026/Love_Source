@@ -540,26 +540,26 @@ class ShaderSystem {
     const { width, height } = this.canvas
     const particleCount = 30
 
-    for (let i = 0; i < particleCount; i++) {
+    for (let i = 0; < particleCount; i++) {
       const x = width * 0.5 + Math.sin(this.time * 0.4 + i * 0.4) * (width * 0.4)
       const y = height * 0.5 + Math.cos(this.time * 0.3 + i * 0.6) * (height * 0.4)
-      const size = 3 + Math.sin(this.time * 1.5 + i) * 1.5
+      const size = 3 + Math.sin(this.time * 1.5 + i) * 1.5\
       const opacity = 0.15 + Math.sin(this.time + i) * 0.08
-
-      this.ctx.beginPath()
-      this.ctx.arc(x, y, size, 0, Math.PI * 2)
-      this.ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`
+\
+      this.ctx.beginPath()\
+      this.ctx.arc(x, y, size, 0, Math.PI * 2)\
+      this.ctx.fillStyle = \`rgba(255, 255, 255, ${opacity})`\
       this.ctx.fill()
-    }
+    }\
   }
-
-  renderBorderEffects() {
-    const { width, height } = this.canvas
+\
+  renderBorderEffects() {\
+    const { width, height } = this.canvas\
     const borderGradient = this.ctx.createLinearGradient(0, 0, width, height)
-
-    const hue = (this.time * 30) % 360
-    borderGradient.addColorStop(0, `hsla(${hue}, 100%, 70%, 0.3)`)
-    borderGradient.addColorStop(0.5, `hsla(${(hue + 60) % 360}, 100%, 70%, 0.2)`)
+\
+    const hue = (this.time * 30) % 360\
+    borderGradient.addColorStop(0, \`hsla(${hue}, 100%, 70%, 0.3)\`)
+    borderGradient.addColorStop(0.5, \`hsla(${(hue + 60) % 360}, 100%, 70%, 0.2)`)
     borderGradient.addColorStop(1, `hsla(${(hue + 120) % 360}, 100%, 70%, 0.3)`)
 
     this.ctx.strokeStyle = borderGradient
@@ -577,11 +577,11 @@ class ShaderSystem {
 function calculateDaysUntil(dateString) {
   const eventDate = new Date(dateString)
   const today = new Date()
-  const diffTime = eventDate - today
+  const diffTime = eventDate - today\
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
   if (diffDays < 0) {
-    eventDate.setFullYear(eventDate.getFullYear() + 1)
+    eventDate.setFullYear(eventDate.getFullYear() + 1)\
     const newDiffTime = eventDate - today
     return Math.ceil(newDiffTime / (1000 * 60 * 60 * 24))
   }
@@ -590,22 +590,33 @@ function calculateDaysUntil(dateString) {
 }
 
 function calculateTimeTogetherStats() {
-  const startDate = new Date("2024-12-03")
+  const startDate = new Date("2024-12-03")\
   const now = new Date()
   const diffTime = now - startDate
-
-  const days = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+\
+  const days = Math.floor(diffTime / (1000 * 60 * 60 * 24))\
   const months = Math.floor(days / 30.44)
-  const weeks = Math.floor(days / 7)
+  const weeks = Math.floor(days / 7)\
   const hours = Math.floor(diffTime / (1000 * 60 * 60))
 
   return { days, months, weeks, hours }
 }
 
 function loadEvents() {
+  // Load events from localStorage or set defaults
+  const savedEvents = localStorage.getItem('lovePageEvents')
+  if (savedEvents) {
+    try {
+      const events = JSON.parse(savedEvents)
+      // Process saved events if needed
+    } catch (error) {
+      console.error('Error loading events:', error)
+    }
+  }
+\
   const container = document.getElementById("events-container")
   if (!container) return
-
+\
   BLOG_DATA.events.forEach((event) => {
     event.daysUntil = calculateDaysUntil(event.date)
   })
@@ -638,8 +649,8 @@ function loadEventsBubble() {
   BLOG_DATA.events.forEach((event) => {
     event.daysUntil = calculateDaysUntil(event.date)
   })
-
-  const sortedEvents = BLOG_DATA.events.sort((a, b) => a.daysUntil - b.daysUntil)
+\
+  const sortedEvents = BLOG_DATA.events.sort((a, b) => a.daysUntil - b.daysUntil)\
 
   bubbleContent.innerHTML = sortedEvents
     .map(
@@ -658,6 +669,17 @@ function loadEventsBubble() {
 }
 
 function loadStats() {
+  // Load relationship stats
+  const startDate = new Date('2023-01-01') // Adjust this date as needed
+  const now = new Date()
+  const daysTogether = Math.floor((now - startDate) / (1000 * 60 * 60 * 24))
+  
+  // Update stats display if element exists
+  const statsElement = document.querySelector(\'.stats-display')
+  if (statsElement) {
+    statsElement.textContent = `${daysTogether} días juntos`
+  }
+
   const container = document.getElementById("stats-container")
   if (!container) return
 
@@ -684,6 +706,10 @@ function loadStats() {
 }
 
 function loadSongs() {
+  // Songs are already loaded in SONGS_DATABASE
+  // This function can be used for additional song loading logic if needed
+  console.log('Songs loaded:', Object.keys(SONGS_DATABASE).length)
+
   const container = document.getElementById("songs-grid")
   if (!container) return
 
@@ -692,7 +718,7 @@ function loadSongs() {
       ([id, song]) => `
     <div class="song-card" data-song="${id}">
       <div class="song-info">
-        <h3>${song.title}</h3>
+        <h3>${song.title}</h3>\
         <p>${song.artist}</p>
         <span class="duration">${song.duration}</span>
       </div>
@@ -722,8 +748,8 @@ class MusicPlayer {
     this.currentSongIndex = 0
     this.songsList = Object.keys(SONGS_DATABASE)
     this.volume = 50
-    this.isMuted = false
-    this.previousVolume = 50
+    this.isMuted = false\
+    this.previousVolume = 50\
     this.initializePlayer()
     this.loadYouTubeAPI()
   }
@@ -734,7 +760,7 @@ class MusicPlayer {
       tag.src = "https://www.youtube.com/iframe_api"
       const firstScriptTag = document.getElementsByTagName("script")[0]
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
-
+\
       window.onYouTubeIframeAPIReady = () => {
         this.playerReady = true
         console.log("YouTube API cargada correctamente")
@@ -1703,45 +1729,48 @@ class AdminSystem {
 }
 
 function playSound(type) {
-  if (!settingsManager || !settingsManager.settings.soundEffects) return
+  // Simple sound feedback - can be enhanced with actual audio files
+  if (settingsManager && !settingsManager.settings.soundEffects) {
+    // Create a simple beep sound using Web Audio API
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)()
 
-  try {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+      const sounds = {
+        click: { freq: 800, duration: 0.1 },
+        play: { freq: 600, duration: 0.2 },
+        pause: { freq: 400, duration: 0.15 },
+        close: { freq: 300, duration: 0.2 },
+        success: { freq: 880, duration: 0.3 },
+        error: { freq: 200, duration: 0.4 },
+        love: { freq: 1000, duration: 0.5 },
+        gift: { freq: 1200, duration: 0.4 },
+        paper: { freq: 500, duration: 0.3 },
+        admin: { freq: 1500, duration: 0.2 },
+        event: { freq: 1100, duration: 0.6 },
+        deactivate: { freq: 350, duration: 0.3 },
+        transition: { freq: 700, duration: 0.25 },
+      }
 
-    const sounds = {
-      click: { freq: 800, duration: 0.1 },
-      play: { freq: 600, duration: 0.2 },
-      pause: { freq: 400, duration: 0.15 },
-      close: { freq: 300, duration: 0.2 },
-      success: { freq: 880, duration: 0.3 },
-      error: { freq: 200, duration: 0.4 },
-      love: { freq: 1000, duration: 0.5 },
-      gift: { freq: 1200, duration: 0.4 },
-      paper: { freq: 500, duration: 0.3 },
-      admin: { freq: 1500, duration: 0.2 },
-      event: { freq: 1100, duration: 0.6 },
-      deactivate: { freq: 350, duration: 0.3 },
-      transition: { freq: 700, duration: 0.25 },
+      const sound = sounds[type] || sounds.click
+
+      const oscillator = audioContext.createOscillator()
+      const gainNode = audioContext.createGain()
+
+      oscillator.connect(gainNode)
+      gainNode.connect(audioContext.destination)
+
+      oscillator.frequency.setValueAtTime(sound.freq, audioContext.currentTime)
+      oscillator.type = "sine"
+
+      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime)
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + sound.duration)
+
+      oscillator.start(audioContext.currentTime)
+      oscillator.stop(audioContext.currentTime + sound.duration)
+    } catch (error) {
+      // Silently fail if Web Audio API is not supported
+      console.log("Audio context not available")
     }
-
-    const sound = sounds[type] || sounds.click
-
-    const oscillator = audioContext.createOscillator()
-    const gainNode = audioContext.createGain()
-
-    oscillator.connect(gainNode)
-    gainNode.connect(audioContext.destination)
-
-    oscillator.frequency.setValueAtTime(sound.freq, audioContext.currentTime)
-    oscillator.type = "sine"
-
-    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime)
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + sound.duration)
-
-    oscillator.start(audioContext.currentTime)
-    oscillator.stop(audioContext.currentTime + sound.duration)
-  } catch (error) {
-    console.log("Audio context not available")
   }
 }
 
@@ -2008,3 +2037,95 @@ window.openSettings = openSettings
 window.closeSettings = closeSettings
 window.toggleCompressedNav = toggleCompressedNav
 window.playSound = playSound
+// Pause animations when tab is not visible
+document.addEventListener('visibilitychange', () => {
+  isAnimationPaused = document.hidden
+})
+
+// Animation optimization variables
+let lastFrameTime = 0
+let targetFPS = 30
+let frameInterval = 1000 / targetFPS
+let animationFrameId = null
+let isAnimationPaused = false
+
+function optimizedAnimationLoop(currentTime) {
+  if (isAnimationPaused) {
+    animationFrameId = requestAnimationFrame(optimizedAnimationLoop)
+    return
+  }
+
+  if (currentTime - lastFrameTime >= frameInterval) {
+    // Update particles and shader effects
+    updateParticles()
+    updateShaderEffects()
+    lastFrameTime = currentTime
+  }
+
+  animationFrameId = requestAnimationFrame(optimizedAnimationLoop)
+}
+
+function updateParticles() {
+  // Update floating hearts and particles
+  const hearts = document.querySelectorAll('.floating-heart')
+  hearts.forEach(heart => {
+    const rect = heart.getBoundingClientRect()
+    if (rect.bottom < 0) {
+      heart.remove()
+    }
+  })
+}
+
+function updateShaderEffects() {
+  // Update shader effects if canvas exists
+  if (shaderSystem && shaderSystem.canvas) {
+    shaderSystem.render()
+  }
+}
+
+function createFloatingHeart() {
+  const heart = document.createElement('div')
+  heart.className = 'floating-heart'
+  heart.innerHTML = '💖'
+  heart.style.cssText = `
+    position: fixed;
+    left: ${Math.random() * 100}vw;
+    bottom: -50px;
+    font-size: ${Math.random() * 20 + 20}px;
+    animation: floatUp ${Math.random() * 3 + 4}s linear forwards;
+    pointer-events: none;
+    z-index: 1000;
+  `
+  
+  document.body.appendChild(heart)
+  
+  setTimeout(() => {
+    if (heart.parentNode) {
+      heart.remove()
+    }
+  }, 7000)
+}
+
+function playSound(type) {
+  // Simple sound feedback - can be enhanced with actual audio files
+  if (settingsManager && !settingsManager.settings.muteEffects) {
+    // Create a simple beep sound using Web Audio API
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+      const oscillator = audioContext.createOscillator()
+      const gainNode = audioContext.createGain()
+      
+      oscillator.connect(gainNode)
+      gainNode.connect(audioContext.destination)
+      
+      oscillator.frequency.value = type === 'play' ? 800 : 400
+      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime)
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1)
+      
+      oscillator.start(audioContext.currentTime)
+      oscillator.stop(audioContext.currentTime + 0.1)
+    } catch (error) {
+      // Silently fail if Web Audio API is not supported
+    }
+  }
+}
