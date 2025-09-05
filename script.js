@@ -281,40 +281,53 @@ Anthony ❤️`,
   },
 }
 
-// Animation optimization variables - declared once at the top
+function activateEvent(eventType) {
+  if (window.eventManager) {
+    window.eventManager.activateEvent(eventType)
+  }
+}
+
+function closeAdminPanel() {
+  if (window.eventManager) {
+    window.eventManager.closeAdminPanel()
+  }
+}
+
+function openHeartRain() {
+  if (window.eventManager) {
+    window.eventManager.triggerHeartRain()
+  }
+}
+
 let lastFrameTime = 0
-const targetFPS = 30
+const targetFPS = 60 // Back to 60 FPS but with much lighter operations
 const frameInterval = 1000 / targetFPS
 let animationFrameId = null
 let isAnimationPaused = false
 let resizeTimeout
 
-// Added missing animation functions
 function updateParticles() {
-  // Optimized particle updates
-  const particles = document.querySelectorAll(".floating-hearts .heart")
-  particles.forEach((particle) => {
-    if (Math.random() > 0.98) {
-      createFloatingHeart()
-    }
-  })
-}
-
-function updateShaderEffects() {
-  // Optimized shader effects updates
-  if (window.shaderSystem && !isAnimationPaused) {
-    // Only update if shader system exists and not paused
+  if (Math.random() > 0.999) {
+    // Only 0.1% chance per frame
+    createFloatingHeart()
   }
 }
 
-// Single optimized animation loop
+function updateShaderEffects() {
+  if (window.shaderSystem && !isAnimationPaused && Math.random() > 0.995) {
+    // Only update shader 0.5% of the time
+    window.shaderSystem.update()
+  }
+}
+
 function optimizedAnimationLoop(currentTime) {
-  if (isAnimationPaused) return
+  if (isAnimationPaused || document.hidden) return
 
   if (currentTime - lastFrameTime >= frameInterval) {
-    // Update only essential animations
-    updateParticles()
-    updateShaderEffects()
+    if (settingsManager?.settings?.visualEffects && !settingsManager?.settings?.lowResources) {
+      updateParticles()
+      updateShaderEffects()
+    }
     lastFrameTime = currentTime
   }
 
@@ -572,6 +585,11 @@ class ShaderSystem {
     if (this.animationId) {
       cancelAnimationFrame(this.animationId)
     }
+  }
+
+  update() {
+    this.time += 0.016
+    this.render()
   }
 }
 
@@ -2024,7 +2042,7 @@ document.addEventListener("DOMContentLoaded", () => {
     eventNav.classList.add("hidden")
   }
 
-  startOptimizedAnimations()
+  startAnimations()
 
   // Hide loading screen after initialization
   setTimeout(() => {
@@ -2083,32 +2101,10 @@ function setupEventListeners() {
   }
 }
 
-function startOptimizedAnimations() {
-  let lastFrameTime = 0
-  const targetFPS = 20 // Reduced from 30 to 20 for better performance
-  const frameInterval = 1000 / targetFPS
-
-  function optimizedAnimationLoop(currentTime) {
-    if (document.hidden || isAnimationPaused) return
-
-    if (currentTime - lastFrameTime >= frameInterval) {
-      if (settingsManager.settings.visualEffects && !settingsManager.settings.lowResources) {
-        if (Math.random() > 0.95) {
-          // Only update particles 5% of the time
-          updateParticles()
-        }
-        if (Math.random() > 0.98) {
-          // Only update shader effects 2% of the time
-          updateShaderEffects()
-        }
-      }
-      lastFrameTime = currentTime
-    }
-
+function startAnimations() {
+  if (!animationFrameId) {
     requestAnimationFrame(optimizedAnimationLoop)
   }
-
-  requestAnimationFrame(optimizedAnimationLoop)
 }
 
 function setupSettingsListeners() {
@@ -2153,6 +2149,10 @@ function setupSettingsListeners() {
     })
   }
 }
+
+window.activateEvent = activateEvent
+window.closeAdminPanel = closeAdminPanel
+window.openHeartRain = openHeartRain
 
 // Export functions for global access
 window.playSong = playSong
