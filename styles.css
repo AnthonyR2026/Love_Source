@@ -645,11 +645,21 @@ body {
   transition: var(--transition);
   animation: floatingTitle 4s ease-in-out infinite;
   cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.floating-event-title.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .floating-event-title.hidden {
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   transform: translateX(-50%) translateY(-30px);
 }
 
