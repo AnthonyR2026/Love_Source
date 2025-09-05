@@ -2006,6 +2006,8 @@ let adminSystem
 
 // Initialize everything when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
+  const loadingScreen = document.querySelector(".loading-screen")
+
   // Initialize systems
   cameraSystem = new CameraSystem()
   shaderSystem = new ShaderSystem()
@@ -2027,6 +2029,15 @@ document.addEventListener("DOMContentLoaded", () => {
       createFloatingHeart()
     }, i * 1000)
   }
+
+  setTimeout(() => {
+    if (loadingScreen) {
+      loadingScreen.style.opacity = "0"
+      setTimeout(() => {
+        loadingScreen.style.display = "none"
+      }, 500)
+    }
+  }, 1500) // Wait 1.5 seconds to ensure everything is loaded
 
   console.log("💕 Aplicación de amor inicializada correctamente")
 })
