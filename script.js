@@ -1911,20 +1911,16 @@ function createCompressedMenu() {
       <span class="menu-item-label">${item.label}</span>
     `
     menuItem.onclick = () => {
-      navigateToSection(item.section)
+      if (cameraSystem) {
+        cameraSystem.switchToSection(item.section)
+      }
       compressedNav.classList.remove("expanded")
+      playSound("click")
     }
     menuDropdown.appendChild(menuItem)
   })
 
   compressedNav.appendChild(menuDropdown)
-}
-
-function navigateToSection(section) {
-  if (cameraSystem) {
-    cameraSystem.switchToSection(section)
-  }
-  playSound("click")
 }
 
 function createFloatingHeart() {
@@ -2006,41 +2002,157 @@ let adminSystem
 
 // Initialize everything when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
-  const loadingScreen = document.querySelector(".loading-screen")
-
-  // Initialize systems
   cameraSystem = new CameraSystem()
-  shaderSystem = new ShaderSystem()
   musicPlayer = new MusicPlayer()
   settingsManager = new SettingsManager()
   adminSystem = new AdminSystem()
 
-  // Load initial data
+  if (settingsManager.settings.visualEffects && !settingsManager.settings.lowResources) {
+    shaderSystem = new ShaderSystem()
+  }
+
+  setupSettingsListeners()
+  setupEventListeners()
+
+  // Initialize other systems
   loadEvents()
   loadStats()
   loadSongs()
 
-  // Start optimized animation loop
-  optimizedAnimationLoop(performance.now())
-
-  // Initial floating hearts
-  for (let i = 0; i < 5; i++) {
-    setTimeout(() => {
-      createFloatingHeart()
-    }, i * 1000)
+  const eventNav = document.getElementById("event-nav")
+  if (eventNav && !document.documentElement.hasAttribute("data-event")) {
+    eventNav.classList.add("hidden")
   }
 
+  startOptimizedAnimations()
+
+  // Hide loading screen after initialization
   setTimeout(() => {
+    const loadingScreen = document.getElementById("loading-screen")
     if (loadingScreen) {
       loadingScreen.style.opacity = "0"
       setTimeout(() => {
         loadingScreen.style.display = "none"
       }, 500)
     }
-  }, 1500) // Wait 1.5 seconds to ensure everything is loaded
-
-  console.log("💕 Aplicación de amor inicializada correctamente")
+  }, 1500)
 })
+
+function setupEventListeners() {
+  const adminCloseBtn = document.getElementById("admin-close-btn")
+  if (adminCloseBtn) {
+    adminCloseBtn.addEventListener("click", () => {
+      adminSystem.closeAdminPanel()
+    })
+  }
+
+  const settingsBtn = document.getElementById("settings-btn")
+  if (settingsBtn) {
+    settingsBtn.addEventListener("click", () => {
+      document.getElementById("settings-modal").classList.remove("hidden")
+      playSound("click")
+    })
+  }
+
+  const settingsCloseBtn = document.getElementById("settings-close-btn")
+  if (settingsCloseBtn) {
+    settingsCloseBtn.addEventListener("click", () => {
+      document.getElementById("settings-modal").classList.add("hidden")
+      playSound("close")
+    })
+  }
+
+  const compressedNavBtn = document.getElementById("compressed-nav-btn")
+  if (compressedNavBtn) {
+    compressedNavBtn.addEventListener("click", toggleCompressedNav)
+  }
+
+  const eventButtons = document.querySelectorAll('[onclick*="adminSystem.activateEvent"]')
+  eventButtons.forEach((button) => {
+    const eventType = button.getAttribute("onclick").match(/'([^']+)'/)[1]
+    button.addEventListener("click", () => {
+      adminSystem.activateEvent(eventType)
+    })
+  })
+
+  const deactivateBtn = document.querySelector('[onclick*="adminSystem.deactivateAllEvents"]')
+  if (deactivateBtn) {
+    deactivateBtn.addEventListener("click", () => {
+      adminSystem.deactivateAllEvents()
+    })
+  }
+}
+
+function startOptimizedAnimations() {
+  let lastFrameTime = 0
+  const targetFPS = 20 // Reduced from 30 to 20 for better performance
+  const frameInterval = 1000 / targetFPS
+
+  function optimizedAnimationLoop(currentTime) {
+    if (document.hidden || isAnimationPaused) return
+
+    if (currentTime - lastFrameTime >= frameInterval) {
+      if (settingsManager.settings.visualEffects && !settingsManager.settings.lowResources) {
+        if (Math.random() > 0.95) {
+          // Only update particles 5% of the time
+          updateParticles()
+        }
+        if (Math.random() > 0.98) {
+          // Only update shader effects 2% of the time
+          updateShaderEffects()
+        }
+      }
+      lastFrameTime = currentTime
+    }
+
+    requestAnimationFrame(optimizedAnimationLoop)
+  }
+
+  requestAnimationFrame(optimizedAnimationLoop)
+}
+
+function setupSettingsListeners() {
+  const themeSelect = document.getElementById("theme-select")
+  if (themeSelect) {
+    themeSelect.value = settingsManager.settings.theme
+    themeSelect.addEventListener("change", (e) => {
+      settingsManager.updateSetting("theme", e.target.value)
+      playSound("click")
+    })
+  }
+
+  const checkboxes = [
+    "reduce-motion",
+    "high-contrast",
+    "large-text",
+    "low-resources",
+    "background-music",
+    "sound-effects",
+    "visual-effects",
+  ]
+
+  checkboxes.forEach((id) => {
+    const checkbox = document.getElementById(id)
+    if (checkbox) {
+      const setting = id.replace(/-/g, "_")
+      checkbox.checked = settingsManager.settings[setting]
+
+      checkbox.addEventListener("change", () => {
+        settingsManager.updateSetting(setting, checkbox.checked)
+        playSound("click")
+      })
+    }
+  })
+
+  const audioQuality = document.getElementById("audio-quality")
+  if (audioQuality) {
+    audioQuality.value = settingsManager.settings.audioQuality
+    audioQuality.addEventListener("change", (e) => {
+      settingsManager.updateSetting("audioQuality", e.target.value)
+      playSound("click")
+    })
+  }
+}
 
 // Export functions for global access
 window.playSong = playSong
@@ -2049,6 +2161,7 @@ window.openSettings = openSettings
 window.closeSettings = closeSettings
 window.toggleCompressedNav = toggleCompressedNav
 window.playSound = playSound
+
 // Pause animations when tab is not visible
 document.addEventListener("visibilitychange", () => {
   isAnimationPaused = document.hidden
