@@ -303,16 +303,26 @@ class CameraSystem {
   }
 
   setupMouseListener() {
-    const isEventActive = () => document.documentElement.hasAttribute("data-event")
-
     document.addEventListener("mousemove", () => {
-      if (isEventActive()) {
+      const isEventActive = document.documentElement.hasAttribute("data-event")
+
+      if (isEventActive) {
+        // Durante eventos: mostrar navegación comprimida
         if (this.compressedNav) {
           this.compressedNav.classList.add("visible")
         }
+        // Ocultar navegación principal durante eventos
+        if (this.mainNav) {
+          this.mainNav.classList.remove("visible")
+        }
       } else {
+        // Sin eventos: mostrar navegación principal
         if (this.mainNav) {
           this.mainNav.classList.add("visible")
+        }
+        // Ocultar navegación comprimida sin eventos
+        if (this.compressedNav) {
+          this.compressedNav.classList.remove("visible")
         }
       }
 
@@ -321,7 +331,7 @@ class CameraSystem {
       }
 
       this.mouseTimer = setTimeout(() => {
-        if (isEventActive()) {
+        if (isEventActive) {
           if (this.compressedNav) {
             this.compressedNav.classList.remove("visible")
           }
@@ -333,6 +343,7 @@ class CameraSystem {
       }, 8000)
     })
 
+    // Eventos para mantener visible al hacer hover
     if (this.mainNav) {
       this.mainNav.addEventListener("mouseenter", () => {
         if (this.mouseTimer) {
@@ -422,6 +433,11 @@ class CameraSystem {
         targetSection.classList.add("active")
         this.currentSection = sectionName
 
+        // Actualizar visibilidad del botón flotante del evento
+        if (adminSystem) {
+          adminSystem.updateFloatingEventVisibility()
+        }
+
         this.container.scrollTo({
           top: 0,
           behavior: "smooth",
@@ -455,6 +471,47 @@ class CameraSystem {
   updateViewport() {
     const vh = window.innerHeight * 0.01
     document.documentElement.style.setProperty("--vh", `${vh}px`)
+  }
+
+  showFloatingTitle(eventType) {
+    const eventData = this.getEventData(eventType)
+    const floatingTitle = document.getElementById("floating-event-title")
+    const floatingEmoji = document.getElementById("floating-event-emoji")
+    const floatingName = document.getElementById("floating-event-name")
+
+    if (floatingEmoji) floatingEmoji.textContent = eventData.icon
+    if (floatingName) floatingName.textContent = eventData.title
+    if (floatingTitle) {
+      floatingTitle.classList.remove("hidden")
+      floatingTitle.classList.add("visible")
+    }
+
+    // Actualizar visibilidad según la sección actual
+    this.updateFloatingEventVisibility()
+  }
+
+  hideFloatingTitle() {
+    const floatingTitle = document.getElementById("floating-event-title")
+    if (floatingTitle) {
+      floatingTitle.classList.add("hidden")
+      floatingTitle.classList.remove("visible")
+    }
+  }
+
+  updateFloatingEventVisibility() {
+    const floatingTitle = document.getElementById("floating-event-title")
+
+    if (floatingTitle && adminSystem.currentEvent) {
+      if (cameraSystem && cameraSystem.currentSection === "evento-especial") {
+        // Ocultar botón flotante cuando esté en la sección del evento
+        floatingTitle.classList.add("hidden")
+        floatingTitle.classList.remove("visible")
+      } else {
+        // Mostrar botón flotante en otras secciones
+        floatingTitle.classList.remove("hidden")
+        floatingTitle.classList.add("visible")
+      }
+    }
   }
 }
 
@@ -1023,12 +1080,23 @@ class MusicPlayer {
       }
 
       if (volumeBtn) {
+        let isMuted = false
+        let previousVolume = 50
+
         volumeBtn.addEventListener("click", () => {
-          if (this.player) {
-            const currentVolume = this.player.getVolume()
-            const newVolume = currentVolume > 0 ? 0 : 50
-            this.player.setVolume(newVolume)
-            volumeBtn.textContent = newVolume > 0 ? "🔊" : "🔇"
+          if (this.player && this.player.getVolume !== undefined) {
+            if (isMuted) {
+              // Restaurar volumen
+              this.player.setVolume(previousVolume)
+              volumeBtn.textContent = "🔊"
+              isMuted = false
+            } else {
+              // Guardar volumen actual y silenciar
+              previousVolume = this.player.getVolume() || 50
+              this.player.setVolume(0)
+              volumeBtn.textContent = "🔇"
+              isMuted = true
+            }
             playSound("click")
           }
         })
@@ -1190,9 +1258,10 @@ class AdminSystem {
 
     document.documentElement.setAttribute("data-event", eventType)
 
+    // Mostrar botón flotante del evento
     this.showFloatingTitle(eventType)
+    // Mostrar botón "Evento" en navegación principal
     this.showEventNav(eventType)
-    this.compressEvents()
 
     if (settingsManager.settings.backgroundMusic) {
       setTimeout(() => {
@@ -1217,9 +1286,10 @@ class AdminSystem {
 
     document.documentElement.removeAttribute("data-event")
 
+    // Ocultar botón flotante del evento
     this.hideFloatingTitle()
+    // Ocultar botón "Evento" en navegación principal
     this.hideEventNav()
-    this.decompressEvents()
 
     musicPlayer.stopBackgroundMusic()
 
@@ -1238,12 +1308,37 @@ class AdminSystem {
 
     if (floatingEmoji) floatingEmoji.textContent = eventData.icon
     if (floatingName) floatingName.textContent = eventData.title
-    if (floatingTitle) floatingTitle.classList.remove("hidden")
+    if (floatingTitle) {
+      floatingTitle.classList.remove("hidden")
+      floatingTitle.classList.add("visible")
+    }
+
+    // Actualizar visibilidad según la sección actual
+    this.updateFloatingEventVisibility()
   }
 
   hideFloatingTitle() {
     const floatingTitle = document.getElementById("floating-event-title")
-    if (floatingTitle) floatingTitle.classList.add("hidden")
+    if (floatingTitle) {
+      floatingTitle.classList.add("hidden")
+      floatingTitle.classList.remove("visible")
+    }
+  }
+
+  updateFloatingEventVisibility() {
+    const floatingTitle = document.getElementById("floating-event-title")
+
+    if (floatingTitle && this.currentEvent) {
+      if (cameraSystem && cameraSystem.currentSection === "evento-especial") {
+        // Ocultar botón flotante cuando esté en la sección del evento
+        floatingTitle.classList.add("hidden")
+        floatingTitle.classList.remove("visible")
+      } else {
+        // Mostrar botón flotante en otras secciones
+        floatingTitle.classList.remove("hidden")
+        floatingTitle.classList.add("visible")
+      }
+    }
   }
 
   showEventNav(eventType) {
@@ -1767,240 +1862,24 @@ function updateSettingsUI() {
     audioQuality.value = settingsManager.settings.audioQuality
     audioQuality.addEventListener("change", (e) => {
       settingsManager.updateSetting("audioQuality", e.target.value)
-      playSound("click")
     })
   }
 }
 
-function toggleEventsBubble() {
-  const bubbleContent = document.getElementById("bubble-content")
-  const bubbleToggle = document.querySelector(".bubble-toggle")
-
-  if (bubbleContent && bubbleToggle) {
-    if (bubbleContent.classList.contains("hidden")) {
-      bubbleContent.classList.remove("hidden")
-      bubbleToggle.classList.add("expanded")
-    } else {
-      bubbleContent.classList.add("hidden")
-      bubbleToggle.classList.remove("expanded")
-    }
-    playSound("click")
-  }
-}
-
-function toggleCompressedNav() {
-  playSound("click")
-  showScreenCenterNotification("Navegación comprimida activada durante eventos", "info")
-}
-
-function goToEvent() {
-  cameraSystem.switchToSection("evento-especial")
-  playSound("click")
-}
-
-function markLetterAsRead() {
-  if (adminSystem) {
-    adminSystem.markLetterAsRead()
-  }
-}
-
-function openGift() {
-  if (adminSystem) {
-    adminSystem.openGift()
-  }
-}
-
-function closeAdminPanel() {
-  if (adminSystem) {
-    adminSystem.closeAdminPanel()
-  }
-}
-
-function activateEvent(eventType) {
-  if (adminSystem) {
-    adminSystem.activateEvent(eventType)
-  }
-}
-
-function deactivateAllEvents() {
-  if (adminSystem) {
-    adminSystem.deactivateAllEvents()
-  }
-}
-
-function closeEventNotification() {
-  if (adminSystem) {
-    adminSystem.closeEventNotification()
-  }
-}
-
-function triggerHeartRain() {
-  if (adminSystem) {
-    adminSystem.triggerHeartRain(20)
-  }
-}
-
-function showLoveMessage() {
-  if (adminSystem) {
-    adminSystem.showLoveMessage()
-  }
-}
-
-function playRandomSong() {
-  if (adminSystem) {
-    adminSystem.playRandomSong()
-  }
-}
-
-function closeLoveMessage() {
-  if (adminSystem) {
-    adminSystem.closeLoveMessage()
-  }
-}
-
-function showScreenCenterNotification(message, type = "info") {
-  const notification = document.createElement("div")
-  notification.className = `screen-notification ${type}`
-
-  notification.textContent = message
-
-  const container = document.getElementById("screen-center-notifications")
-  if (container) {
-    container.appendChild(notification)
-
-    setTimeout(() => {
-      notification.remove()
-    }, 5000)
-  }
-}
-
-function createFloatingHeart() {
-  const hearts = ["💖", "💕", "💗", "💝", "💘"]
-  const heart = document.createElement("div")
-  heart.className = "heart"
-  heart.textContent = hearts[Math.floor(Math.random() * hearts.length)]
-  heart.style.left = Math.random() * 100 + "%"
-  heart.style.animationDuration = Math.random() * 4 + 4 + "s"
-  heart.style.fontSize = Math.random() * 15 + 20 + "px"
-
-  const container = document.querySelector(".floating-hearts")
-  if (container) {
-    container.appendChild(heart)
-
-    setTimeout(() => {
-      heart.remove()
-    }, 8000)
-  }
-}
-
-function setupSettingsListeners() {
-  document.querySelectorAll(".theme-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".theme-btn").forEach((b) => b.classList.remove("active"))
-      btn.classList.add("active")
-      settingsManager.updateSetting("theme", btn.dataset.theme)
-      playSound("click")
-    })
-  })
-
-  document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
-    checkbox.addEventListener("change", () => {
-      const setting = checkbox.id.replace("-", "_")
-      settingsManager.updateSetting(setting, checkbox.checked)
-      playSound("click")
-    })
-  })
-
-  const audioQualitySelect = document.getElementById("audio-quality")
-  if (audioQualitySelect) {
-    audioQualitySelect.addEventListener("change", (e) => {
-      settingsManager.updateSetting("audioQuality", e.target.value)
-      playSound("click")
-    })
-  }
-}
-
-let cameraSystem
-let shaderSystem
-let musicPlayer
-let settingsManager
-let adminSystem
+const cameraSystem = new CameraSystem()
+let shaderSystem = new ShaderSystem()
+const musicPlayer = new MusicPlayer()
+const settingsManager = new SettingsManager()
+const adminSystem = new AdminSystem()
 
 document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    const loadingScreen = document.getElementById("loading-screen")
-    if (loadingScreen) {
-      loadingScreen.classList.add("hidden")
-    }
-  }, 3000)
+  cameraSystem.updateViewport()
+  loadEvents()
+  loadStats()
+  loadSongs()
+  adminSystem.compressEvents()
 
-  try {
-    cameraSystem = new CameraSystem()
-  } catch (error) {
-    console.error("Error initializing camera system:", error)
-  }
-
-  try {
-    shaderSystem = new ShaderSystem()
-  } catch (error) {
-    console.error("Error initializing shader system:", error)
-  }
-
-  try {
-    musicPlayer = new MusicPlayer()
-  } catch (error) {
-    console.error("Error initializing music player:", error)
-  }
-
-  try {
-    settingsManager = new SettingsManager()
-  } catch (error) {
-    console.error("Error initializing settings manager:", error)
-  }
-
-  try {
-    adminSystem = new AdminSystem()
-  } catch (error) {
-    console.error("Error initializing admin system:", error)
-  }
-
-  try {
-    loadEvents()
-    loadStats()
-    loadSongs()
-  } catch (error) {
-    console.error("Error loading content:", error)
-  }
-
-  try {
-    setupSettingsListeners()
-  } catch (error) {
-    console.error("Error setting up listeners:", error)
-  }
-
-  setTimeout(() => {
-    showScreenCenterNotification("💡 Tip: Presiona P + L para acceder al panel secreto", "info")
-  }, 8000)
-
-  setInterval(createFloatingHeart, 2000)
-
-  setTimeout(() => {
-    showScreenCenterNotification("¡Bienvenida a nuestro blog de amor! 💕", "success")
-  }, 4000)
-
-  setTimeout(() => {
-    const mainNav = document.querySelector(".main-navigation")
-    if (mainNav) {
-      mainNav.classList.add("visible")
-      setTimeout(() => {
-        mainNav.classList.remove("visible")
-      }, 10000)
-    }
-  }, 3500)
-})
-
-window.addEventListener("beforeunload", () => {
-  if (shaderSystem) {
-    shaderSystem.destroy()
+  if (settingsManager.settings.backgroundMusic) {
+    musicPlayer.playBackgroundMusic()
   }
 })
